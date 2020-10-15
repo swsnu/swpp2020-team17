@@ -1,3 +1,3 @@
 # swpp2020-team17
-screenshot
+Embeded screenshot example
 ![screensh](./Inven_and_Instagram.png)
