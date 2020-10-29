@@ -1,0 +1,20 @@
+.cell .date {
+  font-size: 20px;
+}
+
+.todoTitle {
+  cursor: pointer;
+}
+
+.notdone {
+  color: blue;
+}
+
+.done {
+  text-decoration: line-through;
+  color: #adb5bd;
+}
+
+.sunday {
+  color: red;
+}
