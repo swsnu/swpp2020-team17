@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 
 import * as API from "./store/api"
 
-import Login from "./containers/login/login";
+import Login  from "./containers/login/login";
+import Post   from "./containers/post/post";
 
 class App extends Component {
   render() {
@@ -13,8 +14,9 @@ class App extends Component {
       <ConnectedRouter history={this.props.history}>
         <div className="App">
           <Switch>
-            <Route path="/login/" exact component={Login} />
-            <Redirect from="/"  to={this.props.currentUser.logged_in ? "/articles/" : "/login/"} />
+            <Route path="/login/"     exact component={Login} />
+            <Route path="/post/"      exact component={Post} />
+            <Redirect from="/"  to={this.props.currentUser.logged_in ? "/post/" : "/login/"} />
           </Switch>
         </div>
       </ConnectedRouter>

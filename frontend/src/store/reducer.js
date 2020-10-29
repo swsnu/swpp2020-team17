@@ -14,7 +14,11 @@ const reducer = (state = {
                 ...state,
                 currentUser: action.currentUser,
             };
-
+        case actionTypes.Logout:
+            return {
+                ...state,
+                //currentUser: action.user
+            }
         default:
             break;
     }
