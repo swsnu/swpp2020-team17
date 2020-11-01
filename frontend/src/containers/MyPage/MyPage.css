@@ -1,0 +1,43 @@
+.profileArea {
+    width: 95%;
+    height: 300px;
+    border: 2px solid black;
+    float: left;
+    margin: 5px;
+}
+
+.friendsArea{
+    width: 95%;
+    height: 600px;
+    border: 2px solid black;
+    float: left;
+    margin: 5px;
+}
+
+.leftArea{
+    width: 30%;
+    height: 90%;
+    border: 2px solid black;
+    float: left;
+    margin: 5px;
+}
+
+.tagArea{
+    width: 67%;
+    height: 150px;
+    border: 2px solid black;
+    float: right;
+    margin: 5px;
+}
+
+.createPost{
+    float: right;
+}
+
+.postArea{
+    width: 67%;
+    height: 800px;
+    border: 2px solid black;
+    float: right;
+    margin: 5px;
+}
