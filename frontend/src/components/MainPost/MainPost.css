@@ -1,0 +1,95 @@
+.MainPost{
+    background: white;
+    width: 1000px;
+    box-shadow: 0 3px 9px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); /* 그림자 */
+    margin: auto;
+    margin-top: 3rem;
+}
+
+.MainPost .shallWe button{
+    height: 100%;
+    width: 7.69%;
+    border-radius: 6px;
+    background-color: #D0021B;
+}
+
+.MainPost .like button{
+    height: 46%;
+    width: 7.69%;
+    border-radius: 6px;
+    background-color: #F5A623;
+}
+
+.MainPost .comment button{
+    height: 54%;
+    width: 7.69%;
+    border-radius: 6px;
+    background-color: #4A90E2;
+}
+
+.MainPost .image {
+    height: 58.24%;
+    width: 64.92%;
+}
+
+.MainPost .content {
+    height: 24.49%;
+    width: 62.66%;
+    color: #4A4A4A;
+    font-family: "Avenir Next";
+    font-size: 21px;
+    letter-spacing: 0;
+    line-height: 26px;
+}
+
+.MainPost .profileImage button{
+    box-sizing: border-box;
+    height: 10.05%;
+    width: 5.82%;
+    border: 1px solid #979797;
+    background-color: #D8D8D8;
+}
+
+.MainPost .username {
+    height: 7.69%;
+    width: 13.23%;
+    color: #BBBBBB;
+    font-family: "Avenir Next";
+    font-size: 36px;
+    font-weight: bold;
+    letter-spacing: -0.98px;
+    line-height: 49px;
+    text-align: center;
+}
+
+.MainPost .status {
+    box-sizing: border-box;
+    height: 7.69%;
+    width: 4.22%;
+    border: 1px solid #979797;
+    background-color: #1AFF00;
+}
+
+.MainPost .LoLTag button{
+    height: 7.85%;
+    width: 5.35%;
+    color: #FF0606;
+    font-family: "Avenir Next";
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -0.98px;
+    line-height: 49px;
+    text-align: center;
+}
+
+.MainPost .highlight button{
+    height: 7.69%;
+    width: 13.6%;
+    color: #B801FF;
+    font-family: "Avenir Next";
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -0.98px;
+    line-height: 49px;
+    text-align: center;
+}
