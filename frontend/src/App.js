@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 
 import Login  from "./containers/Login/Login";
 import Post   from "./containers/Post/Post";
+import Lobby  from "./containers/Lobby/Lobby";
+import Search from "./containers/Search/Search";
+import MyPage from "./containers/MyPage/MyPage";
 
 class App extends Component {
   render() {
@@ -13,7 +16,9 @@ class App extends Component {
         <div className="App">
           <Switch>
             <Route path="/login/"     exact component={Login} />
-            <Route path="/posts/"      exact component={Post} />
+            <Route path="/"      exact component={Post} />
+            <Route path="/lobby/"      exact component={Lobby} />
+            <Route path="/search/"      exact component={Search} />
           </Switch>
         </div>
       </ConnectedRouter>
