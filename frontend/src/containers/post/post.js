@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MainPost from './mainpost'
+import MainPost from '../../components/MainPost/MainPost'
 
 
 class Post extends Component {

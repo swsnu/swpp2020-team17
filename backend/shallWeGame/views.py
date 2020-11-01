@@ -12,8 +12,8 @@ def get_authenticated_user(request):
     return JsonResponse({ "msg": "Authenticated" })
     
 def discord_login(request):
-    if request.method != 'PUT':
-        return HttpResponseNotAllowed(['PUT'])
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
     return redirect(auth_url_discord)
 
 def discord_login_redirect(request):
@@ -31,7 +31,7 @@ def exchange_code(code: str):
         "client_secret": "qMMuitFLFVwqBMcpiH62uY0KXXO5PFZF",
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "http://localhost:3000/posts/",
+        "redirect_uri": "http://localhost:8000/api/login/redirect",
         "scope": "identify"
     }
     headers = {

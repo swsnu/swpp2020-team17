@@ -3,8 +3,8 @@ import { ConnectedRouter } from "connected-react-router";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 
-import Login  from "./containers/login/login";
-import Post   from "./containers/post/post";
+import Login  from "./containers/Login/Login";
+import Post   from "./containers/Post/Post";
 
 class App extends Component {
   render() {
