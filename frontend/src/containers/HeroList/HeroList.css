@@ -1,0 +1,38 @@
+.HeroList {
+  background: #22a6b3;
+  width: 512px;
+  box-shadow: 0 3px 9px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); /* 그림자 */ 
+  margin: auto; 
+  margin-top: 4rem;
+}
+  
+.HeroList .title {
+  padding: 2rem;
+  font-size: 2.5rem;
+  text-align: center;
+  font-weight: 500;
+  background: #7ed6df;
+  color: #dff9fb;
+}
+
+.HeroList .button-container {
+  margin: 10px 0;
+  padding: 15px;
+}
+
+.HeroList .new-hero-button {
+  margin: 5px 0;
+  padding: 10px;
+  font: inherit;
+  border: 1px solid #dff9fb;
+  background-color: transparent;
+  color: #dff9fb;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.HeroList .new-hero-button:hover,
+.HeroList .new-hero-button:active {
+  color: white;
+  background-color: #7ed6df;
+}

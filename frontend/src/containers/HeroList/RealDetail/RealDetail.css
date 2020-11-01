@@ -1,0 +1,41 @@
+.RealDetail {
+  background: #22a6b3;
+  width: 512px;
+  box-shadow: 0 3px 9px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); /* 그림자 */ 
+  margin: auto; 
+  margin-top: 4rem;
+  color: #dff9fb; 
+}
+
+.RealDetail .row {
+  display: flex;
+  padding: 20px;
+  height: 30px;
+  text-align: left;
+}
+  
+.RealDetail .left {
+  font-weight: bold;
+  flex: 25%
+}
+  
+.RealDetail .right {
+  flex: 75%;
+}
+
+.RealDetail .back-button {
+  margin: 5px 0;
+  padding: 10px;
+  font: inherit;
+  border: 1px solid #dff9fb;
+  background-color: transparent;
+  color: #dff9fb;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.RealDetail .back-button:hover,
+.RealDetail .back-button:active {
+  color: white;
+  background-color: #7ed6df;
+}

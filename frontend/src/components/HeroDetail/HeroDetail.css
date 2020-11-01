@@ -1,0 +1,15 @@
+.HeroDetail .row {
+  display: flex;
+  padding: 20px;
+  height: 30px;
+  text-align: left;
+}
+  
+.HeroDetail .left {
+  font-weight: bold;
+  flex: 25%
+}
+  
+.HeroDetail .right {
+  flex: 75%;
+}
