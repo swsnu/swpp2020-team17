@@ -21,14 +21,14 @@ class Post extends Component {
                 <div className="shallWe">
                     <button onClick={this.shallwehandler}>shallWe</button>
                 </div> 
-                <div className="profileImage">Image</div>
-                <div className="content">Content</div>
                 <div className="like">
                     <button onClick={this.likehandler}>Like</button>
                 </div> 
                 <div className="comment">
                     <button onClick={this.commenthandler}>Comment</button>
                 </div> 
+                <div className="image">Image</div>
+                <div className="content">Content</div>
             </div>
         )
     }
