@@ -19,6 +19,7 @@ class App extends Component {
             <Route path="/"      exact component={Post} />
             <Route path="/lobby/"      exact component={Lobby} />
             <Route path="/search/"      exact component={Search} />
+            <Route path="/mypage/"      exact component={MyPage} />
           </Switch>
         </div>
       </ConnectedRouter>
