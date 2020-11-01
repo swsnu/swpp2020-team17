@@ -1,7 +1,18 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    currentUser: null,
+    currentUser: {
+        ID: '',
+        FriendIDList: [],
+        RoomID: '',
+        userName: '',
+        profilePicture: '',
+        postIDList: '',
+        ShallWeRoomList: [],
+        watchedPostedIDList: [],
+        isOnline: false
+    },
+    
 };
 
 const reducer = (state = initialState, action) => {
