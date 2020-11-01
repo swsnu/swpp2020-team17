@@ -1,0 +1,42 @@
+.SearchBar{
+    background: white;
+    display: flex;
+    align-items: center; 
+    width: 80%;
+    box-shadow: 0 3px 9px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); /* 그림자 */
+    margin: auto;
+    margin-top: 3%;
+}
+  /* Style the search field */
+  .SearchBar input[type=text] {
+    padding: 1%;
+    font-size: 100%;
+    border: 1px solid grey;
+    float: left;
+    width: 80%;
+    background: #f1f1f1;
+  }
+  
+  /* Style the submit button */
+  .SearchBar button {
+    float: left;
+    width: 20%;
+    padding: 1%;
+    background: #2196F3;
+    color: white;
+    font-size: 100%;
+    border: 1px solid grey;
+    border-left: none; /* Prevent double borders */
+    cursor: pointer;
+  }
+  
+  .SearchBar button:hover {
+    background: #0b7dda;
+  }
+  
+  /* Clear floats */
+  .SearchBar::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
