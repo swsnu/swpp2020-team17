@@ -3,7 +3,7 @@ version: '3'
 services:
     frontend:
         build:
-            context: ./frontend
+            context: .
             dockerfile: ./frontend/Dockerfile.dev
         ports:
             - "3000:3000"
