@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import * as actionCreators from '../../store/actions/index';
 import { withRouter } from 'react-router';
 import MenuBar from '../../components/MenuBar/MenuBar'
+import './MyPage.css'
 
 class MyPage extends Component {
 
@@ -51,9 +52,13 @@ class MyPage extends Component {
     render() {
         return(
             <div>
-                <div className="menuArea">{  <MenuBar />  }</div>
-                <div className="profileArea">profile{ /* <Profile /> */ }</div>
+                
+                    <div className="menuArea">{  <MenuBar />  }</div>
+                    <div className="leftArea">
+                    <div className="profileArea">profile{ /* <Profile /> */ }</div>
+                
                 <div className="friendsArea">friends{ /* <Friends /> */ }</div>
+                </div>
                 <div className="tagArea">tag{ /* <Tag onClick={() => this.onClickTag/> */ }</div>
                 <button className="createPost" onClick={() => this.onClickCreatePost}>create post</button>
                 <div className="postArea" onClick={() => this.onClickPost}>posts { /* <PostInGrid /> */ } </div>

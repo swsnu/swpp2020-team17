@@ -12,7 +12,6 @@ const initialState = {
         watchedPostedIDList: [],
         isOnline: false
     },
-    
 };
 
 const reducer = (state = initialState, action) => {
