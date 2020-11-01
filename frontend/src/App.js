@@ -13,8 +13,7 @@ class App extends Component {
         <div className="App">
           <Switch>
             <Route path="/login/"     exact component={Login} />
-            {/* <Route path="/posts/"      exact component={Post} />
-            <Redirect from="/"  to={this.props.currentUser.logged_in ? "/post/" : "/login/"} /> */}
+            <Route path="/posts/"      exact component={Post} />
           </Switch>
         </div>
       </ConnectedRouter>
@@ -22,15 +21,4 @@ class App extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-  }
-}
-
-const mapStateToProps = (state) => {
-  return {
-    currentUser: state.info.currentUser,
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

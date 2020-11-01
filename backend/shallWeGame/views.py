@@ -12,6 +12,8 @@ def get_authenticated_user(request):
     return JsonResponse({ "msg": "Authenticated" })
     
 def discord_login(request):
+    if request.method != 'PUT':
+        return HttpResponseNotAllowed(['PUT'])
     return redirect(auth_url_discord)
 
 def discord_login_redirect(request):

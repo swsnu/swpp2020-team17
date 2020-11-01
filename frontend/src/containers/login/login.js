@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import * as actionCreators from '../../store/actions/index';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 class Login extends Component {
 
@@ -25,4 +27,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default Login
+export default connect(null, mapDispatchToProps)(withRouter(Login));

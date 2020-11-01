@@ -9,7 +9,7 @@ export const login_ = (user) => {
   
 export const login = () => {
     return dispatch => {
-        return axios.put('/api/login/')
+        return axios.get('/api/login/')
             .then(res => {
                 dispatch(login_(res.data))
             });
