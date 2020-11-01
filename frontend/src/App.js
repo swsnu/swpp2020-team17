@@ -1,27 +1,36 @@
-import React from 'react';
-import './App.css';
+import React, { Component } from "react";
+import { ConnectedRouter } from "connected-react-router";
+import { Switch, Route, Redirect } from "react-router-dom";
+import { connect } from 'react-redux';
 
-import HeroList from './containers/HeroList/HeroList';
-import RealDetail from './containers/HeroList/RealDetail/RealDetail';
-import NewHero from './containers/HeroList/NewHero/NewHero';
+import * as API from "./store/api"
 
-import { Route, Redirect, Switch } from 'react-router-dom';
-import { ConnectedRouter } from 'connected-react-router';
+import Login from "./containers/login/login";
 
-function App(props) {
-  return (
-    <ConnectedRouter history={props.history}>
-      <div className="App" >
-        <Switch>
-          <Route path='/heros' exact render={() => <HeroList title="MY FAVORITE HEROS" />} />
-          <Route path='/heros/:id' exact component={RealDetail} />
-          <Route path='/new-hero' exact component={NewHero} />
-          <Redirect exact from='/' to='heros' />
-          <Route render={() => <h1>Not Found</h1>} />
-        </Switch>
-      </div >
-    </ConnectedRouter>
-  );
+class App extends Component {
+  render() {
+    return (
+      <ConnectedRouter history={this.props.history}>
+        <div className="App">
+          <Switch>
+            <Route path="/login/" exact component={Login} />
+            <Redirect from="/"  to={this.props.currentUser.logged_in ? "/articles/" : "/login/"} />
+          </Switch>
+        </div>
+      </ConnectedRouter>
+    );
+  }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.info.currentUser,
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
