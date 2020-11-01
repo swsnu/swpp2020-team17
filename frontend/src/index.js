@@ -12,11 +12,11 @@ import thunk from 'redux-thunk';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 
-import articleReducer from './store/reducers/article';
+import userReducer from './store/reducers/user';
 
 const history = createBrowserHistory();
 const rootReducer = combineReducers({
-  ac: articleReducer,
+  ur: userReducer,
   router: connectRouter(history),
 });
 

@@ -29,7 +29,7 @@ def exchange_code(code: str):
         "client_secret": "qMMuitFLFVwqBMcpiH62uY0KXXO5PFZF",
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "http://localhost:8000/api/login/redirect",
+        "redirect_uri": "http://localhost:3000/posts/",
         "scope": "identify"
     }
     headers = {

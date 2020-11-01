@@ -1,14 +1,17 @@
 import * as actionTypes from '../actions/actionTypes';
 
-initialState = {
+const initialState = {
     currentUser: null,
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.LOGIN:
-            return;
+            return { ...state, currentUser: action.user};
+        default:
+            break;
     }
+    return state
 };
 
 export default reducer;

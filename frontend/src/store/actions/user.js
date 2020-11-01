@@ -4,7 +4,7 @@ import axios from 'axios';
 import { push } from 'connected-react-router';
 
 export const login_ = (user) => {
-    return { type: actionTypes.LOGIN, targetID: user.id };
+    return { type: actionTypes.LOGIN, user: user };
 }
   
 export const login = () => {
@@ -12,7 +12,6 @@ export const login = () => {
         return axios.put('/api/login/')
             .then(res => {
                 dispatch(login_(res.data))
-                dispatch(push('/post/'))
             });
     }
 }

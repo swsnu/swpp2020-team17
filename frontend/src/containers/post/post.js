@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import Logout from '../logout/logout';
 import MainPost from './mainpost'
 
 
 class Post extends Component {
-    
 
 
     render() {
@@ -15,7 +13,6 @@ class Post extends Component {
                 <div className="MainPostWrapper">
                     <MainPost></MainPost>
                 </div>
-                <Logout ></Logout>
             </div>
         )
     }
