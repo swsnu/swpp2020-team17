@@ -4,7 +4,7 @@ import axios from 'axios';
 import { push } from 'connected-react-router';
 
 export const login_ = (user) => {
-    return { type: actionTypes.LOGIN, user: user };
+    return { type: actionTypes.Login, user: user };
 }
   
 export const login = () => {
@@ -15,3 +15,4 @@ export const login = () => {
             });
     }
 }
+
