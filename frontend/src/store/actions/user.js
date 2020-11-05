@@ -1,7 +1,9 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
-
 import { push } from 'connected-react-router';
+
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
 export const login_ = (user) => {
     return { type: actionTypes.Login, user: user };
@@ -9,10 +11,22 @@ export const login_ = (user) => {
   
 export const login = () => {
     return dispatch => {
-        return axios.post('/api/login/')
-            .then(res => {
-                dispatch(login_(res.data))
-            });
+        // return axios.post('/api/login/')
+        //     .then(res => {
+        //         dispatch(login_(res.data))
+        //     });
+        return fetch('/api/login/', {
+            credentials: 'include',
+            method: 'POST',
+            mode: 'same-origin',
+            headers: {
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken                
+            }
+        }).then(function(res) {
+            dispatch(login_(res.data))
+        })
     }
 }
 
@@ -190,3 +204,19 @@ export const deletePost = () => {
     return
 }
 
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';'); 
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break; 
+            }
+        }
+        return cookieValue; 
+    }
+}
+
+const csrftoken = getCookie('csrftoken')

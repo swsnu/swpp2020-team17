@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, Http
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 import requests
 
@@ -10,10 +11,9 @@ auth_url_discord='https://discord.com/api/oauth2/authorize?client_id=77139587644
 @login_required(login_url='/api/login/')
 def get_authenticated_user(request):
     return JsonResponse({ "msg": "Authenticated" })
-    
+
+@ensure_csrf_cookie
 def discord_login(request):
-    if request.method != 'POST':
-        return HttpResponseNotAllowed(['POST'])
     return redirect(auth_url_discord)
 
 def discord_login_redirect(request):
