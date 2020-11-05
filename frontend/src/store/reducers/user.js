@@ -5,16 +5,24 @@ const reducer = (state = {
     currentUser: {
         ID: 0,
         FriendIDList: [],
-        RoomID: 0,
+        chatRoom: [],
         userName: '',
         profilePicture: '',
-        postIDList: [],
+        postList: [],
         ShallWeRoomList: [],
         watchedPostedIDList: [],
         tagList: [],
         isOnline: false,
     },
+    visitedUser: {
+        ID: 0,
+        userName: '',
+        profilePicture: '',
+        postList: [],
+        isOnline: false,
+    },
     like: 0,
+    postList: [],
     comments: [],
     MainPost: 0,
     postPicture: '',
@@ -29,24 +37,24 @@ const reducer = (state = {
             return { ...state, currentUser: action.user };
         case actionTypes.SendShallWe:
             return {...state, currentUser:{...state.currentUser, 
-                ShallWeRoomList: [...state.currentUser.ShallWeRoomList, action.RoomID]}};
+                ShallWeRoomList: [...state.currentUser.ShallWeRoomList, action.chatRoom]}};
         case actionTypes.IncreaseLike:
             return {...state, like: (state.like + 1)};
         case actionTypes.GetComments:
             return {...state, comments: [action.comments]};
         case actionTypes.GetUserPage:
-            return {...state, currentUser: action.user};
+            return {...state, visitedUser: action.user};
         case actionTypes.CreatePost:
             return {...state, currentUser:{...state.currentUser, 
-                PostIDList: [...state.currentUser.PostIDList, action.postID]}};
+                postList: [...state.currentUser.postList, action.post]}};
         case actionTypes.GetChatRoomList:
             return {...state, chatRoomList: [action.chatRoomList]};
-        case actionTypes.CreateRoom:
-            return {...state, currentUser: {...state.currentUser, RoomID: action.RoomID}};
+        case actionTypes.CreateChatRoom:
+            return {...state, currentUser: {...state.currentUser, chatRoom: action.chatRoom}};
         case actionTypes.JoinChatRoom:
-            return {...state, currentUser: {...state.currentUser, RoomID: action.RoomID}};
+            return {...state, currentUser: {...state.currentUser, chatRoom: action.chatRoom}};
         case actionTypes.ExitChatRoom:
-            return {...state, currentUser: {...state.currentUser, RoomID: 0},
+            return {...state, currentUser: {...state.currentUser, chatRoom: []},
                     chatRoomList: [action.chatRoomList]};
         case actionTypes.GetTagList:
             return {...state, searchedTagList: [action.tags]};

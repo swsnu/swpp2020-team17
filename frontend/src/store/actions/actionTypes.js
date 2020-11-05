@@ -6,7 +6,7 @@ export const GetUserPage = 'GetUserPage'
 export const CreatePost = 'CreatePost'
 
 export const GetChatRoomList = 'GetChatRoomList'
-export const CreateRoom = 'CreateRoom'
+export const CreateChatRoom = 'CreateChatRoom'
 export const JoinChatRoom = 'JoinChatRoom'
 export const ExitChatRoom = 'ExitChatRoom'
 
