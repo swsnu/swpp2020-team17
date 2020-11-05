@@ -1,20 +1,26 @@
 export {
     login,
     sendShallWe,
-    increaseLike,
-    getComments,
     getUserPage,
-    createPost,
-    getChatRoomList,
-    createChatRoom,
-    joinChatRoom,
-    exitChatRoom,
     getTagList,
     getUserList,
     addTag,
     followUser,
     applySetting,
+} from './user';
+
+export {
+    increaseLike,
+    getComments,
+    createPost,
     getGridPost,
     putPost,
     deletePost,
-} from './user';
+} from './post'
+
+export {
+    getChatRoomList,
+    createChatRoom,
+    joinChatRoom,
+    exitChatRoom,
+} from './chatroom'
