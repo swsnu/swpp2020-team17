@@ -1,12 +1,24 @@
 import React from 'react'; 
-import './SearchBar.css';
+import { Input } from 'antd';
+import "antd/dist/antd.css";
+
+const { Search } = Input;
+const onSearch = value => console.log(value);
+
 
 const SearchedBar = props => {
     return (
-        <div className="SearchBar">
-            <input type="text" placeholder="Search Tags or Users"/>
-            <button>Search</button>
-        </div> 
+        <div>
+            <div className="SearchBar">
+                <Search
+                    placeholder="Search tag or user"
+                    allowClear
+                    enterButton="Search"
+                    size="large"
+                    onSearch={onSearch}
+                />
+            </div> 
+        </div>
     ); 
 }
 export default SearchedBar;
