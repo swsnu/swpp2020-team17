@@ -19,15 +19,21 @@ def discord_login(request):
 def discord_login_redirect(request):
     code = request.GET.get('code')
     user = exchange_code(code)
-    discord_user = authenticate(request, user=user)
-    discordUser = DiscordUser(
-        id = user['id'],
-        username = user['username'],
-        avatar = user['avatar'],
-    )
-    discordUser.save()
+    try:
+        discordUser = DiscordUser.objects.get(id=user['id'])
+        discordUser.login = True
+        print('signup user')
+    except DiscordUser.DoesNotExist:
+        print('new user')
+        discordUser = DiscordUser(
+            id = user['id'],
+            username = user['username'],
+            avatar = user['avatar'],
+            login = True
+        )
+        discordUser.save()
     login(request, discordUser)
-    
+    print(request.user.username)
     return JsonResponse({ "user": user })
 
 def exchange_code(code: str):
