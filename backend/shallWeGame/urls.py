@@ -1,5 +1,7 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+from django.conf.urls import url
+from django.conf import settings
 
 urlpatterns = [
     path('auth/user/', views.get_authenticated_user, name='discord_authenticated'),

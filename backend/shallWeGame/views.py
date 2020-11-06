@@ -6,7 +6,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 import requests
 
-auth_url_discord='https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
+auth_url_discord='https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code&scope=identify'
 
 @login_required(login_url='/api/login/')
 def get_authenticated_user(request):
@@ -32,7 +32,8 @@ def exchange_code(code: str):
         "grant_type": "authorization_code",
         "code": code,
         "redirect_uri": "http://localhost:8000/api/login/redirect",
-        "scope": "identify"
+        "scope": "identify",
+        "auth_url": "https://discordapp.com/api/oauth2/authorize"
     }
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -41,7 +42,8 @@ def exchange_code(code: str):
     credentials = response.json()
     access_token = credentials['access_token']
     response = requests.get("http://discord.com/api/v6/users/@me", headers={
-        'Authorization': 'Bearer %s' % access_token
+        'Authorization': 'Bearer %s' % access_token,
+        "Content-Type" : 'application/json'
     })
     print(response)
     user = response.json()

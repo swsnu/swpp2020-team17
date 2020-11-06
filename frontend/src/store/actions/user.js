@@ -1,6 +1,28 @@
 import * as actionTypes from './actionTypes';
-import axios from 'axios';
 import { push } from 'connected-react-router';
+import axios from 'axios';
+<<<<<<< HEAD
+import { push } from 'connected-react-router';
+=======
+
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';'); for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break; 
+            }
+            return cookieValue; 
+        }
+    } 
+}
+const csrftoken = getCookie('csrftoken');
+>>>>>>> login
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -11,6 +33,7 @@ export const login_ = (user) => {
   
 export const login = () => {
     return dispatch => {
+<<<<<<< HEAD
         // return axios.post('/api/login/')
         //     .then(res => {
         //         dispatch(login_(res.data))
@@ -27,6 +50,14 @@ export const login = () => {
         }).then(function(res) {
             dispatch(login_(res.data))
         })
+=======
+        return axios.get('https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code&scope=identify',
+        
+        ).then(res => {
+            dispatch(login_(res.data))
+            dispatch(push('/'))
+        });
+>>>>>>> login
     }
 }
 
@@ -34,6 +65,30 @@ export const sendShallWe = () => {
     return
 }
 
+<<<<<<< HEAD
+=======
+export const increaseLike = () => {
+    return dispatch => {
+        return axios.get
+    }
+}
+
+export const getComments = (postID) => {
+    return dispatch => {
+        return axios.get('/api/comment/')
+        .then((res) => dispatch(getComments_(postID, res.data)))
+    }
+}
+
+const getComments_ = (postID, comment) => {
+    let postComment = comment.filter(c => c.post_ID === postID)
+    return {
+        type: actionTypes.GetComments,
+        comments: postComment
+    }
+}
+
+>>>>>>> login
 export const getUserPage = (id) => {
     return dispatch => {
         return axios.get('/api/user/' + id + '/')
@@ -47,6 +102,120 @@ const getUserPage_ = (user) => {
     return {
         type: actionTypes.GetUserPage,
         user: user
+    }
+}
+
+export const createPost = (post) => {
+    return dispatch => {
+        return axios.post('/api/post/', post)
+        .then(res => dispatch(createPost_(res.data)))
+    }
+}
+
+const createPost_ = (post) => {
+    return {
+        type: actionTypes.CreatePost,
+        post: post
+    }
+}
+
+export const getChatRoomList = () => {
+    return dispatch => {
+        return axios.get('/api/chatroom/')
+        .then(res => {
+            dispatch(getChatRoomList_(res.data))
+        })
+    }
+}
+
+<<<<<<< HEAD
+const getUserList_ = (users) => {
+    return {
+        type: actionTypes.GetUserList,
+        users: users
+    }
+}
+
+export const addTag = () => {
+    return
+}
+
+export const followUser = () => {
+    return
+}
+
+export const applySetting = () => {
+    return
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';'); 
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break; 
+            }
+        }
+        return cookieValue; 
+    }
+}
+
+const csrftoken = getCookie('csrftoken')
+=======
+const getChatRoomList_ = (chatRoomList) => {
+    return {
+        type: actionTypes.GetChatRoomList,
+        chatRoomList: chatRoomList
+    }
+}
+
+export const createChatRoom = (chatRoom) => {
+    return dispatch => {
+        return axios.post('/api/chatroom/', chatRoom)
+        .then(res => {
+            dispatch(res => dispatch(createchatRoom_(res.data)))
+        })
+    }
+}
+
+const createchatRoom_ = (chatRoom) => {
+    return {
+        type: actionTypes.CreateChatRoom,
+        chatRoom: chatRoom
+    }
+}
+
+export const joinChatRoom = (chatRoomID) => {
+    return dispatch => {
+        return axios.get('/api/chatroom/' + chatRoomID + '/')
+        .then(res => {
+            dispatch(res => dispatch(joinChatRoom_(res.data)))
+        })
+    }
+}
+
+const joinChatRoom_ = (chatRoom) => {
+    return {
+        type: actionTypes.JoinChatRoom,
+        chatRoom: chatRoom
+    }
+}
+
+export const exitChatRoom = (chatRoomID) => {
+    return dispatch => {
+        return axios.get('/api/chatroom' + chatRoomID + '/')
+        .then(res => {
+            dispatch(res => dispatch(exitChatRoom_(res.data)))
+        })
+    }
+}
+
+const exitChatRoom_ = (chatRoom) => {
+    return {
+        type: actionTypes.ExitChatRoom
     }
 }
 
@@ -94,19 +263,18 @@ export const applySetting = () => {
     return
 }
 
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';'); 
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break; 
-            }
-        }
-        return cookieValue; 
-    }
+export const getGridPost = () => {
+    return
 }
 
-const csrftoken = getCookie('csrftoken')
+export const putPost = () => {
+    return
+}
+
+export const deletePost = () => {
+    return
+}
+
+
+
+>>>>>>> login
