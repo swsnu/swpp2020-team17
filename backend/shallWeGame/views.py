@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 import requests
+from .models import DiscordUser, Post, Comment, Tag, Chatroom
 
 auth_url_discord='https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
 
@@ -12,17 +13,21 @@ auth_url_discord='https://discord.com/api/oauth2/authorize?client_id=77139587644
 def get_authenticated_user(request):
     return JsonResponse({ "msg": "Authenticated" })
 
-@ensure_csrf_cookie
 def discord_login(request):
     return redirect(auth_url_discord)
 
 def discord_login_redirect(request):
     code = request.GET.get('code')
-    print(code)
     user = exchange_code(code)
     discord_user = authenticate(request, user=user)
-    discord_user = list(discord_user).pop()
-    login(request, discord_user)
+    discordUser = DiscordUser(
+        id = user['id'],
+        username = user['username'],
+        avatar = user['avatar'],
+    )
+    discordUser.save()
+    login(request, discordUser)
+    
     return JsonResponse({ "user": user })
 
 def exchange_code(code: str):
@@ -45,9 +50,7 @@ def exchange_code(code: str):
         'Authorization': 'Bearer %s' % access_token,
         "Content-Type" : 'application/json'
     })
-    print(response)
     user = response.json()
-    print(user)
     return user
 
 def discord_logout(request):
