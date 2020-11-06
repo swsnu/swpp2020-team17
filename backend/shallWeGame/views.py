@@ -33,7 +33,6 @@ def exchange_code(code: str):
         "grant_type": "authorization_code",
         "code": code,
         "redirect_uri": "http://localhost:8000/api/login/redirect",
-        # "redirect_uri": "http://localhost:3000/",
         "scope": "identify",
         "auth_url": "https://discordapp.com/api/oauth2/authorize"
     }
