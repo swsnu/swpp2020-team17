@@ -15,11 +15,12 @@ class App extends Component {
       <ConnectedRouter history={this.props.history}>
         <div className="App">
           <Switch>
-            <Route path="/login/"     exact component={Login} />
-            <Route path="/"      exact component={Post} />
-            <Route path="/lobby/"      exact component={Lobby} />
+            <Route path="/login/"       exact component={Login} />
+            <Route path="/"             exact component={Post} />
+            <Route path="/lobby/"       exact component={Lobby} />
             <Route path="/search/"      exact component={Search} />
             <Route path="/mypage/"      exact component={MyPage} />
+            <Redirect from="/" to="/login/" />
           </Switch>
         </div>
       </ConnectedRouter>

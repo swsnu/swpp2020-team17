@@ -26,19 +26,8 @@ export const login_ = (user) => {
   
 export const login = () => {
     return dispatch => {
-        return axios.post('/api/login/',
-        {
-            credentials: 'include',
-            mode: 'same-origin',
-            headers: {
-                'Accept': 'application/json',
-                // 'Access-Control-Allow-Headers': 'Content-Type, X-CSRFToken',
-                'access-control-allow-headers': 'Content-Type, Authorization, X-Track, X-Super-Properties, X-Context-Properties, X-Failed-Requests, X-Fingerprint, X-RPC-Proxy, X-Debug-Options, x-client-trace-id, If-None-Match, X-RateLimit-Precision',
-                'Content-Type': 'application/json',
-                'X-ACCESS_TOKEN': csrftoken,
-                'X-CSRFToken' : csrftoken
-            } 
-        }
+        return axios.get('https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify',
+        
         ).then(res => {
             dispatch(login_(res.data))
             dispatch(push('/'))
