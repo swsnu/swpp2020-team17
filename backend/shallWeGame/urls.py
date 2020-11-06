@@ -9,9 +9,3 @@ urlpatterns = [
     path('login/redirect/', views.discord_login_redirect, name='discord_login_redirect'),
     path('logout/', views.discord_logout, name='discord_logout'),
 ]
-
-if settings.DEBUG: 
-    import debug_toolbar 
-    urlpatterns += [ 
-        url(r'^__debug__/', include(debug_toolbar.urls)), 
-    ]
