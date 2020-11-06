@@ -6,7 +6,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 import requests
 
-auth_url_discord='https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code&scope=identify'
+auth_url_discord='https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
 
 @login_required(login_url='/api/login/')
 def get_authenticated_user(request):
