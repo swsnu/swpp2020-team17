@@ -16,6 +16,7 @@ def get_authenticated_user(request):
 def discord_login(request):
     return redirect(auth_url_discord)
 
+@ensure_csrf_cookie
 def discord_login_redirect(request):
     code = request.GET.get('code')
     user = exchange_code(code)
@@ -34,7 +35,7 @@ def discord_login_redirect(request):
         discordUser.save()
     login(request, discordUser)
     print(request.user.username)
-    return redirect('https://localhost:3000/')
+    return redirect("http://localhost:3000/")
 
 def exchange_code(code: str):
     data = {
