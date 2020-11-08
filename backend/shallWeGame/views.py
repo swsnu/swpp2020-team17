@@ -34,7 +34,7 @@ def discord_login_redirect(request):
         discordUser.save()
     login(request, discordUser)
     print(request.user.username)
-    return JsonResponse({ "user": user })
+    return redirect('https://localhost:3000/')
 
 def exchange_code(code: str):
     data = {
@@ -44,7 +44,7 @@ def exchange_code(code: str):
         "code": code,
         "redirect_uri": "http://localhost:8000/api/login/redirect",
         "scope": "identify",
-        "auth_url": "https://discordapp.com/api/oauth2/authorize"
+        "auth_url": "https://discordapp.com/api/oauth2/authorize",
     }
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
