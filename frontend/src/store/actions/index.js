@@ -11,7 +11,7 @@ export {
 
 export {
     increaseLike,
-    getComments,
+    getCommentList,
     createPost,
     getGridPost,
     putPost,

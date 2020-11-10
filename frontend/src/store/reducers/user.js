@@ -23,7 +23,7 @@ const reducer = (state = {
     },
     like: 0,
     postList: [],
-    comments: [],
+    commentList: [],
     MainPost: 0,
     chatRoomList: [],
     userList: [],
@@ -39,8 +39,8 @@ const reducer = (state = {
                 shallWeRoomList: [...state.currentUser.shallWeRoomList, action.chatRoom]}};
         case actionTypes.IncreaseLike:
             return {...state, like: (state.like + 1)};
-        case actionTypes.GetComments:
-            return {...state, comments: [action.comments]};
+        case actionTypes.GetCommentList:
+            return {...state, commentList: [action.commentList]};
         case actionTypes.GetUserPage:
             return {...state, visitedUser: action.user};
         case actionTypes.CreatePost:

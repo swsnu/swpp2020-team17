@@ -7,14 +7,14 @@ export const increaseLike = () => {
     }
 }
 
-export const getComments = (postID) => {
+export const getCommentList = (postID) => {
     return dispatch => {
         return axios.get('/api/comment/')
-        .then((res) => dispatch(getComments_(postID, res.data)))
+        .then((res) => dispatch(getCommentList_(postID, res.data)))
     }
 }
 
-const getComments_ = (postID, comment) => {
+const getCommentList_ = (postID, comment) => {
     let postComment = comment.filter(c => c.post_ID === postID)
     return {
         type: actionTypes.GetComments,

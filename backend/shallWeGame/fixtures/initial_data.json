@@ -1,0 +1,26 @@
+[
+    {
+        "model": "shallWeGame.Tag",
+        "pk": 1,
+        "fields": {
+            "name":"LOL",
+            "image": null
+        }
+    },
+    {
+        "model": "shallWeGame.Tag",
+        "pk": 2,
+        "fields": {
+            "name":"HearthStone",
+            "image": null
+        }
+    },
+    {
+        "model": "shallWeGame.Tag",
+        "pk":3,
+        "fields": {
+            "name":"MapleStory",
+            "image": null
+        }
+    }
+]
