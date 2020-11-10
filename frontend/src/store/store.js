@@ -4,12 +4,12 @@ import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 
 import userReducer from './reducers/user';
-import chatroomReducer from './reducers/chatroom';
+import tagReducer from './reducers/tag';
 
 export const history = createBrowserHistory();
 const rootReducer = combineReducers({
   ur: userReducer,
-  chat: chatroomReducer,
+  tg: tagReducer,
   router: connectRouter(history),
 });
 export const middlewares = [thunk, routerMiddleware(history)]

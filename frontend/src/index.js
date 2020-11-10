@@ -14,11 +14,13 @@ import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 
 import userReducer from './store/reducers/user';
-import chatroomReducer from './store/reducers/chatroom'
+import chatroomReducer from './store/reducers/chatroom';
+import tagReducer from './store/reducers/tag';
 
 const history = createBrowserHistory();
 const rootReducer = combineReducers({
   ur: userReducer,
+  tg: tagReducer,
   chat: chatroomReducer,
   router: connectRouter(history),
 });

@@ -4,13 +4,13 @@ import * as actionTypes from '../actions/actionTypes';
 const reducer = (state = {
     currentUser: {
         ID: 0,
-        friendIDList: [],
-        chatRoom: [],
+        friendList: [],
+        chatroom: [],
         username: '',
         avatar: '',
         postList: [],
         shallWeRoomList: [],
-        watchedPostedIDList: [],
+        watchedPostList: [],
         tagList: [],
         login: false,
     },
@@ -26,7 +26,6 @@ const reducer = (state = {
     comments: [],
     MainPost: 0,
     chatRoomList: [],
-    tagList: [],
     userList: [],
 
 }, action) => {
@@ -56,8 +55,6 @@ const reducer = (state = {
         case actionTypes.ExitChatRoom:
             return {...state, currentUser: {...state.currentUser, chatRoom: []},
                     chatRoomList: [action.chatRoomList]};
-        case actionTypes.GetTagList:
-            return {...state, searchedTagList: [action.tags]};
         case actionTypes.GetUserList:
             return {...state, searchedUserList: [action.users]};
         case actionTypes.AddTag:

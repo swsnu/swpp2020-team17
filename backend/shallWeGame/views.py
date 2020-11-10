@@ -255,8 +255,8 @@ def tag_list(request):
     # request.method == 'GET'
     tag_object_list = [tag for tag in Tag.objects.all().values()]
     tag_response_list = []
-    for tag in tag_reponse_list:
-        tag_repsonse_list.append({'image': tag['image'], 'name': tag['name']})
+    for tag in tag_response_list:
+        tag_respsonse_list.append({'image': tag['image'], 'name': tag['name']})
     return JsonResponse(tag_response_list, safe=False)
 
 def tag_info(request, id=0):

@@ -2,7 +2,6 @@ export {
     login,
     sendShallWe,
     getUserPage,
-    getTagList,
     getUserList,
     addTag,
     followUser,
@@ -25,3 +24,7 @@ export {
     joinChatRoom,
     exitChatRoom,
 } from './chatroom'
+
+export {
+    getTagList,
+} from './tag'

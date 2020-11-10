@@ -35,11 +35,11 @@ export const getUserInfo = () => { // read user info from /api/user/
 const _getUserInfo = (user) => {
     console.log(user)
     let cUser = {
-        ID: user.ID,
+        ID: user.id,
         friendIDList: [],
         chatRoom: [],
         userName: user.userName,
-        avatar: user.avatar,
+        profilePicture: '',
         postList: [],
         shallWeRoomList: [],
         watchedPostedIDList: [],
@@ -86,22 +86,6 @@ const getUserPage_ = (user) => {
     return {
         type: actionTypes.GetUserPage,
         user: user
-    }
-}
-
-export const getTagList = () => {
-    return dispatch => {
-        return axios.get('/api/tag/')
-        .then(res => {
-            dispatch(res => dispatch(getTagList_(res.data)))
-        })
-    }
-}
-
-const getTagList_ = (tags) => {
-    return {
-        type: actionTypes.GetTagList,
-        tags: tags
     }
 }
 
