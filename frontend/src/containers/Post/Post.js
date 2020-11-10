@@ -8,7 +8,6 @@ import * as userAPI from '../../store/actions/user'
 
 class Post extends Component {
 
-
     render() {
         return (
             <div>

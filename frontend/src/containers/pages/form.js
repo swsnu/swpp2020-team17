@@ -13,7 +13,7 @@ const layout = {
     wrapperCol: { span: 16 },
 };
 
-const RoomInfo = () => {
+const FormApp = () => {
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
@@ -25,7 +25,7 @@ const RoomInfo = () => {
             .then(res => {
                 setLoading(false);
                 message.success('Room created Successfully!');
-                history.push('/header');
+                history.push('/list');
             })
             .catch(error => {
                 setLoading(false);
@@ -107,7 +107,7 @@ const RoomInfo = () => {
                             <Button type="primary" loading={loading} htmlType="submit">
                                 Save
             </Button>{' '}
-                            <Button type="danger" htmlType="button" onClick={() => history.push('/header')}>
+                            <Button type="danger" htmlType="button" onClick={() => history.push('/list')}>
                                 Back
             </Button>
                         </div>
@@ -118,4 +118,4 @@ const RoomInfo = () => {
     );
 }
 
-export default RoomInfo;
+export default FormApp;

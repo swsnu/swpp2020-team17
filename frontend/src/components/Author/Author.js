@@ -4,9 +4,11 @@ import { connect } from 'react-redux'
 const Author = props => {
 
     return (
-        <div className="image"></div>
-        <div className="username"></div>
-        <div className="login"></div>
+        <div>
+            <div className="image"></div>
+            <div className="username"></div>
+            <div className="login"></div>
+        </div>
     )
 }
 
