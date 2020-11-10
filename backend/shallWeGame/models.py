@@ -1,7 +1,7 @@
 from django.db import models
 from .managers import DiscordUserOAuth2Manager
 
-class DiscordUser(models.Model):
+class DiscordUser(app.model):
     objects = DiscordUserOAuth2Manager()
 
     id = models.BigIntegerField(primary_key=True)

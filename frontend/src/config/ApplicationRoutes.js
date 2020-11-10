@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import List from "../containers/pages/list";
+import LobbyHeader from "../components/LobbyHeader/LobbyHeader";
+import RoomInfo from "../components/RoomInfo/RoomInfo";
 import Posts from "../containers/pages/posts";
-import Form from "../containers/pages/form";
 import SideNav from "../containers/layouts/sidebar";
 import File from "../containers/pages/files";
 import Videos from "../containers/pages/videos";
@@ -11,7 +11,7 @@ import { Layout } from 'antd';
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined
-  } from '@ant-design/icons';
+}   from '@ant-design/icons';
 
 const { Header, Sider, Content} = Layout;
 
@@ -44,11 +44,11 @@ const ApplicationRoutes = () => {
               <Content style={{margin: '24px 16px', padding: 24, minHeight: "calc(100vh - 114px)", background: "#fff"}}>
                 <Switch>
                     <Route path="/posts" component={Posts} />
-                    <Route path="/list" component={List} />
-                    <Route path="/form" component={Form} />
+                    {/* <Route path="/header" component={LobbyHeader} /> */}
+                    <Route path="/RoomInfo" component={RoomInfo} />
                     <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} />
-                    <Redirect to="/list" from="/" />
+                    <Redirect to="/header" from="/" />
                 </Switch>
               </Content>
           </Layout>

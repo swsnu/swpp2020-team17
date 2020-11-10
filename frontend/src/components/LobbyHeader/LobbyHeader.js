@@ -5,8 +5,7 @@ import axios from 'axios';
 
 const { Title } = Typography;
 
-
-const List = () => {
+const LobbyHeader = props => {
     const history = useHistory();
     const [allData, setAllData] = useState([]);
 
@@ -50,7 +49,7 @@ const List = () => {
     });
 
     const handleClick = () => {
-        history.push('/form')
+        history.push('/RoomInfo')
     }
 
     return (
@@ -74,4 +73,4 @@ const List = () => {
     );
 }
 
-export default List;
+export default LobbyHeader;
