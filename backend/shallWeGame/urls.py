@@ -8,6 +8,7 @@ urlpatterns = [
     path('login/', views.discord_login, name='discord_login'),
     path('login/redirect/', views.discord_login_redirect, name='discord_login_redirect'),
     path('logout/', views.discord_logout, name='discord_logout'),
+    path('user/', views.user_info, name='user_info'),
 
     path('post/', views.post_list, name='post'),
     path('post/<int:id>/', views.post_info, name='post_info'),

@@ -6,9 +6,9 @@ class DiscordUser(AbstractBaseUser):
     objects = DiscordUserOAuth2Manager()
 
     id = models.BigIntegerField(primary_key=True)
+    chatroom = models.IntegerField(default=-1)
     username = models.CharField(max_length=100, null=True)
     avatar = models.CharField(max_length=100, null=True)
-    chatroom = models.IntegerField(default=-1)
     login = models.BooleanField()
     
     def is_authenticated(self, request):

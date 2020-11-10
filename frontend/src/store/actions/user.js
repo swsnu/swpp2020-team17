@@ -23,8 +23,37 @@ const csrftoken = getCookie('csrftoken');
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
+export const getUserInfo = () => { // read user info from /api/user/
+    return dispatch => {
+        return axios.get('/api/user/')
+        .then(res => {
+            return dispatch(_getUserInfo(res.data))
+        })
+    }
+}
+
+const _getUserInfo = (user) => {
+    console.log(user)
+    let cUser = {
+        ID: user.id,
+        friendIDList: [],
+        chatRoom: [],
+        userName: user.userName,
+        profilePicture: '',
+        postList: [],
+        shallWeRoomList: [],
+        watchedPostedIDList: [],
+        tagList: [],
+        login: user.login,
+    }
+    return {
+        type: actionTypes.GetUserInfo,
+        currentUser: cUser,
+    }
+}
+
 export const login_ = (user) => {
-    return { type: actionTypes.Login, user: user };
+    return { type: actionTypes.Login, user: true };
 }
   
 export const login = () => {
@@ -32,7 +61,9 @@ export const login = () => {
         return axios.get('https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify',
         
         ).then(res => {
-            dispatch(login_(res.data))
+            const user = res.data
+            console.log(user)
+            dispatch(login_(user))
             dispatch(push('/'))
         });
     }
@@ -42,7 +73,7 @@ export const sendShallWe = () => {
     return
 }
 
-export const getUserPage = (id) => {
+export const getUserPage = (id) => { 
     return dispatch => {
         return axios.get('/api/user/' + id + '/')
         .then(res => {

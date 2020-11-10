@@ -4,40 +4,40 @@ import * as actionTypes from '../actions/actionTypes';
 const reducer = (state = {
     currentUser: {
         ID: 0,
-        FriendIDList: [],
+        friendIDList: [],
         chatRoom: [],
-        userName: '',
-        profilePicture: '',
+        username: '',
+        avatar: '',
         postList: [],
-        ShallWeRoomList: [],
+        shallWeRoomList: [],
         watchedPostedIDList: [],
         tagList: [],
-        isOnline: false,
+        login: false,
     },
     visitedUser: {
         ID: 0,
-        userName: '',
-        profilePicture: '',
+        username: '',
+        avatar: '',
         postList: [],
-        isOnline: false,
+        login: false,
     },
     like: 0,
     postList: [],
     comments: [],
     MainPost: 0,
-    postPicture: '',
-    content: '',
     chatRoomList: [],
     tagList: [],
     userList: [],
 
 }, action) => {
     switch (action.type) {
-        case actionTypes.Login:
-            return { ...state, currentUser: action.user };
+        case actionTypes.GetUserInfo:
+            return { ...state, currentUser: action.currentUser }
+        /*case actionTypes.Login:
+            return { ...state, currentUser: action.user };*/
         case actionTypes.SendShallWe:
             return {...state, currentUser:{...state.currentUser, 
-                ShallWeRoomList: [...state.currentUser.ShallWeRoomList, action.chatRoom]}};
+                shallWeRoomList: [...state.currentUser.shallWeRoomList, action.chatRoom]}};
         case actionTypes.IncreaseLike:
             return {...state, like: (state.like + 1)};
         case actionTypes.GetComments:
@@ -65,11 +65,9 @@ const reducer = (state = {
                     tagList: [...state.currentUser.tagList, action.tag]}};
         case actionTypes.FollowUser:
             return {...state, currentUser: {...state.currentUser, 
-                FriendIDList: [...state.currentUser.FriendIDList, action.user]}};
+                friendIDList: [...state.currentUser.friendIDList, action.user]}};
         case actionTypes.ApplySetting:
             return {...state, currentUser: action.user};
-        case actionTypes.GetGridPost:
-            return {...state, postPicture:action.picture, content: action.content};
         case actionTypes.PutPost:
             return {...state, content: action.content};
         case actionTypes.DeletePost:
