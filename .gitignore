@@ -1,2 +1,3 @@
-./backend/backend/__pycache__
-./backend.zip
+backend/backend/__pycache__/
+backend/shallWeGame/__pychache__/
+backend.zip

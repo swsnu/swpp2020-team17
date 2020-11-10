@@ -7,6 +7,7 @@ export {
     addTag,
     followUser,
     applySetting,
+    getUserInfo,
 } from './user';
 
 export {
