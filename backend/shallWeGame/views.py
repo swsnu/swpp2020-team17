@@ -31,6 +31,8 @@ def discord_login_redirect(request):
             id = user['id'],
             username = user['username'],
             avatar = user['avatar'],
+            chatroom = user['chatroom'],
+            friend_id_list = user['friend_id_list'],
             login = True
         )
         discordUser.save()
@@ -64,7 +66,7 @@ def discord_logout(request, id):
     print()
     return redirect('https://discord.com/api/oauth2/token/revoke')
 
-def user_info(request):
+def user_info(request):  # get user information
     user = DiscordUser.objects.filter(login=True).first()
     response_dict = {"ID": user.id, "userName": user.username, "login": user.login,
                     "avatar": user.avatar, "chatRoom": user.chatroom}

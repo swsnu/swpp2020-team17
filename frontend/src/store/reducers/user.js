@@ -25,8 +25,6 @@ const reducer = (state = {
     postList: [],
     comments: [],
     MainPost: 0,
-    postPicture: '',
-    content: '',
     chatRoomList: [],
     searchedTagList: [],
     searchedUserList: [],
@@ -70,8 +68,6 @@ const reducer = (state = {
                 friendIDList: [...state.currentUser.friendIDList, action.user]}};
         case actionTypes.ApplySetting:
             return {...state, currentUser: action.user};
-        case actionTypes.GetGridPost:
-            return {...state, postPicture:action.picture, content: action.content};
         case actionTypes.PutPost:
             return {...state, content: action.content};
         case actionTypes.DeletePost:
