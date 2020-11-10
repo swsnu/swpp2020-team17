@@ -3,10 +3,14 @@ import MainPost from '../../components/MainPost/MainPost'
 import MenuBar from '../../components/MenuBar/MenuBar'
 import { connect } from 'react-redux';
 import {Redirect} from 'react-router-dom';
+import * as actionCreators from '../../store/actions/index';
 
-import * as userAPI from '../../store/actions/user'
+// import * as userAPI from '../../store/actions/user'
 
 class Post extends Component {
+    componentDidMount() {
+      this.props.getUserInfo();
+    }
 
     render() {
         return (
@@ -26,7 +30,7 @@ class Post extends Component {
 const mapDispatchToProps = (dispatch) => {
     return {
       getUserInfo: () => {
-        dispatch(userAPI.getUserInfo())
+        dispatch(actionCreators.getUserInfo())
       }
     }
   }
