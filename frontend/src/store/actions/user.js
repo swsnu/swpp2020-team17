@@ -35,11 +35,11 @@ export const getUserInfo = () => { // read user info from /api/user/
 const _getUserInfo = (user) => {
     console.log(user)
     let cUser = {
-        ID: user.id,
+        ID: user.ID,
         friendIDList: [],
         chatRoom: [],
         userName: user.userName,
-        profilePicture: '',
+        avatar: user.avatar,
         postList: [],
         shallWeRoomList: [],
         watchedPostedIDList: [],
