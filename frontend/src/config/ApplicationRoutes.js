@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import LobbyHeader from "../components/LobbyHeader/LobbyHeader";
+import Lobby from "../containers/Lobby/Lobby";
 import RoomInfo from "../components/RoomInfo/RoomInfo";
-import Posts from "../containers/pages/posts";
+import Posts from "../containers/Post/Post";
 import SideNav from "../containers/layouts/sidebar";
 import File from "../containers/pages/files";
 import Videos from "../containers/pages/videos";
+import Login from "../containers/Login/Login"
 
 import { Layout } from 'antd';
 import {
@@ -43,12 +44,13 @@ const ApplicationRoutes = () => {
             </Header>
               <Content style={{margin: '24px 16px', padding: 24, minHeight: "calc(100vh - 114px)", background: "#fff"}}>
                 <Switch>
-                    <Route path="/posts" component={Posts} />
-                    {/* <Route path="/header" component={LobbyHeader} /> */}
+                    <Route path='/login' component={Login}/>
+                    <Route path="/post" component={Posts} />
+                    <Route path="/lobby" component={Lobby} />
                     <Route path="/RoomInfo" component={RoomInfo} />
                     <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} />
-                    <Redirect to="/header" from="/" />
+                    <Redirect to="/post" from="/" />
                 </Switch>
               </Content>
           </Layout>

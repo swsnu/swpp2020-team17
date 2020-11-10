@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 
@@ -27,13 +27,12 @@ def discord_login_redirect(request):
         print('signup user')
     except DiscordUser.DoesNotExist:
         print('new user')
+        print(user)
         discordUser = DiscordUser(
-            id = user['id'],
-            username = user['username'],
-            avatar = user['avatar'],
-            chatroom = user['chatroom'],
-            friend_id_list = user['friend_id_list'],
-            login = True
+            id=user['id'],
+            username=user['username'],
+            avatar=user['avatar'],
+            login=True,
         )
         discordUser.save()
     login(request, discordUser)
@@ -62,15 +61,32 @@ def exchange_code(code: str):
     user = response.json()
     return user
 
-def discord_logout(request, id):
-    print()
-    return redirect('https://discord.com/api/oauth2/token/revoke')
+# @login_required(login_url='/api/login/')
+@ensure_csrf_cookie
+def discord_logout(request):
+    user = DiscordUser.objects.filter(id=request.user.id)
+    user.login = False
+    print(user.login)
+    logout(request)
+    return redirect('http://localhost:3000/login/')
+    # return
 
-def user_info(request):  # get user information
-    user = DiscordUser.objects.filter(login=True).first()
-    response_dict = {"ID": user.id, "userName": user.username, "login": user.login,
-                    "avatar": user.avatar, "chatRoom": user.chatroom}
-    print(response_dict)
+def user_info(request):  # get current user information
+    # user = DiscordUser.objects.filter(login=True).first()
+    user = request.user
+    chatroom = -1
+    if user.chatroom is not None:
+        chatroom = user.chatroom.id
+    friendList = [friend.id for friend in user.friends.all().values()]
+    postList = [post.id for post in user.posts.all().values()]
+    shallWeRoomList = [room.id for room in user.shallWeRoom.all().values()]
+    watchedPostList = [post.id for post in user.watchedPosts.all().values()]
+    tagList = [tag.id for tag in user.tags.all().values()]
+    response_dict = {"ID": user.id, "username": user.username, "login": user.login,
+                    "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
+                    "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
+    # print(response_dict)
+    print(user.username)
     return HttpResponse(content=json.dumps(response_dict), status=201)
     
 
