@@ -5,7 +5,7 @@ export const increaseLike = () => {
     return dispatch => {
         return axios.get
     }
-}
+}    
 
 export const getCommentList = (postID) => {
     return dispatch => {
@@ -17,7 +17,7 @@ export const getCommentList = (postID) => {
 const getCommentList_ = (postID, comment) => {
     let postComment = comment.filter(c => c.post_ID === postID)
     return {
-        type: actionTypes.GetComments,
+        type: actionTypes.GetCommentList,
         comments: postComment
     }
 }
