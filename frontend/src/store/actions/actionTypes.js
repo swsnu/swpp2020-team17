@@ -4,6 +4,7 @@ export const IncreaseLike = 'IncreaseLike'
 export const GetComments = 'GetComments'
 export const GetUserPage = 'GetUserPage'
 export const CreatePost = 'CreatePost'
+export const GetUserInfo = 'GetUserInfo'
 
 export const GetChatRoomList = 'GetChatRoomList'
 export const CreateChatRoom = 'CreateChatRoom'

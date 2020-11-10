@@ -3,6 +3,8 @@ import { ConnectedRouter } from "connected-react-router";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 
+import * as userAPI from './store/actions/user'
+
 import Login  from "./containers/Login/Login";
 import Post   from "./containers/Post/Post";
 import Lobby  from "./containers/Lobby/Lobby";
@@ -10,6 +12,11 @@ import Search from "./containers/Search/Search";
 import MyPage from "./containers/MyPage/MyPage";
 
 class App extends Component {
+
+  componentDidMount() {
+    this.props.getUserInfo()
+  }
+
   render() {
     return (
       <ConnectedRouter history={this.props.history}>
@@ -28,4 +35,18 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getUserInfo: () => {
+      dispatch(userAPI.getUserInfo())
+    }
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.ur.currentUser,
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

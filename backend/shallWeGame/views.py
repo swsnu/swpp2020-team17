@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 
+import json
 import requests
 from .models import DiscordUser, Post, Comment, Tag, Chatroom
 
@@ -34,7 +35,6 @@ def discord_login_redirect(request):
         )
         discordUser.save()
     login(request, discordUser)
-    print(request.user.username)
     return redirect("http://localhost:3000/")
 
 def exchange_code(code: str):
@@ -60,9 +60,17 @@ def exchange_code(code: str):
     user = response.json()
     return user
 
-def discord_logout(request):
+def discord_logout(request, id):
     print()
     return redirect('https://discord.com/api/oauth2/token/revoke')
+
+def user_info(request):
+    user = DiscordUser.objects.filter(login=True).first()
+    response_dict = {"ID": user.id, "userName": user.username, "login": user.login,
+                    "avatar": user.avatar, "chatRoom": user.chatroom}
+    print(response_dict)
+    return HttpResponse(content=json.dumps(response_dict), status=201)
+    
 
 ######################
 # post
