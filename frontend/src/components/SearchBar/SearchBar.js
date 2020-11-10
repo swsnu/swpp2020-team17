@@ -3,7 +3,6 @@ import { Input } from 'antd';
 import "antd/dist/antd.css";
 
 const { Search } = Input;
-const onSearch = value => console.log(value);
 
 
 const SearchedBar = props => {
@@ -15,7 +14,7 @@ const SearchedBar = props => {
                     allowClear
                     enterButton="Search"
                     size="large"
-                    onSearch={onSearch}
+                    onSearch={props.onSearch}
                 />
             </div> 
         </div>

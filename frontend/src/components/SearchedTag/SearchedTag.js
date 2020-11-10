@@ -11,11 +11,11 @@ const SearchedTag = props => {
                 <Avatar size="large" icon={<UserOutlined />} />
             </div>
             <div className="middle">
-                Tag Name
+                {props.tagname}
             </div>
             <div className="right">
                 <button>
-                    Add/Delete
+                    {props.addOrDelete}
                 </button>
             </div>
         </div>

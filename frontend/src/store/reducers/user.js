@@ -28,8 +28,8 @@ const reducer = (state = {
     postPicture: '',
     content: '',
     chatRoomList: [],
-    searchedTagList: [],
-    searchedUserList: [],
+    tagList: [],
+    userList: [],
 
 }, action) => {
     switch (action.type) {

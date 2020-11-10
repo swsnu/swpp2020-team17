@@ -11,11 +11,11 @@ const SearchedUser = props => {
                 <Avatar size="large" icon={<UserOutlined />} />
             </div>
             <div className="middle">
-                User Name
+                {props.username}
             </div>
             <div className="right">
                 <button>
-                    Add/Delete
+                    {props.addOrDelete}
                 </button>
             </div>
         </div>
