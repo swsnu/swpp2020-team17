@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+
 import Lobby from "../containers/Lobby/Lobby";
 import RoomInfo from "../components/RoomInfo/RoomInfo";
 import Posts from "../containers/Post/Post";
@@ -7,6 +8,8 @@ import SideNav from "../containers/layouts/sidebar";
 import File from "../containers/pages/files";
 import Videos from "../containers/pages/videos";
 import Login from "../containers/Login/Login"
+import Search from "../containers/Search/Search"
+import MyPage from "../containers/MyPage/MyPage"
 
 import { Layout } from 'antd';
 import {
@@ -44,12 +47,17 @@ const ApplicationRoutes = () => {
             </Header>
               <Content style={{margin: '24px 16px', padding: 24, minHeight: "calc(100vh - 114px)", background: "#fff"}}>
                 <Switch>
-                    <Route path='/login' component={Login}/>
+                    <Route path='/login' component={Login} />
+
                     <Route path="/post" component={Posts} />
                     <Route path="/lobby" component={Lobby} />
                     <Route path="/RoomInfo" component={RoomInfo} />
+                    <Route path="/search" component={Search} />
+                    <Route path="/myPage" component={MyPage} />
+
                     <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} />
+
                     <Redirect to="/post" from="/" />
                 </Switch>
               </Content>

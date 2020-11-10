@@ -52,7 +52,6 @@ class MyPage extends Component {
     render() {
         return(
             <div>
-                    <div className="menuArea">{  <MenuBar />  }</div>
                     <div className="leftArea">
                     <div className="profileArea">profile{ /* <Profile /> */ }</div>
                 

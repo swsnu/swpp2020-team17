@@ -15,8 +15,16 @@ const SideNav = () => {
         history.push('/posts');
     }
 
-    const handleUserClick = () => {
-        history.push('/list');
+    const handleLobbyClick = () => {
+        history.push('/lobby');
+    }
+
+    const handleSearchClick = () => {
+        history.push('/search');
+    }
+
+    const handleMyPageClick = () => {
+        history.push('/myPage');
     }
 
     const handleVideosClick = () => {
@@ -35,15 +43,28 @@ const SideNav = () => {
                     <FormOutlined />
                     <span> Posts</span>
                 </Menu.Item>
-                <Menu.Item key="2" onClick={handleUserClick}>
+
+                <Menu.Item key="2" onClick={handleLobbyClick}>
                     <UserOutlined />
                     <span> Lobby</span>
                 </Menu.Item>
-                <Menu.Item key="3" onClick={handleVideosClick}>
+
+                <Menu.Item key="3" onClick={handleSearchClick}>
+                    <UserOutlined />
+                    <span> Search</span>
+                </Menu.Item>
+
+                <Menu.Item key="4" onClick={handleMyPageClick}>
+                    <UserOutlined />
+                    <span> MyPage</span>
+                </Menu.Item>
+
+                <Menu.Item key="5" onClick={handleVideosClick}>
                     <VideoCameraOutlined />
                     <span> Videos</span>
                 </Menu.Item>
-                <Menu.Item key="4" onClick={handleFileClick}>
+
+                <Menu.Item key="6" onClick={handleFileClick}>
                     <UploadOutlined />
                     <span> Files</span>
                 </Menu.Item>

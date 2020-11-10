@@ -9,8 +9,6 @@ import ApplicationRoutes from "./config/ApplicationRoutes";
 
 function App() {
 
-
-
   return (
     <ApplicationRoutes />
   );

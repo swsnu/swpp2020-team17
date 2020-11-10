@@ -16,8 +16,6 @@ class Post extends Component {
         return (
             <div>
                 {Redirect}
-                <div className="Menu"></div>
-                <MenuBar></MenuBar>
                 <div className="TagWrapper"></div>
                 <div className="MainPostWrapper">
                     <MainPost></MainPost>
