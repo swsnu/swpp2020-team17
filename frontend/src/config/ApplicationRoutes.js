@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import LobbyHeader from "../components/LobbyHeader/LobbyHeader";
+import Lobby from "../containers/Lobby/Lobby";
 import RoomInfo from "../components/RoomInfo/RoomInfo";
 import Posts from "../containers/pages/posts";
 import SideNav from "../containers/layouts/sidebar";
@@ -44,11 +44,11 @@ const ApplicationRoutes = () => {
               <Content style={{margin: '24px 16px', padding: 24, minHeight: "calc(100vh - 114px)", background: "#fff"}}>
                 <Switch>
                     <Route path="/posts" component={Posts} />
-                    {/* <Route path="/header" component={LobbyHeader} /> */}
+                    <Route path="/lobby" component={Lobby} />
                     <Route path="/RoomInfo" component={RoomInfo} />
                     <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} />
-                    <Redirect to="/header" from="/" />
+                    <Redirect to="/posts" from="/" />
                 </Switch>
               </Content>
           </Layout>

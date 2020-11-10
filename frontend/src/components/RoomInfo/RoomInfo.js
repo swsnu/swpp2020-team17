@@ -25,7 +25,8 @@ const RoomInfo = () => {
             .then(res => {
                 setLoading(false);
                 message.success('Room created Successfully!');
-                history.push('/header');
+                /** history.push('/chatroom/:id') 이런식으로 바꿔줘야함 */
+                history.push('/lobby');
             })
             .catch(error => {
                 setLoading(false);
@@ -107,7 +108,7 @@ const RoomInfo = () => {
                             <Button type="primary" loading={loading} htmlType="submit">
                                 Save
             </Button>{' '}
-                            <Button type="danger" htmlType="button" onClick={() => history.push('/header')}>
+                            <Button type="danger" htmlType="button" onClick={() => history.push('/lobby')}>
                                 Back
             </Button>
                         </div>
