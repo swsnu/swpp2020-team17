@@ -39,8 +39,6 @@ class Search extends Component {
                     return <SearchedTag tagname={tag.name} addOrDelete={addOrDelete} />
                 }
             });
-            console.log(storedUserList);
-            console.log(storedTagList);
         }
 
         return (
