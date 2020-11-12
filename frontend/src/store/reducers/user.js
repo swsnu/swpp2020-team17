@@ -2,25 +2,8 @@ import * as actionTypes from '../actions/actionTypes';
 
 
 const reducer = (state = {
-    currentUser: {
-        ID: 0,
-        friendList: [],
-        chatroom: [],
-        username: '',
-        avatar: '',
-        postList: [],
-        shallWeRoomList: [],
-        watchedPostList: [],
-        tagList: [],
-        login: false,
-    },
-    visitedUser: {
-        ID: 0,
-        username: '',
-        avatar: '',
-        postList: [],
-        login: false,
-    },
+    currentUser: null,
+    selectedUser: null,
     like: 0,
     postList: [],
     commentList: [],
@@ -30,8 +13,10 @@ const reducer = (state = {
 
 }, action) => {
     switch (action.type) {
-        case actionTypes.GetUserInfo:
+        case actionTypes.GetCurrentUser:
             return { ...state, currentUser: action.currentUser }
+        case actionTypes.GetUserInfo:
+            return { ...state, selectedUser: action.user }
         /*case actionTypes.Login:
             return { ...state, currentUser: action.user };*/
         case actionTypes.SendShallWe:
@@ -56,7 +41,7 @@ const reducer = (state = {
             return {...state, currentUser: {...state.currentUser, chatRoom: []},
                     chatRoomList: [action.chatRoomList]};
         case actionTypes.GetUserList:
-            return {...state, searchedUserList: [action.users]};
+            return {...state, userList: action.users};
         case actionTypes.AddTag:
             return {...state, currentUser: {...state.currentUser, 
                     tagList: [...state.currentUser.tagList, action.tag]}};

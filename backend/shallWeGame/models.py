@@ -13,28 +13,36 @@ class DiscordUser(AbstractBaseUser):
     chatroom = models.ForeignKey(
         'Chatroom',
         null=True,
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE
     )
     friends = models.ManyToManyField(
         'DiscordUser',
-        related_name='friendList'
+        blank=True,
+        related_name='friendList',
+        db_table='friends'
     )
     watchedPosts = models.ManyToManyField(
         'Post', 
+        blank=True,
         related_name='watchedUser'
     )
     tags = models.ManyToManyField(
         'Tag',
-        related_name='user'
+        blank=True,
+        related_name='user',
+        db_table='tags'
     )
     shallWeRoom = models.ManyToManyField(
         'Chatroom',
+        blank=True,
+        null=True,
         related_name='shallWe',
+        db_table='shallWeRoom'
     )
 
-    
     def is_authenticated(self, request):
         return True
+        
 
 class Tag(models.Model):
     image = models.ImageField(blank=True)

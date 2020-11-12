@@ -23,32 +23,35 @@ const csrftoken = getCookie('csrftoken');
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
-export const getUserInfo = () => { // read user info from /api/user/
+export const getCurrentUser = () => { // read user info from /api/user/
     return dispatch => {
-        return axios.get('/api/user/')
+        return axios.get('/api/currentUser/')
         .then(res => {
-            return dispatch(_getUserInfo(res.data))
+            return dispatch(_getCurrentUser(res.data))
         })
     }
 }
 
-const _getUserInfo = (user) => {
-    console.log(user)
-    let cUser = {
-        ID: user.id,
-        friendIDList: [],
-        chatRoom: [],
-        userName: user.userName,
-        profilePicture: '',
-        postList: [],
-        shallWeRoomList: [],
-        watchedPostedIDList: [],
-        tagList: [],
-        login: user.login,
+const _getCurrentUser= (user) => {
+    return {
+        type: actionTypes.GetCurrentUser,
+        currentUser: user,
     }
+}
+
+export const getUserInfo_ = (user) => {
     return {
         type: actionTypes.GetUserInfo,
-        currentUser: cUser,
+        user: user,
+    }
+}
+
+export const getUserInfo = (id) => {
+    return dispatch => {
+        return axios.get('/api/user/' + id)
+        .then(res => {
+            dispatch(getUserInfo_(res.data))
+        })
     }
 }
 
@@ -61,9 +64,7 @@ export const login = () => {
         return axios.get('https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify',
         
         ).then(res => {
-            const user = res.data
-            console.log(user)
-            dispatch(login_(user))
+            dispatch(login_(res.data))
             dispatch(push('/'))
         });
     }
@@ -93,7 +94,7 @@ export const getUserList = () => {
     return dispatch => {
         return axios.get('/api/user/')
         .then(res => {
-            dispatch(res => dispatch(getUserList_(res.data)))
+            dispatch(dispatch(getUserList_(res.data)))
         })
     }
 }

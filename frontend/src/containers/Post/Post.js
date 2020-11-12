@@ -9,7 +9,7 @@ import * as actionCreators from '../../store/actions/index';
 
 class Post extends Component {
     componentDidMount() {
-      this.props.getUserInfo();
+      this.props.getCurrentUser();
     }
 
     render() {
@@ -27,8 +27,8 @@ class Post extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      getUserInfo: () => {
-        dispatch(actionCreators.getUserInfo())
+      getCurrentUser: () => {
+        dispatch(actionCreators.getCurrentUser())
       }
     }
   }
