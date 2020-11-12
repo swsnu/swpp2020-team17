@@ -11,9 +11,12 @@ class Search extends Component {
     componentDidMount() {
         this.props.onGetUserList();
         this.props.onGetTagList();
-        this.props.onGetUserInfo();
+        this.props.onGetCurrentUser();
     }
-    onSearch = {};
+    onSearch = value => {
+        console.log(value);
+        return this.setState({ searchInput: value });
+    };
 
     state = {
         searchInput: '',
@@ -22,22 +25,45 @@ class Search extends Component {
     render() {
         let users = []
         let tags = []
+
+        // if (this.props.storedCurrentUser){
+        //     console.log("currentUser is OK");
+        //     console.log(this.props.storedCurrentUser);
+        // }
+        // if(this.props.storedTagList) {
+        //     console.log("tagList is OK");
+        //     console.log(this.props.storedTagList);
+        // }
+        
         if (this.props.storedUserList && this.props.storedCurrentUser && this.props.TagList) {
             users = this.props.storedUserList.map(user => {
                 console.log(user.username);
                 if (user.username.includes(this.state.searchInput)) {
                     let addOrDelete = 'add';
-                    if (user.friendList.find(id => id==this.props.storedCurrentUser.id) != null) addOrDelete = 'delete'
+                    if (user.friendList.find(id => id===this.props.storedCurrentUser.id) != null) addOrDelete = 'delete'
                     return <SearchedUser username={user.username} addOrDelete={addOrDelete}/>
                 }
+                return;
             });
     
             tags = this.props.storedTagList.map(tag => {
                 if (tag.name.includes(this.state.searchInput)) {
                     let addOrDelete = 'add';
-                    if (this.props.storedCurrentUser.tagList.find(id => id==tag.id) != null) addOrDelete = 'delete'
+                    if (this.props.storedCurrentUser.tagList.find(id => id===tag.id) != null) addOrDelete = 'delete'
                     return <SearchedTag tagname={tag.name} addOrDelete={addOrDelete} />
                 }
+                return;
+            });
+        }
+        if (this.props.TagList) console.log(this.props.TagList);
+        if (this.props.storedCurrentUser && this.props.TagList) {
+            tags = this.props.storedTagList.map(tag => {
+                if (tag.name.includes(this.state.searchInput)) {
+                    let addOrDelete = 'add';
+                    if (this.props.storedCurrentUser.tagList.find(id => id===tag.id) != null) addOrDelete = 'delete'
+                    return <SearchedTag tagname={tag.name} addOrDelete={addOrDelete} />
+                }
+                return;
             });
         }
 
@@ -68,8 +94,8 @@ const mapDispatchToProps = dispatch => {
             dispatch(actionCreators.getUserList()),
         onGetTagList: () =>
             dispatch(actionCreators.getTagList()),
-        onGetUserInfo: () =>
-            dispatch(actionCreators.getUserInfo()),
+        onGetCurrentUser: () =>
+            dispatch(actionCreators.getCurrentUser()),
     };
 }
 
