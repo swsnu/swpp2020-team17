@@ -5,15 +5,13 @@
 
 
 # Frontend
-<pre><code>
-cd frontend   
+<pre><code>cd frontend   
 yarn install   
 yarn add eslint   
 yarn start
 </code></pre>
 
 # Backend
-<pre><code>
-cd backend
+<pre><code>cd backend
 sh myshell.sh
 </code></pre>
