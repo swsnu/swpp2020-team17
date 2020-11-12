@@ -13,10 +13,17 @@ class Search extends Component {
         this.props.onGetTagList();
         this.props.onGetCurrentUser();
     }
+
     onSearch = value => {
         if (value != '') this.setState({ searchInput: value.toLowerCase() });
         else this.setState({ searchInput: null });
     };
+
+    onClickUserButton = () => {
+    }
+
+    onClickTagButton = () => {
+    }
 
     state = {
         searchInput: null,
@@ -25,7 +32,7 @@ class Search extends Component {
     render() {
         let users = []
         let tags = []
-        
+
         if (this.state.searchInput != null) {
             if (this.props.storedCurrentUser && this.props.storedUserList && this.props.storedTagList)  {
                 users = this.props.storedUserList.map(user => {
@@ -33,7 +40,7 @@ class Search extends Component {
                     if (user.username.toLowerCase().includes(this.state.searchInput)) {
                         let addOrDelete = 'add';
                         if (user.friendList.find(ID => ID===this.props.storedCurrentUser.ID) != null) addOrDelete = 'delete'
-                        return <SearchedUser username={user.username} addOrDelete={addOrDelete}/>
+                        return <SearchedUser username={user.username} addOrDelete={addOrDelete} onClick={this.onClickUserButton}/>
                     }
                     return;
                 });
@@ -41,7 +48,7 @@ class Search extends Component {
                     if (tag.name.toLowerCase().includes(this.state.searchInput)) {
                         let addOrDelete = 'add';
                         if (this.props.storedCurrentUser.tagList.find(ID => ID===tag.ID) != null) addOrDelete = 'delete'
-                        return <SearchedTag tagname={tag.name} addOrDelete={addOrDelete} />
+                        return <SearchedTag tagname={tag.name} addOrDelete={addOrDelete} onClick={this.onClickTagButton}/>
                     }
                     return;
                 });

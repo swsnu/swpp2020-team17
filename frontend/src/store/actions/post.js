@@ -1,49 +1,49 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
 
-export const increaseLike = () => {
-    return dispatch => {
-        return axios.get
-    }
-}    
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
-export const getCommentList = (postID) => {
-    return dispatch => {
-        return axios.get('/api/comment/')
-        .then((res) => dispatch(getCommentList_(postID, res.data)))
-    }
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';'); for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break; 
+            }
+            return cookieValue; 
+        }
+    } 
 }
+const csrftoken = getCookie('csrftoken');
 
-const getCommentList_ = (postID, comment) => {
-    let postComment = comment.filter(c => c.post_ID === postID)
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
+const getPostList_ = (posts) => {
     return {
-        type: actionTypes.GetCommentList,
-        comments: postComment
+        type: actionTypes.GetPostList,
+        posts: posts,
     }
 }
 
-export const createPost = (post) => {
+export const getPostList = () => {
     return dispatch => {
-        return axios.post('/api/post/', post)
-        .then(res => dispatch(createPost_(res.data)))
+        return axios.get('/api/post/')
+        .then((res) => dispatch(getPostList_(res.data)))
     }
 }
 
-const createPost_ = (post) => {
-    return {
-        type: actionTypes.CreatePost,
-        post: post
-    }
-}
+const createPost_ = () => {}
+export const createPost = () => {}
 
-export const getGridPost = () => {
-    return
-}
+const getPost_ = () => {}
+export const getPost = () => {}
 
-export const putPost = () => {
-    return
-}
+const putPost_ = () => {}
+export const putPost = () => {}
 
-export const deletePost = () => {
-    return
-}
+const deletePost_ = () => {}
+export const deletePost = () => {}
