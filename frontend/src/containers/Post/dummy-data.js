@@ -1,6 +1,6 @@
 const dummyData = [
     {
-        username: "twitch",
+        username: "SWPP1",
         thumbnailUrl:
             "https://icon2.cleanpng.com/20180320/sqe/kisspng-twitch-computer-icons-streaming-media-youtube-live-tv-twitch-icon-5ab19172461392.001176751521586546287.jpg",
         imageUrl:
@@ -28,7 +28,7 @@ const dummyData = [
         ]
     },
     {
-        username: "SWPP",
+        username: "SWPP2",
         thumbnailUrl:
             "https://icon2.cleanpng.com/20180320/sqe/kisspng-twitch-computer-icons-streaming-media-youtube-live-tv-twitch-icon-5ab19172461392.001176751521586546287.jpg",
         imageUrl:

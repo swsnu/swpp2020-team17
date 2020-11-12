@@ -27,13 +27,13 @@ const SideNav = () => {
         history.push('/myPage');
     }
 
-    const handleVideosClick = () => {
-        history.push('/videos');
-    }
+    // const handleVideosClick = () => {
+    //     history.push('/videos');
+    // }
 
-    const handleFileClick = () => {
-        history.push('/files');
-    }
+    // const handleFileClick = () => {
+    //     history.push('/files');
+    // }
 
     return (
         <div>
@@ -57,16 +57,6 @@ const SideNav = () => {
                 <Menu.Item key="4" onClick={handleMyPageClick}>
                     <UserOutlined />
                     <span> MyPage</span>
-                </Menu.Item>
-
-                <Menu.Item key="5" onClick={handleVideosClick}>
-                    <VideoCameraOutlined />
-                    <span> Videos</span>
-                </Menu.Item>
-
-                <Menu.Item key="6" onClick={handleFileClick}>
-                    <UploadOutlined />
-                    <span> Files</span>
                 </Menu.Item>
             </Menu>
         </div>

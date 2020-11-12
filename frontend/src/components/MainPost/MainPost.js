@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CommentSection from "../PopComment/CommentSectionContainer";
 import LikeSection from "./LikeSection";
 import PostHeader from "./PostHeader";
+import {Button} from 'antd';
 import './MainPost.css';
 
 const MainPost = props => {
