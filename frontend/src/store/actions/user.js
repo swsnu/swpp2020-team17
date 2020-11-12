@@ -90,11 +90,20 @@ const getUserPage_ = (user) => {
     }
 }
 
+// export const getUserList = () => {
+//     return dispatch => {
+//         return axios.get('/api/user/')
+//         .then(res => {
+//             dispatch(res => dispatch(getUserList_(res.data)))
+//         })
+//     }
+// }
+
 export const getUserList = () => {
     return dispatch => {
         return axios.get('/api/user/')
         .then(res => {
-            dispatch(res => dispatch(getUserList_(res.data)))
+            dispatch(dispatch(getUserList_(res.data)))
         })
     }
 }
