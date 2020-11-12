@@ -90,15 +90,6 @@ const getUserPage_ = (user) => {
     }
 }
 
-// export const getUserList = () => {
-//     return dispatch => {
-//         return axios.get('/api/user/')
-//         .then(res => {
-//             dispatch(res => dispatch(getUserList_(res.data)))
-//         })
-//     }
-// }
-
 export const getUserList = () => {
     return dispatch => {
         return axios.get('/api/user/')
@@ -109,7 +100,6 @@ export const getUserList = () => {
 }
 
 const getUserList_ = (users) => {
-    console.log(users)
     return {
         type: actionTypes.GetUserList,
         users: users

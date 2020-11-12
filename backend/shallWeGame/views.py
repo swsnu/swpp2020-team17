@@ -312,7 +312,7 @@ def tag_list(request):
     tag_object_list = [tag for tag in Tag.objects.all().values()]
     tag_response_list = []
     for tag in tag_object_list:
-        tag_response_list.append({"image": tag['image'], "name": tag['name']})
+        tag_response_list.append({"ID": tag['id'], "image": tag['image'], "name": tag['name']})
     print(tag_response_list)
     return JsonResponse(tag_response_list, safe=False)
 
