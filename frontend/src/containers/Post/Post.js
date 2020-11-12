@@ -1,41 +1,42 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import MainPost from '../../components/MainPost/MainPost'
-import MenuBar from '../../components/MenuBar/MenuBar'
 import { connect } from 'react-redux';
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import * as actionCreators from '../../store/actions/index';
+import dummyData from "./dummy-data.js";
 
 // import * as userAPI from '../../store/actions/user'
 
-class Post extends Component {
-    componentDidMount() {
-      this.props.getUserInfo();
-    }
+const Post = (props) => {
 
-    render() {
-        return (
-            <div>
-                {Redirect}
-                <div className="TagWrapper"></div>
-                <div className="MainPostWrapper">
-                    <MainPost></MainPost>
-                </div>
-            </div>
-        )
-    }
+  const [posts] = useState(dummyData);
+
+// Redirect removed
+  return (
+      <div>
+      <div className="TagWrapper"></div>
+
+      <div className="MainPostWrapper">
+        {posts.map(p => (
+          <MainPost key={p.imageUrl} dataFromParent={p} />
+        ))}
+
+      </div>
+      </div>
+  )
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      getUserInfo: () => {
+        getUserInfo: () => {
         dispatch(actionCreators.getUserInfo())
       }
     }
   }
-  
+
   const mapStateToProps = (state) => {
     return {
-      currentUser: state.ur.currentUser,
+        currentUser: state.ur.currentUser,
     }
   }
 

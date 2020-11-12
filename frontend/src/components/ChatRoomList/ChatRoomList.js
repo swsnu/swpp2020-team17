@@ -30,7 +30,7 @@ const ChatRoomList = props => {
             game: chatroom.tag,
             gamers: chatroom.members.length,
             title: chatroom.title,
-            join: 'Join',
+            join: <Button type="primary"> Join </Button>,
         })
         return data;
     });
@@ -41,7 +41,7 @@ const ChatRoomList = props => {
                 <Col span={18}>
                     <Title level={2}>
                         Room List
-            </Title>
+                    </Title>
                 </Col>
                 <Col span={6}>
                     <Button onClick={props.clickRoomInfo} block>Create Room</Button>

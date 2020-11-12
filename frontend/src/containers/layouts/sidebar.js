@@ -41,12 +41,12 @@ const SideNav = () => {
             <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                 <Menu.Item key="1" onClick={handlePostClick}>
                     <FormOutlined />
-                    <span> Posts</span>
+                    <span> Posts </span>
                 </Menu.Item>
 
                 <Menu.Item key="2" onClick={handleLobbyClick}>
                     <UserOutlined />
-                    <span> Lobby</span>
+                    <span> Lobby </span>
                 </Menu.Item>
 
                 <Menu.Item key="3" onClick={handleSearchClick}>
