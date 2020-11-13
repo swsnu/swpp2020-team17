@@ -5,9 +5,15 @@
 
 
 # Frontend
+1. If you want to run frontend for the first time after cloning,
 <pre><code>cd frontend   
 yarn install   
 yarn add eslint   
+yarn start
+</code></pre>
+
+2. After first running,
+<pre><code>cd frontend   
 yarn start
 </code></pre>
 
