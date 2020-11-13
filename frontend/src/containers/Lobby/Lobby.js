@@ -13,16 +13,16 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onGetChatRoomList: () => dispatch(actionCreators.getChatRoomList())
+        onGetChatroomList: () => dispatch(actionCreators.getChatroomList())
     }
 }
 
 class Lobby extends Component{
     componentDidMount() {
-        this.props.onGetChatRoomList();
+        this.props.onGetChatroomList();
     }
 
-    chatRoomList = [
+    chatroomList = [
         {tag:'LoL', title:'골드 이하 금지' , members:['1', '2']},
         {tag:'HS', title:'랭크전' , members:['1', '2', '3']}
     ]

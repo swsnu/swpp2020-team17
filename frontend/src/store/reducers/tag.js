@@ -7,11 +7,11 @@ const reducer = (state = {
 }, action) => {
     switch (action.type) {
         case actionTypes.GetTagList:
-            return {...state, tagList: action.tags};
+            return { ...state, tagList: action.tags };
         default:
             break;
     }
-    return state
+    return state;
 };
 
 export default reducer;

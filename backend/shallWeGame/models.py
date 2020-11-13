@@ -24,7 +24,8 @@ class DiscordUser(AbstractBaseUser):
     watchedPosts = models.ManyToManyField(
         'Post', 
         blank=True,
-        related_name='watchedUser'
+        related_name='watchedUser',
+        db_table='wacthedPosts'
     )
     tags = models.ManyToManyField(
         'Tag',
@@ -35,7 +36,6 @@ class DiscordUser(AbstractBaseUser):
     shallWeRoom = models.ManyToManyField(
         'Chatroom',
         blank=True,
-        null=True,
         related_name='shallWe',
         db_table='shallWeRoom'
     )

@@ -10,10 +10,6 @@ from .models import DiscordUser, Post, Comment, Tag, Chatroom
 
 auth_url_discord='https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
 
-@login_required(login_url='/api/login/')
-def get_authenticated_user(request):
-    return JsonResponse({ "msg": "Authenticated" })
-
 def discord_login(request):
     return redirect(auth_url_discord)
 
@@ -89,7 +85,6 @@ def currentUser(request):  # get current user information
     response_dict = {"ID": user.id, "username": user.username, "login": user.login,
                     "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
                     "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
-    #print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
     
 def user_list(request):
@@ -98,20 +93,15 @@ def user_list(request):
         return HttpResponseNotAllowed(['GET'])
 
     tag = Tag.objects.get(name='LOL')
-    #print(request.user.id)
     user = DiscordUser.objects.get(id=request.user.id)
-    #print(user.username)
     user.tags.add(tag)
     tag = Tag.objects.get(name='HearthStone')
-    #print(request.user.id)
     user = DiscordUser.objects.get(id=request.user.id)
-    #print(user.username)
     user.tags.add(tag)
     
     user_object_list = [user for user in DiscordUser.objects.all()]
     user_response_list = []
     for user in user_object_list:
-        #print(user.tags.all().values().first()['id'])
         chatroom = room.id if user.chatroom is not None else -1
         friendList = [friend['id'] for friend in user.friends.all().values()]
         postList = [post['id'] for post in user.posts.all().values()]
@@ -127,24 +117,26 @@ def user_list(request):
 
 def user_info(request, id=0):
     # non-allowed requests returns 405  
-    if request.method != 'GET':
-        return HttpResponseNotAllowed(['GET'])
+    if request.method != 'GET' and request.method != 'PUT':
+        return HttpResponseNotAllowed(['GET', 'PUT'])
     # non-existing user returns 404
     try:
         user = DiscordUser.objects.get(id=id)
     except DiscordUser.DoesNotExist:
         return HttpResponseNotFound()
 
-    friendList = [friend.id for friend in user.friends.all().values()]
-    postList = [post.id for post in user.posts.all().values()]
-    shallWeRoomList = [room.id for room in user.shallWeRoom.all().values()]
-    watchedPostList = [post.id for post in user.watchedPosts.all().values()]
-    tagList = [tag.id for tag in user.tags.all().values()]
-    response_dict = {"ID": user.id, "username": user.username, "login": user.login,
-                    "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
-                    "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
-    return HttpResponse(content=json.dumps(response_dict), status=201)
-         
+    if request.method == 'GET':
+        friendList = [friend.id for friend in user.friends.all().values()]
+        postList = [post.id for post in user.posts.all().values()]
+        shallWeRoomList = [room.id for room in user.shallWeRoom.all().values()]
+        watchedPostList = [post.id for post in user.watchedPosts.all().values()]
+        tagList = [tag.id for tag in user.tags.all().values()]
+        response_dict = {"ID": user.id, "username": user.username, "login": user.login,
+                        "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
+                        "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
+        return HttpResponse(content=json.dumps(response_dict), status=201)
+    else:   # request.method == 'PUT'
+        return
 
 ######################
 # post

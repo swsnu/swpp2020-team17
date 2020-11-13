@@ -14,18 +14,4 @@ function App() {
   );
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getUserInfo: () => {
-      dispatch(actionCreators.getUserInfo())
-    }
-  }
-}
-
-const mapStateToProps = (state) => {
-  return {
-    currentUser: state.ur.currentUser,
-  }
-}
-
 export default connect(mapStateToProps, mapDispatchToProps)(App);

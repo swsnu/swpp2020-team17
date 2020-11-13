@@ -14,7 +14,7 @@ const SearchedTag = props => {
                 {props.tagname}
             </div>
             <div className="right">
-                <button>
+                <button onClick={props.onClick}>
                     {props.addOrDelete}
                 </button>
             </div>

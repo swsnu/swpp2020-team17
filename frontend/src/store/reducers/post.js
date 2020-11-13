@@ -1,11 +1,14 @@
 import * as actionTypes from '../actions/actionTypes';
 
+
 const reducer = (state = {
-    chatroomList: []
+    selectedPost: null,
+    postList: [],
+
 }, action) => {
     switch (action.type) {
-        case actionTypes.GetChatroomList:
-            return {...state, chatroomList: action.chatroomList};
+        case actionTypes.GetPostList:
+            return {...state, postList: action.postList};
         default:
             break;
     }

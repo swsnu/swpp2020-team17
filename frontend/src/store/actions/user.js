@@ -23,38 +23,6 @@ const csrftoken = getCookie('csrftoken');
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
-export const getCurrentUser = () => { // read user info from /api/user/
-    return dispatch => {
-        return axios.get('/api/currentUser/')
-        .then(res => {
-            return dispatch(_getCurrentUser(res.data))
-        })
-    }
-}
-
-const _getCurrentUser= (user) => {
-    return {
-        type: actionTypes.GetCurrentUser,
-        currentUser: user,
-    }
-}
-
-export const getUserInfo_ = (user) => {
-    return {
-        type: actionTypes.GetUserInfo,
-        user: user,
-    }
-}
-
-export const getUserInfo = (id) => {
-    return dispatch => {
-        return axios.get('/api/user/' + id)
-        .then(res => {
-            dispatch(getUserInfo_(res.data))
-        })
-    }
-}
-
 export const login_ = (user) => {
     return { type: actionTypes.Login, user: true };
 }
@@ -65,28 +33,14 @@ export const login = () => {
         
         ).then(res => {
             dispatch(login_(res.data))
-            dispatch(push('/'))
         });
     }
 }
 
-export const sendShallWe = () => {
-    return
-}
-
-export const getUserPage = (id) => { 
-    return dispatch => {
-        return axios.get('/api/user/' + id + '/')
-        .then(res => {
-            dispatch(getUserPage_(res.data))
-        })
-    }
-}
-
-const getUserPage_ = (user) => {
+const getUserList_ = (users) => {
     return {
-        type: actionTypes.GetUserPage,
-        user: user
+        type: actionTypes.GetUserList,
+        users: users
     }
 }
 
@@ -99,23 +53,50 @@ export const getUserList = () => {
     }
 }
 
-const getUserList_ = (users) => {
+const getCurrentUser_= (user) => {
     return {
-        type: actionTypes.GetUserList,
-        users: users
+        type: actionTypes.GetCurrentUser,
+        currentUser: user,
     }
 }
 
-export const addTag = () => {
-    return
+export const getCurrentUser = () => {       // read user info from /api/user/
+    return dispatch => {
+        return axios.get('/api/currentUser/')
+        .then(res => {
+            return dispatch(getCurrentUser_(res.data))
+        })
+    }
 }
 
-export const followUser = () => {
-    return
+export const getUser_ = (user) => {
+    return {
+        type: actionTypes.GetUser,
+        user: user,
+    }
 }
 
-export const applySetting = () => {
-    return
+export const getUser = (ID) => {        // Get user with id
+    return dispatch => {
+        return axios.get('/api/user/' + ID)
+        .then(res => {
+            dispatch(getUser_(res.data))
+        })
+    }
+}
+
+export const putUser_ = (user) => {
+    return {
+        type: actionTypes.PutUser,
+        user: user,
+    }
+}
+
+export const putUser = (user) => {
+    return dispatch => {
+        return axios.put('/api/user/' + user.ID, user)
+        .then(res => dispatch(putUser_(user)))
+    }
 }
 
 
