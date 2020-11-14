@@ -95,7 +95,7 @@ export const putUser_ = (user) => {
 export const putUser = (user) => {
     return dispatch => {
         return axios.put('/api/user/' + user.ID, user)
-        .then(res => dispatch(putUser_(user)))
+        .then(res => dispatch(putUser_(res.data)))
     }
 }
 
