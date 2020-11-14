@@ -29,8 +29,8 @@ const Post = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getUserInfo: () => {
-        dispatch(actionCreators.getUserInfo())
+        getCurrentUser: () => {
+        dispatch(actionCreators.getCurrentUser())
       }
     }
   }
