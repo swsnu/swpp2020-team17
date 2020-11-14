@@ -4,7 +4,7 @@ import axios from 'axios';
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
-function getCookie(name) {
+export function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';'); for (let i = 0; i < cookies.length; i++) {

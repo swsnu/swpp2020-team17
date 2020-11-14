@@ -12,7 +12,7 @@ export const history = createBrowserHistory();
 const rootReducer = combineReducers({
   ur: userReducer,
   tg: tagReducer,
-  cr: chatroomReducer,
+  chat: chatroomReducer,
   ps: postReducer,
   router: connectRouter(history),
 });

@@ -5,7 +5,7 @@ import axios from 'axios';
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
-function getCookie(name) {
+export function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';'); for (let i = 0; i < cookies.length; i++) {
@@ -23,17 +23,10 @@ const csrftoken = getCookie('csrftoken');
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
-export const login_ = (user) => {
-    return { type: actionTypes.Login, user: true };
-}
   
 export const login = () => {
     return dispatch => {
-        return axios.get('https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify',
-        
-        ).then(res => {
-            dispatch(login_(res.data))
-        });
+        return axios.get('https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify');
     }
 }
 

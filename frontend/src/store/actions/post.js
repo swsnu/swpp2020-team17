@@ -4,7 +4,7 @@ import axios from 'axios';
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
-function getCookie(name) {
+export function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';'); for (let i = 0; i < cookies.length; i++) {
@@ -32,18 +32,59 @@ const getPostList_ = (posts) => {
 export const getPostList = () => {
     return dispatch => {
         return axios.get('/api/post/')
-        .then((res) => dispatch(getPostList_(res.data)))
+        .then(res => dispatch(getPostList_(res.data)))
     }
 }
 
-const createPost_ = () => {}
-export const createPost = () => {}
+const createPost_ = (post) => {
+    return {
+        type: actionTypes.CreatePost,
+        post: post
+    }
+}
+export const createPost = (post) => {
+    return dispatch => {
+        return axios.post('/api/post/', post)
+        .then(res => dispatch(createPost_(res.data)))
+    }
+}
 
-const getPost_ = () => {}
-export const getPost = () => {}
+const getPost_ = (post) => {
+    return {
+        type: actionTypes.GetPost,
+        post: post
+    }
+}
+export const getPost = (ID) => {
+    return dispatch => {
+        return axios.get('/api/post/' + ID)
+        .then(res => dispatch(getPost_(res.data)))
+    }
+}
 
-const putPost_ = () => {}
-export const putPost = () => {}
+const putPost_ = (post) => {
+    return {
+        type: actionTypes.PutPost,
+        post: post
+    }
+}
+export const putPost = (post) => {
+    return dispatch => {
+        return axios.put('/api/post/' + post.ID, post)
+        .then(res => dispatch(putPost_(res.data)))
+    }
+}
 
-const deletePost_ = () => {}
-export const deletePost = () => {}
+const deletePost_ = (post) => {
+    return {
+        type: actionTypes.DeletePost,
+        post: post
+    }
+}
+
+export const deletePost = (ID) => {
+    return dispatch => {
+        return axios.delete('api/post/' + ID)
+        .then(res => dispatch(deletePost_(res.data)))
+    }
+}
