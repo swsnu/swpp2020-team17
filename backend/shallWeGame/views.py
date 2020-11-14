@@ -3,8 +3,6 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
-from json import JSONDecodeError
-from django.forms.models import model_to_dict
 
 import json
 import requests
@@ -20,14 +18,14 @@ def discord_login_redirect(request):
     code = request.GET.get('code')
     user = exchange_code(code)
     try:
-        discordUser = DiscordUser.objects.get(username=user['username'])
+        discordUser = DiscordUser.objects.get(id=user['id'])
         discordUser.login = True
         print('signup user')
     except DiscordUser.DoesNotExist:
         print('new user')
         print(user)
         discordUser = DiscordUser(
-            # id=user['id'],
+            id=user['id'],
             username=user['username'],
             avatar=user['avatar'],
             login=True,
@@ -85,13 +83,9 @@ def currentUser(request):  # get current user information
     # print("tags user")
     # print(tag1.user.all().values())
 
-    try:
-        tempChat = Chatroom.objects.create(id= -1, toggleGlobal=True, title='temp', tag=Tag.objects.get(id=1), maxPersonnel=0)
-    except:
-        tempChat = Chatroom.objects.get(id= -1)
-    chatroom = user.chatroom.id if user.chatroom is not None else tempChat.id
+    chatroom = room.id if user.chatroom is not None else -1
     friendList = [friend['id'] for friend in user.friends.all().values()]
-    postList = [post['id'] for post in user.postlist.all().values()]
+    postList = [post['id'] for post in user.posts.all().values()]
     shallWeRoomList = [room['id'] for room in user.shallWeRoom.all().values()]
     watchedPostList = [post['id'] for post in user.watchedPosts.all().values()]
     tagList = [tag['id'] for tag in user.tags.all().values()]
@@ -108,9 +102,9 @@ def user_list(request):
     user_object_list = [user for user in DiscordUser.objects.all()]
     user_response_list = []
     for user in user_object_list:
-        chatroom = user.chatroom.id if user.chatroom is not None else -1
+        chatroom = room.id if user.chatroom is not None else -1
         friendList = [friend['id'] for friend in user.friends.all().values()]
-        postList = [post['id'] for post in user.postlist.all().values()]
+        postList = [post['id'] for post in user.posts.all().values()]
         shallWeRoomList = [room['id'] for room in user.shallWeRoom.all().values()]
         watchedPostList = [post['id'] for post in user.watchedPosts.all().values()]
         tagList = [tag['id'] for tag in user.tags.all().values()]
@@ -133,7 +127,7 @@ def user_info(request, id=0):
 
     if request.method == 'GET':
         friendList = [friend.id for friend in user.friends.all().values()]
-        postList = [post.id for post in user.postlist.all().values()]
+        postList = [post.id for post in user.posts.all().values()]
         shallWeRoomList = [room.id for room in user.shallWeRoom.all().values()]
         watchedPostList = [post.id for post in user.watchedPosts.all().values()]
         tagList = [tag.id for tag in user.tags.all().values()]
@@ -141,51 +135,36 @@ def user_info(request, id=0):
                         "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
                         "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
         return HttpResponse(content=json.dumps(response_dict), status=201)
-    
-    if request.method == 'PUT':
+    else:   # request.method == 'PUT'
         user = DiscordUser.objects.get(id=id)
-        print('this : ', user)
         # non-author returns 403
         if user != request.user:
             return HttpResponse(status=403)
         try:
             req_data = json.loads(request.body.decode())
-
             user_username = req_data['username']
             user_login = req_data['login']
             user_avatar = req_data['avatar']
             user_chatroom = req_data['chatroom']
             user_friendList = req_data['friendList']
-            user_postlist = req_data['postList']
-
-            user_shallWeRoom = req_data['shallWeRoomList']
-            user_watchedPosts= req_data['watchedPostList']
-
+            user_postList = req_data['postList']
+            user_shallWeRoomList = req_data['shallWeRoomList']
+            user_watchedPostList = req_data['watchedPostList']
         except (KeyError, JSONDecodeError) as e:
-            print(e)
             return HttpResponseBadRequest()
-
-        user.username = user_username
+        user.username = username
         user.login = user_login
         user.avatar = user_avatar
-        # tempChat = Chatroom.objects.create(id= -1, toggleGlobal=True, title='temp', tag=Tag.objects.get(id=1), maxPersonnel=0)
-        tempChat = Chatroom.objects.get(id=user_chatroom)
-        user.chatroom = tempChat
+        user.chatroom = user_chatroom
         user.friendList.set([DiscordUser.objects.get(id=user_id) for user_id in user_friendList])
-        user.postlist.set([Post.objects.get(id=post_id) for post_id in user_postlist])
-        user.shallWeRoom.set([Chatroom.objects.get(id=room_id) for room_id in user_shallWeRoom])
-        user.watchedPosts.set([Post.objects.get(id=post_id) for post_id in user_watchedPosts])
-        user.save()
-        print(user)
-
-        return JsonResponse(model_to_dict(user), status=200)
+        user.postList.set([Post.objects.get(id=post_id) for post_id in user_postList])
+        user.shallWeRoomList.set([Chatroom.objects.get(id=room_id) for room_id in user_shallWeRoomList])
+        user.watchedPostList.set([Post.objects.get(id=post_id) for post_id in watchedPostList])
         
-        # response_dict = {"ID": user.id, "username": user.username, "login": user.login,
-        #                 "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
-        #                 "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
-        # print(response_dict)
-        # return HttpResponse(content=json.dumps(response_dict), status=200)
-        
+        response_dict = {"ID": user.id, "username": user.username, "login": user.login,
+                        "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
+                        "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
+        return HttpResponse(content=json.dumps(response_dict), status=200)
 
 ######################
 # post
@@ -476,10 +455,3 @@ def chatroom_message(request, id=0):
     message.save()
     response_dict = {"id": message.id, "author": message.author.id, "chatroom": message.chatroom.id, "content": message.content}
     return HttpResponse(content=json.dumps(response_dict), status=200)
-
-@ensure_csrf_cookie
-def token(request):
-    if request.method == 'GET':
-        return HttpResponse(status=204)
-    else:
-        return HttpResponseNotAllowed(['GET'])

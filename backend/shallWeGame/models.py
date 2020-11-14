@@ -5,26 +5,10 @@ from django.contrib.auth.models import AbstractBaseUser
 class DiscordUser(AbstractBaseUser):
     objects = DiscordUserOAuth2Manager()
 
-    id = models.AutoField(primary_key=True)  # AutoField?
-    is_superuser = models.IntegerField(default=False)
-    first_name = models.CharField(max_length=30, default='')
-    last_name = models.CharField(max_length=30, default='')
-    email = models.EmailField(max_length=75)
-    is_staff = models.IntegerField(default=False)
-    is_active = models.IntegerField(default=False)
-    date_joined = models.DateTimeField(default=None, null=True)
-    def has_perm(self, perm, obj=None):
-        return self.is_superuser
-
-    def has_module_perms(self, app_label):
-        return self.is_superuser
-
-    # id = models.BigIntegerField(primary_key=True)
+    id = models.BigIntegerField(primary_key=True)
     username = models.CharField(max_length=100)
-    USERNAME_FIELD = 'username'
-
     avatar = models.CharField(max_length=100, null=True)
-    login = models.BooleanField(default=True, null=True)
+    login = models.BooleanField()
 
     chatroom = models.ForeignKey(
         'Chatroom',
@@ -69,7 +53,7 @@ class Post(models.Model):
     content = models.TextField(default="")
     author = models.ForeignKey(
         DiscordUser,
-        related_name='postlist',
+        related_name='posts',
         on_delete=models.CASCADE,
     )
     tag = models.ForeignKey(

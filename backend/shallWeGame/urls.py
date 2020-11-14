@@ -23,5 +23,4 @@ urlpatterns = [
     path('chatroom/<int:id>/', views.chatroom_info, name='chatroom_info'),
     path('chatroom/<int:id>/global/', views.chatroom_global_toggle, name='post_global_toggle'),
     path('chatroom/<int:id>/message/', views.chatroom_message, name='chatroom_message'),
-    path('token/', views.token, name='token'),
 ]
