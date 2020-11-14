@@ -476,3 +476,10 @@ def chatroom_message(request, id=0):
     message.save()
     response_dict = {"id": message.id, "author": message.author.id, "chatroom": message.chatroom.id, "content": message.content}
     return HttpResponse(content=json.dumps(response_dict), status=200)
+
+@ensure_csrf_cookie
+def token(request):
+    if request.method == 'GET':
+        return HttpResponse(status=204)
+    else:
+        return HttpResponseNotAllowed(['GET'])
