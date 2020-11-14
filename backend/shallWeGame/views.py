@@ -18,7 +18,7 @@ def discord_login_redirect(request):
     code = request.GET.get('code')
     user = exchange_code(code)
     try:
-        discordUser = DiscordUser.objects.get(id=user['id'])
+        discordUser = DiscordUser.objects.get(username=user['username'])
         discordUser.login = True
         print('signup user')
     except DiscordUser.DoesNotExist:
@@ -57,7 +57,7 @@ def exchange_code(code: str):
     user = response.json()
     return user
 
-# @login_required(login_url='/api/login/')
+@login_required(login_url='/api/login/')
 @ensure_csrf_cookie
 def discord_logout(request):
     user = DiscordUser.objects.filter(id=request.user.id)
@@ -455,3 +455,10 @@ def chatroom_message(request, id=0):
     message.save()
     response_dict = {"id": message.id, "author": message.author.id, "chatroom": message.chatroom.id, "content": message.content}
     return HttpResponse(content=json.dumps(response_dict), status=200)
+
+@ensure_csrf_cookie
+def token(request):
+    if request.method == 'GET':
+        return HttpResponse(status=204)
+    else:
+        return HttpResponseNotAllowed(['GET'])

@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser
 class DiscordUser(AbstractBaseUser):
     objects = DiscordUserOAuth2Manager()
 
-    id = models.BigIntegerField(primary_key=True)
+    #id = models.BigIntegerField(primary_key=True)
     username = models.CharField(max_length=100)
     avatar = models.CharField(max_length=100, null=True)
     login = models.BooleanField()
@@ -42,6 +42,9 @@ class DiscordUser(AbstractBaseUser):
 
     def is_authenticated(self, request):
         return True
+    
+    def __str__(self):
+        return self.username
         
 
 class Tag(models.Model):
