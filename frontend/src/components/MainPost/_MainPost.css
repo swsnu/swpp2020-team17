@@ -1,0 +1,129 @@
+.MainPost{
+    position: relative;
+    background: white;
+    left: 0;
+    top: 0;
+    width: 800px;
+    height: 500px;
+    box-shadow: 0 3px 9px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); /* 그림자 */
+    margin: auto;
+    margin-top: 3rem;
+}
+
+.MainPost .shallWe button{
+    position: relative;
+    left: 0px;
+    top: 0px;
+    height: 500px;
+    width: 45px;
+    border-radius: 6px;
+    background-color: #D0021B;
+}
+
+.MainPost .like button{
+    position: relative;
+    left: 755px;
+    top: -500px;
+    height: 250px;
+    width: 45px;
+    border-radius: 6px;
+    background-color: #F5A623;
+}
+
+.MainPost .comment button{
+    position: relative;
+    left: 755px;
+    top: -500px;
+    height: 250px;
+    width: 45px;
+    border-radius: 6px;
+    background-color: #4A90E2;
+}
+
+.MainPost .image {
+    position: relative;
+    left: 100px;
+    top: -900px;
+    height: 58.24%;
+    width: 64.92%;
+}
+
+.MainPost .content {
+    position: relative;
+    left: 100px;
+    top: -1000px;
+    height: 24.49%;
+    width: 62.66%;
+    color: #4A4A4A;
+    font-family: "Avenir Next";
+    font-size: 21px;
+    letter-spacing: 0;
+    line-height: 26px;
+}
+
+.MainPost .profileImage button{
+    position: relative;
+    left: 187px;
+    top: 0px;
+    box-sizing: border-box;
+    height: 10.05%;
+    width: 5.82%;
+    border: 1px solid #979797;
+    background-color: #D8D8D8;
+}
+
+.MainPost .username {
+    position: relative;
+    left: 267px;
+    top: 15px;
+    height: 7.69%;
+    width: 13.23%;
+    color: #BBBBBB;
+    font-family: "Avenir Next";
+    font-size: 36px;
+    font-weight: bold;
+    letter-spacing: -0.98px;
+    line-height: 49px;
+    text-align: center;
+}
+
+.MainPost .status {
+    position: relative;
+    left: 427px;
+    top: 15px;
+    box-sizing: border-box;
+    height: 7.69%;
+    width: 4.22%;
+    border: 1px solid #979797;
+    background-color: #1AFF00;
+}
+
+.MainPost .LoLTag button{
+    position: relative;
+    left: 590px;
+    top: 14px;
+    height: 7.85%;
+    width: 5.35%;
+    color: #FF0606;
+    font-family: "Avenir Next";
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -0.98px;
+    line-height: 49px;
+    text-align: center;
+}
+
+.MainPost .highlight button{
+    position: relative;
+    left: 665px;
+    top: 15px;
+    height: 7.69%;
+    width: 13.6%;
+    color: #B801FF;
+    font-family: "Avenir Next";
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -0.98px;
+    line-height: 49px;
+    text-align: center;
+}
