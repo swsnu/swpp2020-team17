@@ -33,4 +33,5 @@ yarn test --coverage --watchAll=false
 <pre><code>
 pip install coveralls
 coverage run --source='.' manage.py test
+coverage report -m
 </code></pre>
