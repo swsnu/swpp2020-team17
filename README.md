@@ -23,10 +23,14 @@ sh runBack.sh
 # Testing
 After activating venv,
 1. Test frontend
-cd frontend
+<pre><code>
+cd frontend   
 yarn add coverage
 yarn test --coverage --watchAll=false
+</code></pre>
 
 2. Test backend
+<pre><code>
 pip install coveralls
 coverage run --source='.' manage.py test
+</code></pre>
