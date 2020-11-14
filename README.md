@@ -19,3 +19,14 @@ yarn start
 <pre><code>cd backend
 sh runBack.sh
 </code></pre>
+
+# Testing
+After activating venv,
+1. Test frontend
+cd frontend
+yarn add coverage
+yarn test --coverage --watchAll=false
+
+2. Test backend
+pip install coveralls
+coverage run --source='.' manage.py test
