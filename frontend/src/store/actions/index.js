@@ -1,28 +1,25 @@
 export {
     login,
-    sendShallWe,
-    getUserPage,
     getUserList,
-    addTag,
-    followUser,
-    applySetting,
-    getUserInfo,
+    getCurrentUser,
+    getUser,
+    putUser
 } from './user';
 
 export {
-    increaseLike,
-    getCommentList,
+    getPostList,
     createPost,
-    getGridPost,
+    getPost,
     putPost,
     deletePost,
 } from './post'
 
 export {
-    getChatRoomList,
-    createChatRoom,
-    joinChatRoom,
-    exitChatRoom,
+    getChatroomList,
+    createChatroom,
+    getChatroom,
+    putChatroom,
+    deleteChatroom,
 } from './chatroom'
 
 export {

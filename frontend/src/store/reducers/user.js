@@ -2,74 +2,25 @@ import * as actionTypes from '../actions/actionTypes';
 
 
 const reducer = (state = {
-    currentUser: {
-        ID: 0,
-        friendList: [],
-        chatroom: [],
-        username: '',
-        avatar: '',
-        postList: [],
-        shallWeRoomList: [],
-        watchedPostList: [],
-        tagList: [],
-        login: false,
-    },
-    visitedUser: {
-        ID: 0,
-        username: '',
-        avatar: '',
-        postList: [],
-        login: false,
-    },
-    like: 0,
-    postList: [],
-    commentList: [],
-    MainPost: 0,
-    chatRoomList: [],
+    currentUser: null,
+    selectedUser: null,
     userList: [],
 
 }, action) => {
     switch (action.type) {
-        case actionTypes.GetUserInfo:
-            return { ...state, currentUser: action.currentUser }
-        /*case actionTypes.Login:
-            return { ...state, currentUser: action.user };*/
-        case actionTypes.SendShallWe:
-            return {...state, currentUser:{...state.currentUser, 
-                shallWeRoomList: [...state.currentUser.shallWeRoomList, action.chatRoom]}};
-        case actionTypes.IncreaseLike:
-            return {...state, like: (state.like + 1)};
-        case actionTypes.GetCommentList:
-            return {...state, commentList: [action.commentList]};
-        case actionTypes.GetUserPage:
-            return {...state, visitedUser: action.user};
-        case actionTypes.CreatePost:
-            return {...state, currentUser:{...state.currentUser, 
-                postList: [...state.currentUser.postList, action.post]}};
-        case actionTypes.GetChatRoomList:
-            return {...state, chatRoomList: [action.chatRoomList]};
-        case actionTypes.CreateChatRoom:
-            return {...state, currentUser: {...state.currentUser, chatRoom: action.chatRoom}};
-        case actionTypes.JoinChatRoom:
-            return {...state, currentUser: {...state.currentUser, chatRoom: action.chatRoom}};
-        case actionTypes.ExitChatRoom:
-            return {...state, currentUser: {...state.currentUser, chatRoom: []},
-                    chatRoomList: [action.chatRoomList]};
         case actionTypes.GetUserList:
-            return {...state, searchedUserList: [action.users]};
-        case actionTypes.AddTag:
-            return {...state, currentUser: {...state.currentUser, 
-                    tagList: [...state.currentUser.tagList, action.tag]}};
-        case actionTypes.FollowUser:
-            return {...state, currentUser: {...state.currentUser, 
-                friendIDList: [...state.currentUser.friendIDList, action.user]}};
-        case actionTypes.ApplySetting:
-            return {...state, currentUser: action.user};
-        case actionTypes.PutPost:
-            return {...state, content: action.content};
-        case actionTypes.DeletePost:
-            return {...state, currentUser:{...state.currentUser, 
-                PostIDList: [action.postsID]}};
+            return {...state, userList: action.users};
+        case actionTypes.GetCurrentUser:
+            return { ...state, currentUser: action.currentUser }
+        case actionTypes.GetUser:
+            return { ...state, selectedUser: action.user }
+        case actionTypes.PutUser:
+            const modifiedUserList = state.userList.map((user) => {
+                if (user.id === action.user.id) {
+                    return { ...action.user };
+                } else return { ...user };
+            })
+            return { ...state , userList: modifiedUserList}
         default:
             break;
     }

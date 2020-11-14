@@ -1,31 +1,38 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
 
-export const increaseLike = () => {
-    return dispatch => {
-        return axios.get
-    }
-}    
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
-export const getCommentList = (postID) => {
-    return dispatch => {
-        return axios.get('/api/comment/')
-        .then((res) => dispatch(getCommentList_(postID, res.data)))
-    }
+export function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';'); for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break; 
+            }
+            return cookieValue; 
+        }
+    } 
 }
+const csrftoken = getCookie('csrftoken');
 
-const getCommentList_ = (postID, comment) => {
-    let postComment = comment.filter(c => c.post_ID === postID)
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
+const getPostList_ = (posts) => {
     return {
-        type: actionTypes.GetCommentList,
-        comments: postComment
+        type: actionTypes.GetPostList,
+        posts: posts,
     }
 }
 
-export const createPost = (post) => {
+export const getPostList = () => {
     return dispatch => {
-        return axios.post('/api/post/', post)
-        .then(res => dispatch(createPost_(res.data)))
+        return axios.get('/api/post/')
+        .then(res => dispatch(getPostList_(res.data)))
     }
 }
 
@@ -35,15 +42,49 @@ const createPost_ = (post) => {
         post: post
     }
 }
-
-export const getGridPost = () => {
-    return
+export const createPost = (post) => {
+    return dispatch => {
+        return axios.post('/api/post/', post)
+        .then(res => dispatch(createPost_(res.data)))
+    }
 }
 
-export const putPost = () => {
-    return
+const getPost_ = (post) => {
+    return {
+        type: actionTypes.GetPost,
+        post: post
+    }
+}
+export const getPost = (ID) => {
+    return dispatch => {
+        return axios.get('/api/post/' + ID)
+        .then(res => dispatch(getPost_(res.data)))
+    }
 }
 
-export const deletePost = () => {
-    return
+const putPost_ = (post) => {
+    return {
+        type: actionTypes.PutPost,
+        post: post
+    }
+}
+export const putPost = (post) => {
+    return dispatch => {
+        return axios.put('/api/post/' + post.ID, post)
+        .then(res => dispatch(putPost_(res.data)))
+    }
+}
+
+const deletePost_ = (post) => {
+    return {
+        type: actionTypes.DeletePost,
+        post: post
+    }
+}
+
+export const deletePost = (ID) => {
+    return dispatch => {
+        return axios.delete('api/post/' + ID)
+        .then(res => dispatch(deletePost_(res.data)))
+    }
 }

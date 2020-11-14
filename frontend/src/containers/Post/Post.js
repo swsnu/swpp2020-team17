@@ -7,6 +7,7 @@ import dummyData from "./dummy-data.js";
 
 // import * as userAPI from '../../store/actions/user'
 
+
 const Post = (props) => {
 
   const [posts] = useState(dummyData);

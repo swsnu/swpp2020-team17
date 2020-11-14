@@ -10,10 +10,6 @@ from .models import DiscordUser, Post, Comment, Tag, Chatroom
 
 auth_url_discord='https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
 
-@login_required(login_url='/api/login/')
-def get_authenticated_user(request):
-    return JsonResponse({ "msg": "Authenticated" })
-
 def discord_login(request):
     return redirect(auth_url_discord)
 
@@ -69,26 +65,106 @@ def discord_logout(request):
     print(user.login)
     logout(request)
     return redirect('http://localhost:3000/login/')
-    # return
 
-def user_info(request):  # get current user information
-    # user = DiscordUser.objects.filter(login=True).first()
+
+######################
+# user
+######################
+
+def currentUser(request):  # get current user information
     user = request.user
-    chatroom = -1
-    if user.chatroom is not None:
-        chatroom = user.chatroom.id
-    friendList = [friend.id for friend in user.friends.all().values()]
-    postList = [post.id for post in user.posts.all().values()]
-    shallWeRoomList = [room.id for room in user.shallWeRoom.all().values()]
-    watchedPostList = [post.id for post in user.watchedPosts.all().values()]
-    tagList = [tag.id for tag in user.tags.all().values()]
+    
+    # tag1 = Tag.objects.get(id=1)
+    # tag2 = Tag.objects.get(id=2)
+    # user.tags.add(tag1)
+    # user.tags.add(tag2)
+    # print("user tags")
+    # print(user.tags.all().values())
+    # print("tags user")
+    # print(tag1.user.all().values())
+
+    chatroom = room.id if user.chatroom is not None else -1
+    friendList = [friend['id'] for friend in user.friends.all().values()]
+    postList = [post['id'] for post in user.posts.all().values()]
+    shallWeRoomList = [room['id'] for room in user.shallWeRoom.all().values()]
+    watchedPostList = [post['id'] for post in user.watchedPosts.all().values()]
+    tagList = [tag['id'] for tag in user.tags.all().values()]
     response_dict = {"ID": user.id, "username": user.username, "login": user.login,
                     "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
                     "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
-    # print(response_dict)
-    print(user.username)
     return HttpResponse(content=json.dumps(response_dict), status=201)
     
+def user_list(request):
+    # non-allowed requests returns 405
+    if request.method != 'GET':
+        return HttpResponseNotAllowed(['GET'])
+    
+    user_object_list = [user for user in DiscordUser.objects.all()]
+    user_response_list = []
+    for user in user_object_list:
+        chatroom = room.id if user.chatroom is not None else -1
+        friendList = [friend['id'] for friend in user.friends.all().values()]
+        postList = [post['id'] for post in user.posts.all().values()]
+        shallWeRoomList = [room['id'] for room in user.shallWeRoom.all().values()]
+        watchedPostList = [post['id'] for post in user.watchedPosts.all().values()]
+        tagList = [tag['id'] for tag in user.tags.all().values()]
+        user_response_list.append({"ID": user.id, "username": user.username, "login": user.login,
+                    "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
+                    "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList})
+    print(user_response_list)
+    return JsonResponse(user_response_list, safe=False)    
+
+
+def user_info(request, id=0):
+    # non-allowed requests returns 405  
+    if request.method != 'GET' and request.method != 'PUT':
+        return HttpResponseNotAllowed(['GET', 'PUT'])
+    # non-existing user returns 404
+    try:
+        user = DiscordUser.objects.get(id=id)
+    except DiscordUser.DoesNotExist:
+        return HttpResponseNotFound()
+
+    if request.method == 'GET':
+        friendList = [friend.id for friend in user.friends.all().values()]
+        postList = [post.id for post in user.posts.all().values()]
+        shallWeRoomList = [room.id for room in user.shallWeRoom.all().values()]
+        watchedPostList = [post.id for post in user.watchedPosts.all().values()]
+        tagList = [tag.id for tag in user.tags.all().values()]
+        response_dict = {"ID": user.id, "username": user.username, "login": user.login,
+                        "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
+                        "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
+        return HttpResponse(content=json.dumps(response_dict), status=201)
+    else:   # request.method == 'PUT'
+        user = DiscordUser.objects.get(id=id)
+        # non-author returns 403
+        if user != request.user:
+            return HttpResponse(status=403)
+        try:
+            req_data = json.loads(request.body.decode())
+            user_username = req_data['username']
+            user_login = req_data['login']
+            user_avatar = req_data['avatar']
+            user_chatroom = req_data['chatroom']
+            user_friendList = req_data['friendList']
+            user_postList = req_data['postList']
+            user_shallWeRoomList = req_data['shallWeRoomList']
+            user_watchedPostList = req_data['watchedPostList']
+        except (KeyError, JSONDecodeError) as e:
+            return HttpResponseBadRequest()
+        user.username = username
+        user.login = user_login
+        user.avatar = user_avatar
+        user.chatroom = user_chatroom
+        user.friendList.set([DiscordUser.objects.get(id=user_id) for user_id in user_friendList])
+        user.postList.set([Post.objects.get(id=post_id) for post_id in user_postList])
+        user.shallWeRoomList.set([Chatroom.objects.get(id=room_id) for room_id in user_shallWeRoomList])
+        user.watchedPostList.set([Post.objects.get(id=post_id) for post_id in watchedPostList])
+        
+        response_dict = {"ID": user.id, "username": user.username, "login": user.login,
+                        "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
+                        "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
+        return HttpResponse(content=json.dumps(response_dict), status=200)
 
 ######################
 # post
@@ -102,7 +178,7 @@ def post_list(request):
     if request.method == 'GET':
         post_object_list = [post for post in Post.objects.all().values()]
         post_response_list = []
-        for post in post_all_list:
+        for post in post_object_list:
             post_response_list.append({"image": post.image, "content": post.content, "author": post.author.id, "tag": post.tag.id, "likingUsers": post.likingUsers})
         return JsonResponse(post_reponse_list, safe=False)
     else:   # request.method == 'POST'
@@ -255,8 +331,9 @@ def tag_list(request):
     # request.method == 'GET'
     tag_object_list = [tag for tag in Tag.objects.all().values()]
     tag_response_list = []
-    for tag in tag_response_list:
-        tag_respsonse_list.append({'image': tag['image'], 'name': tag['name']})
+    for tag in tag_object_list:
+        tag_response_list.append({"ID": tag['id'], "image": tag['image'], "name": tag['name']})
+    print(tag_response_list)
     return JsonResponse(tag_response_list, safe=False)
 
 def tag_info(request, id=0):

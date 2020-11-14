@@ -1,65 +1,102 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
 
-export const getChatRoomList = () => {
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
+export function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';'); for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break; 
+            }
+            return cookieValue; 
+        }
+    } 
+}
+const csrftoken = getCookie('csrftoken');
+
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
+const getChatroomList_ = (chatroomList) => {
+    return {
+        type: actionTypes.GetChatroomList,
+        chatrooms: chatroomList
+    }
+}
+
+export const getChatroomList = () => {
     return dispatch => {
         return axios.get('/api/chatroom/')
         .then(res => {
-            dispatch(getChatRoomList_(res.data))
+            dispatch(getChatroomList_(res.data))
         })
     }
 }
 
-const getChatRoomList_ = (chatRoomList) => {
+const createChatroom_ = (chatroom) => {
     return {
-        type: actionTypes.GetChatRoomList,
-        chatRoomList: chatRoomList
+        type: actionTypes.CreateChatroom,
+        chatroom: chatroom
     }
 }
 
-export const createChatRoom = (chatRoom) => {
+export const createChatroom = (chatroom) => {
     return dispatch => {
-        return axios.post('/api/chatroom/', chatRoom)
+        return axios.post('/api/chatroom/', chatroom)
         .then(res => {
-            dispatch(res => dispatch(createchatRoom_(res.data)))
+            dispatch(createChatroom_(res.data))
         })
     }
 }
 
-const createchatRoom_ = (chatRoom) => {
+const getChatroom_ = (chatroom) => {
     return {
-        type: actionTypes.CreateChatRoom,
-        chatRoom: chatRoom
+        type: actionTypes.GetChatroom,
+        chatroom: chatroom
     }
 }
-
-export const joinChatRoom = (chatRoomID) => {
+export const getChatroom = (ID) => {
     return dispatch => {
-        return axios.get('/api/chatroom/' + chatRoomID + '/')
+        return axios.get('api/chatroom/' + ID)
         .then(res => {
-            dispatch(res => dispatch(joinChatRoom_(res.data)))
+            dispatch(getChatroom_(res.data))
         })
     }
 }
 
-const joinChatRoom_ = (chatRoom) => {
+const putChatroom_ = (chatroom) => {
     return {
-        type: actionTypes.JoinChatRoom,
-        chatRoom: chatRoom
+        type: actionTypes.PutChatroom,
+        chatroom: chatroom
     }
 }
-
-export const exitChatRoom = (chatRoomID) => {
+export const putChatroom = (chatroom) => {
     return dispatch => {
-        return axios.get('/api/chatroom' + chatRoomID + '/')
+        return axios.put('api/chatroom/' + chatroom.ID, chatroom)
         .then(res => {
-            dispatch(res => dispatch(exitChatRoom_(res.data)))
+            dispatch(putChatroom_(res.data))
         })
     }
 }
 
-const exitChatRoom_ = (chatRoom) => {
+const deleteChatroom_ = (chatroom) => {
     return {
-        type: actionTypes.ExitChatRoom
+        type: actionTypes.DeleteChatroom,
+        chatroom: chatroom
     }
 }
+export const deleteChatroom = (ID) => {
+    return dispatch => {
+        return axios.delete('api/chatroom/' + ID)
+        .then(res => {
+            dispatch(deleteChatroom_(res.data))
+        })
+    }
+}
+
+
