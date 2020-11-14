@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CommentSection from "../PopComment/CommentSectionContainer";
 import LikeSection from "./LikeSection";
 import PostHeader from "./PostHeader";
+// import TagsInput from "../../components/Tag/TagsInput"
 import {Button} from 'antd';
 import './MainPost.css';
 
@@ -9,6 +10,7 @@ const MainPost = props => {
     const [likes, setLikes] = useState(
         props.dataFromParent.likes
     );
+    // const selectedTags = ['Lol'];
 
     const incrementLike = () => {
         setLikes(likes => likes + 1);
