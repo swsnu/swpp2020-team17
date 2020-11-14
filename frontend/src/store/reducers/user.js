@@ -17,7 +17,7 @@ const reducer = (state = {
         case actionTypes.PutUser:
             const modifiedUserList = state.userList.map((user) => {
                 if (user.id === action.user.id) {
-                    return action.user;
+                    return { ...action.user };
                 } else return { ...user };
             })
             return { ...state , userList: modifiedUserList}

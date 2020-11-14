@@ -16,12 +16,14 @@ import { createBrowserHistory } from 'history';
 import userReducer from './store/reducers/user';
 import chatroomReducer from './store/reducers/chatroom';
 import tagReducer from './store/reducers/tag';
+import postReducer from './store/reducers/post';
 
 const history = createBrowserHistory();
 const rootReducer = combineReducers({
   ur: userReducer,
   tg: tagReducer,
   chat: chatroomReducer,
+  ps: postReducer,
   router: connectRouter(history),
 });
 

@@ -4,7 +4,7 @@ import axios from 'axios';
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
-function getCookie(name) {
+export function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';'); for (let i = 0; i < cookies.length; i++) {
@@ -22,10 +22,10 @@ const csrftoken = getCookie('csrftoken');
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
-const getChatroomList_ = (chatRoomList) => {
+const getChatroomList_ = (chatroomList) => {
     return {
         type: actionTypes.GetChatroomList,
-        chatRoomList: chatRoomList
+        chatrooms: chatroomList
     }
 }
 
@@ -49,18 +49,54 @@ export const createChatroom = (chatroom) => {
     return dispatch => {
         return axios.post('/api/chatroom/', chatroom)
         .then(res => {
-            dispatch(res => dispatch(createChatroom_(res.data)))
+            dispatch(createChatroom_(res.data))
         })
     }
 }
 
-const getChatroom_ = () => {}
-export const getChatroom = () => {}
+const getChatroom_ = (chatroom) => {
+    return {
+        type: actionTypes.GetChatroom,
+        chatroom: chatroom
+    }
+}
+export const getChatroom = (ID) => {
+    return dispatch => {
+        return axios.get('api/chatroom/' + ID)
+        .then(res => {
+            dispatch(getChatroom_(res.data))
+        })
+    }
+}
 
-const putChatroom_ = () => {}
-export const putChatroom = () => {}
+const putChatroom_ = (chatroom) => {
+    return {
+        type: actionTypes.PutChatroom,
+        chatroom: chatroom
+    }
+}
+export const putChatroom = (chatroom) => {
+    return dispatch => {
+        return axios.put('api/chatroom/' + chatroom.ID, chatroom)
+        .then(res => {
+            dispatch(putChatroom_(res.data))
+        })
+    }
+}
 
-const deleteChatroom_ = () => {}
-export const deleteChatroom = () => {}
+const deleteChatroom_ = (chatroom) => {
+    return {
+        type: actionTypes.DeleteChatroom,
+        chatroom: chatroom
+    }
+}
+export const deleteChatroom = (ID) => {
+    return dispatch => {
+        return axios.delete('api/chatroom/' + ID)
+        .then(res => {
+            dispatch(deleteChatroom_(res.data))
+        })
+    }
+}
 
 

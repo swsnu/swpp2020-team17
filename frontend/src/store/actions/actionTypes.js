@@ -1,4 +1,3 @@
-export const Login = 'Login'
 export const GetUserList = 'GetUserList'
 export const GetCurrentUser = 'GetCurrentUser'
 export const GetUser = 'GetUser'

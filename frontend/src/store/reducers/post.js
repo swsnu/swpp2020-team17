@@ -8,7 +8,23 @@ const reducer = (state = {
 }, action) => {
     switch (action.type) {
         case actionTypes.GetPostList:
-            return {...state, postList: action.postList};
+            return { ...state, postList: action.posts };
+        case actionTypes.CreatePost:
+            return { ...state, postList: state.postList.concat(action.post), selectedPost: action.post };
+        case actionTypes.GetPost:
+            return { ...state, selectedPost: action.post };
+        case actionTypes.PutPost:
+            const modifiedPosts = state.postList.map(post => {
+                if (post.ID === action.post.ID) {
+                  return { ...action.post };
+                } else return { ...post };
+            })
+            return { ...state, postList: modifiedPosts };
+        case actionTypes.DeletePost:
+            const deletedPosts = state.postList.filter(post => {
+                return post.ID !== action.post.ID;
+            });
+            return { ...state, postList: deletedPosts};
         default:
             break;
     }
