@@ -14,6 +14,12 @@ class Search extends Component {
         this.props.onGetCurrentUser();
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps.storedCurrentUser !== this.props.storedCurrentUser) {
+            this.props.onGetCurrentUser();
+        }
+    }
+
     onSearch = value => {
         if (value != '') this.setState({ searchInput: value.toLowerCase() });
         else this.setState({ searchInput: null });
