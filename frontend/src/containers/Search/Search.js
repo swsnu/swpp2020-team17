@@ -14,11 +14,11 @@ class Search extends Component {
         this.props.onGetCurrentUser();
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if(prevProps.storedCurrentUser !== this.props.storedCurrentUser) {
-            this.props.onGetCurrentUser();
-        }
-    }
+    // componentDidUpdate(prevProps, prevState) {
+    //     if(prevProps.storedCurrentUser !== this.props.storedCurrentUser) {
+    //         this.props.onGetCurrentUser();
+    //     }
+    // }
 
     onSearch = value => {
         if (value != '') this.setState({ searchInput: value.toLowerCase() });
@@ -55,6 +55,7 @@ class Search extends Component {
         let users = []
         let tags = []
 
+        if (this.props.storedCurrentUser) console.log(this.props.storedCurrentUser);
         if (this.state.searchInput != null) {
             if (this.props.storedCurrentUser && this.props.storedUserList && this.props.storedTagList)  {
                 users = this.props.storedUserList.map(user => {
