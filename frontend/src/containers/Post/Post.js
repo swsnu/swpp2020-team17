@@ -1,6 +1,6 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import MainPost from '../../components/MainPost/MainPost'
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import * as actionCreators from '../../store/actions/index';
 import dummyData from "./dummy-data.js";
@@ -8,37 +8,55 @@ import dummyData from "./dummy-data.js";
 // import * as userAPI from '../../store/actions/user'
 
 
-const Post = (props) => {
+class Post extends Component {
 
-  const [posts] = useState(dummyData);
+  componentDidMount() {
+    this.props.getPostList();
+    this.props.getCurrentUser();
+    console.log(this.props)
+  }
 
-// Redirect removed
-  return (
+
+  // Redirect removed
+  render() {
+    let posts = this.props.postList.map((post, index) => {
+      return (
+        <div className="MainPostWrapper">
+          <MainPost key={index} dataFromParent={post} />
+        </div>
+      )
+    })
+
+
+    return (
       <div>
-      <div className="TagWrapper"></div>
+        <div className="TagWrapper"></div>
 
-      <div className="MainPostWrapper">
-        {posts.map(p => (
-          <MainPost key={p.imageUrl} dataFromParent={p} />
-        ))}
-
+        <div className="MainPostWrapper">
+          {posts}
+        </div>
       </div>
-      </div>
-  )
+    )
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        getCurrentUser: () => {
-        dispatch(actionCreators.getCurrentUser())
-      }
-    }
-  }
+  return {
+    getCurrentUser: () => {
+      dispatch(actionCreators.getCurrentUser())
+    },
 
-  const mapStateToProps = (state) => {
-    return {
-        currentUser: state.ur.currentUser,
+    getPostList: () => {
+      dispatch(actionCreators.getPostList())
     }
   }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.ur.currentUser,
+    postList: state.ps.postList
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Post);

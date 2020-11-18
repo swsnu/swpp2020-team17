@@ -3,7 +3,7 @@ import store from '../store';
 import * as actionCreators from './chatroom';
 
 const stubChatroom1 = {
-    ID: 1, 
+    id: 1, 
     toggleGlobal: true, 
     title: 'chatroom1', 
     tag: 1, 
@@ -11,7 +11,7 @@ const stubChatroom1 = {
     discordLink: null,
 }
 const stubChatroom2 = {
-    ID: 2, 
+    id: 2, 
     toggleGlobal: false, 
     title: 'chatroom2', 
     tag: 2, 

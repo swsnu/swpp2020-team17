@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, Component } from 'react';
 import CommentSection from "../PopComment/CommentSectionContainer";
 import LikeSection from "./LikeSection";
 import PostHeader from "./PostHeader";
+import { useDispatch } from 'react-redux';
+import * as actionCreators from '../../store/actions/index';
 // import TagsInput from "../../components/Tag/TagsInput"
 import {Button} from 'antd';
 import './MainPost.css';
 
-const MainPost = props => {
+const MainPost = (props) => {
+
+    useEffect(() =>  {
+        props.getPostComment(props.dataFromParent.id);
+        //
+    }, [])
+    
     const [likes, setLikes] = useState(
         props.dataFromParent.likes
     );
@@ -15,11 +23,14 @@ const MainPost = props => {
     const incrementLike = () => {
         setLikes(likes => likes + 1);
     };
+
+    const dispatch = useDispatch();
+
     return (
         <div className="post-border">
             <PostHeader
                 username={
-                    props.dataFromParent.username
+                    props.dataFromParent.author_name
                 }
                 thumbnailUrl={
                     props.dataFromParent.thumbnailUrl
@@ -29,7 +40,7 @@ const MainPost = props => {
                 <img
                     alt="post thumbnail"
                     className="post-image"
-                    src={props.dataFromParent.imageUrl}
+                    src={props.dataFromParent.image}
                 />
             </div>
             <LikeSection
@@ -38,17 +49,32 @@ const MainPost = props => {
             />
             <CommentSection
                 postId={
-                    props.dataFromParent.imageUrl
+                    props.key
                 }
-                comments={
-                    props.dataFromParent.comments
+                commentList={
+                    props.commentList
                 }
             />
         </div>
     );
 };
 
-export default MainPost;
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//       getPostComment: (id) => {
+//         dispatch(actionCreators.getPostComment(id))
+//       }
+//     }
+//   }
+  
+//   const mapStateToProps = (state) => {
+//     return {
+//       ...state,
+//       commentList: state.ps.commentList
+//     }
+//   }
+  
+  export default MainPost;
 
 // class Post extends Component {
 

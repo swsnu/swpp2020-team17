@@ -3,7 +3,7 @@ import store from '../store';
 import * as actionCreators from './user';
 
 const stubUser1 = {
-    ID: 1, 
+    id: 1, 
     username: 'User1',
     login: true,
     avatar: null, 
@@ -15,7 +15,7 @@ const stubUser1 = {
     tagList: [5]
 }
 const stubUser2 = {
-    ID: 2, 
+    id: 2, 
     username: 'User2',
     login: false,
     avatar: null, 

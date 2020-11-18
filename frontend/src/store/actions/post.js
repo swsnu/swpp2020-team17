@@ -22,17 +22,17 @@ const csrftoken = getCookie('csrftoken');
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
-const getPostList_ = (posts) => {
-    return {
-        type: actionTypes.GetPostList,
-        posts: posts,
-    }
-}
-
 export const getPostList = () => {
     return dispatch => {
         return axios.get('/api/post/')
         .then(res => dispatch(getPostList_(res.data)))
+    }
+}
+
+const getPostList_ = (posts) => {
+    return {
+        type: actionTypes.GetPostList,
+        posts: posts,
     }
 }
 
@@ -55,9 +55,9 @@ const getPost_ = (post) => {
         post: post
     }
 }
-export const getPost = (ID) => {
+export const getPost = (id) => {
     return dispatch => {
-        return axios.get('/api/post/' + ID)
+        return axios.get('/api/post/' + id)
         .then(res => dispatch(getPost_(res.data)))
     }
 }
@@ -70,7 +70,7 @@ const putPost_ = (post) => {
 }
 export const putPost = (post) => {
     return dispatch => {
-        return axios.put('/api/post/' + post.ID, post)
+        return axios.put('/api/post/' + post.id, post)
         .then(res => dispatch(putPost_(res.data)))
     }
 }
@@ -82,9 +82,23 @@ const deletePost_ = (post) => {
     }
 }
 
-export const deletePost = (ID) => {
+export const deletePost = (id) => {
     return dispatch => {
-        return axios.delete('api/post/' + ID)
+        return axios.delete('api/post/' + id)
         .then(res => dispatch(deletePost_(res.data)))
+    }
+}
+
+const getPostComment_ = (comments) => {
+    return {
+        type: actionTypes.GetPostComment,
+        comments: comments
+    }
+}
+
+export const getPostComment = (id) => {
+    return dispatch => {
+        return axios.get('api/post/' + id + '/comment/')
+        .then(res => dispatch(getPostComment_(res.data)))
     }
 }

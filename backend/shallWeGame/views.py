@@ -34,7 +34,7 @@ def discord_login_redirect(request):
         )
         discordUser.save()
     login(request, discordUser)
-    return redirect("http://localhost:3000/")
+    return redirect("http://localhost:3000/post")
 
 def exchange_code(code: str):
     data = {
@@ -95,7 +95,7 @@ def currentUser(request):  # get current user information
     shallWeRoomList = [room['id'] for room in user.shallWeRoom.all().values()]
     watchedPostList = [post['id'] for post in user.watchedPosts.all().values()]
     tagList = [tag['id'] for tag in user.tags.all().values()]
-    response_dict = {"ID": user.id, "username": user.username, "login": user.login,
+    response_dict = {"id": user.id, "username": user.username, "login": user.login,
                     "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
                     "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
     return HttpResponse(content=json.dumps(response_dict), status=201)
@@ -114,7 +114,7 @@ def user_list(request):
         shallWeRoomList = [room['id'] for room in user.shallWeRoom.all().values()]
         watchedPostList = [post['id'] for post in user.watchedPosts.all().values()]
         tagList = [tag['id'] for tag in user.tags.all().values()]
-        user_response_list.append({"ID": user.id, "username": user.username, "login": user.login,
+        user_response_list.append({"id": user.id, "username": user.username, "login": user.login,
                     "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
                     "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList})
     print(user_response_list)
@@ -137,7 +137,7 @@ def user_info(request, id=0):
         shallWeRoomList = [room.id for room in user.shallWeRoom.all().values()]
         watchedPostList = [post.id for post in user.watchedPosts.all().values()]
         tagList = [tag.id for tag in user.tags.all().values()]
-        response_dict = {"ID": user.id, "username": user.username, "login": user.login,
+        response_dict = {"id": user.id, "username": user.username, "login": user.login,
                         "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
                         "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
         return HttpResponse(content=json.dumps(response_dict), status=201)
@@ -180,7 +180,7 @@ def user_info(request, id=0):
 
         return JsonResponse(model_to_dict(user), status=200)
         
-        # response_dict = {"ID": user.id, "username": user.username, "login": user.login,
+        # response_dict = {"id": user.id, "username": user.username, "login": user.login,
         #                 "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
         #                 "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
         # print(response_dict)
@@ -197,23 +197,21 @@ def post_list(request):
         return HttpResponseNotAllowed(['GET', 'POST'])
 
     if request.method == 'GET':
-        post_object_list = [post for post in Post.objects.all().values()]
-        post_response_list = []
-        for post in post_object_list:
-            post_response_list.append({"image": post.image, "content": post.content, "author": post.author.id, "tag": post.tag.id, "likingUsers": post.likingUsers})
-        return JsonResponse(post_reponse_list, safe=False)
+        post_response_list= [{"id": post.id, "image": post.image, "content": post.content, "author": post.author_id, "author_name": post.author.username, "tag": post.tag_id, "likingUsers": list(post.likingUsers.all())} for post in Post.objects.all()]
+        return JsonResponse(post_response_list, safe=False)
     else:   # request.method == 'POST'
         try:
             req_data = json.loads(request.body.decode())
             post_image = req_data['image']
             post_content = req_data['content']
             post_tag = req_data['tag_id']
-        except (KeyError, JsonDecodeError) as e:
+        except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest()
         post_author = request.user
         tag = Tag.objects.get(id=int(post_tag))
         post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
-        response_dict = {"id": post.id, "image": post.image, "content": post.content, "author": post.author.id, "tag": post.tag.id}
+        response_dict = {"id": post.id, "image": post.image, "content": post.content, "author": post.author_id, "author_name": post.author.username, "tag": post.tag.id, "likingUsers": list(post.likingUsers.all())}
+        print(response_dict)
         return HttpResponse(content=json.dumps(response_dict), status=201)
 
 @login_required(login_url='/api/login/')
@@ -233,7 +231,7 @@ def post_info(request, id=0):
         likingUser_response_list = []
         for likingUser in likingUser_object_list:
             likingUser_response_list.append(likingUser.id)
-        return JsonResponse({ "image": post.image, "content": post.content, "author": post.author.id, "tag": post.tag.id, "likingUsers": likingUser_response_list })
+        return JsonResponse({"id": post.id, "image": post.image, "content": post.content, "author": post.author_id, "author_name": post.author.username, "tag": post.tag.id, "likingUsers": list(post.likingUsers.all()) })
     elif request.method == 'PUT':
         post = Post.objects.get(id=id)
         # non-author returns 403
@@ -248,7 +246,7 @@ def post_info(request, id=0):
         likingUser_response_list = []
         for likingUser in likingUser_object_list:
             likingUser_response_list.append(likingUser.id)
-        response_dict = {"id": post.id, "image": post.image, "content": post_content, "author": post.author.id, "tag": post.tag.id, "likingUsers": likingUser_response_list}
+        response_dict = {"id": post.id, "image": post.image, "content": post_content, "author": post.author_id, "author_name": post.author.username, "tag": post.tag.id, "likingUsers": list(post.likingUsers.all())}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     else:   #request.method == 'DELETE'
         post = Post.objects.get(id=id)
@@ -277,6 +275,23 @@ def post_like_toggle(request, id=0):
         user.likingPosts.add(post)
     return HttpResponse(status=200)
 
+@login_required(login_url='/api/login/')
+def post_comment(request, id=0):
+    # non-allowed requests returns 405
+    if request.method != 'GET':
+        return HttpResponseNotAllowed(['GET'])
+    # non-existing post returns 404
+    try:
+        post = Post.objects.get(id=id)
+    except Post.DoesNotExist:
+        return HttpResponseNotFound()
+    #request.method == 'GET'
+    comment_object_list = [comment for comment in Comment.objects.filter(post=post)]
+    comment_response_list = []
+    for comment in comment_object_list:
+        comment_response_list.append({"post": comment.post.id, "content": comment.content, "author": comment.author.id, "author_name": comment.author.username})
+    return JsonResponse(comment_response_list, safe=False)
+
 
 ######################
 # comment
@@ -291,7 +306,7 @@ def comment_list(request, id=0):
         comment_object_list = [comment for comment in Comment.objects.all().values()]
         comment_response_list = []
         for comment in comment_object_list:
-            comment_response_list.append({"post": comment.postid, "content": comment.content, "author": comment.author.id})
+            comment_response_list.append({"post": comment.post.id, "content": comment.content, "author": comment.author.id, "author_name": comment.author.username})
         return JsonResponse(comment_response_list, safe=False)
     else:   # request.method == 'POST'
         try:
@@ -303,7 +318,7 @@ def comment_list(request, id=0):
         comment_post = Post.objects.get(id=id)
         comment = Comment(post=comment_post, content=comment_content, author=comment_author)
         comment.save()
-        response_dict = {"id": comment.id, "post": comment.post.id, "content": comment.content, "author": comment.author.id}
+        response_dict = {"id": comment.id, "post": comment.post.id, "content": comment.content, "author": comment.author.id, "author_name": comment.author.username}
         return HttpResponse(content=json.dumps(response_dict), status=200)
 
 @login_required(login_url='/api/login/')
@@ -319,7 +334,7 @@ def comment_info(request, id=0):
 
     if request.method == 'GET':
         comment = Comment.objects.get(id=id)
-        return JsonResponse({"post": comment.post.id, "content": comment.content, "author": comment.author.id})
+        return JsonResponse({"post": comment.post.id, "content": comment.content, "author": comment.author.id, "author_name": comment.author.username})
     elif request.method == 'PUT':
         comment = Comment.objects.get(id=id)
         # non-author returns 403
@@ -331,7 +346,7 @@ def comment_info(request, id=0):
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest()
         comment.content = comment_content
-        response_dict = {"id": comment.id, "post": comment.post.id, "content": comment.content, "author": comment.author.id}
+        response_dict = {"id": comment.id, "post": comment.post.id, "content": comment.content, "author": comment.author.id, "author_name": comment.author.username}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     else:   # request.method == 'DELETE'
         comment = Comment.objects.get(id=id)
@@ -353,7 +368,7 @@ def tag_list(request):
     tag_object_list = [tag for tag in Tag.objects.all().values()]
     tag_response_list = []
     for tag in tag_object_list:
-        tag_response_list.append({"ID": tag['id'], "image": tag['image'], "name": tag['name']})
+        tag_response_list.append({"id": tag['id'], "image": tag['image'], "name": tag['name']})
     print(tag_response_list)
     return JsonResponse(tag_response_list, safe=False)
 

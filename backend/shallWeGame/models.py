@@ -65,7 +65,7 @@ class Tag(models.Model):
     name = models.CharField(max_length=30)
 
 class Post(models.Model):
-    image = models.ImageField(blank=True)
+    image = models.TextField(blank=True, null=True)
     content = models.TextField(default="")
     author = models.ForeignKey(
         DiscordUser,
@@ -79,6 +79,7 @@ class Post(models.Model):
     likingUsers = models.ManyToManyField(
         DiscordUser,
         related_name='likingPosts',
+        blank=True
     )
 
 

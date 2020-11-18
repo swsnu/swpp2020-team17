@@ -1,28 +1,4 @@
-[{
-        "model": "shallWeGame.Tag",
-        "pk": 1,
-        "fields": {
-            "name": "LOL",
-            "image": null
-        }
-    },
-    {
-        "model": "shallWeGame.Tag",
-        "pk": 2,
-        "fields": {
-            "name": "HearthStone",
-            "image": null
-        }
-    },
-    {
-        "model": "shallWeGame.Tag",
-        "pk": 3,
-        "fields": {
-            "name": "MapleStory",
-            "image": null
-        }
-    },
-
+[
     {
         "model": "shallWeGame.Tag",
         "pk": 1,
@@ -61,7 +37,7 @@
         "model": "shallWeGame.Post",
         "pk": 5,
         "fields": {
-            "image": "https://cdn.pixabay.com/photo/2012/04/18/23/22/joystick-38228_960_720.png",
+            "image": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3750&q=80",
             "content": "aaaaaaaaaaaaaaaaaaaaaaaaaaa",
             "author": "3",
             "tag": "1"
@@ -71,7 +47,7 @@
         "model": "shallWeGame.Post",
         "pk": 6,
         "fields": {
-            "image": "https://cdn.pixabay.com/photo/2015/10/11/12/48/chess-982260_960_720.jpg",
+            "image": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3750&q=80",
             "content": "bbbbbbbbbbbbbbbbbbbbbbbbbbb",
             "author": "3",
             "tag": "2"
@@ -81,7 +57,7 @@
         "model": "shallWeGame.Post",
         "pk": 7,
         "fields": {
-            "image": "https://cdn.pixabay.com/photo/2016/04/16/09/03/video-game-1332694_960_720.png",
+            "image": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3750&q=80",
             "content": "cccccccccccccccccccccccccccc",
             "author": "4",
             "tag": "1"
@@ -91,7 +67,7 @@
         "model": "shallWeGame.Post",
         "pk": 8,
         "fields": {
-            "image": "https://cdn.pixabay.com/photo/2017/08/28/16/17/super-mario-2690254_960_720.jpg",
+            "image": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3750&q=80",
             "content": "dddddddddddddddddddddddddddd",
             "author": "4",
             "tag": "2"
@@ -112,7 +88,7 @@
         "pk": 10,
         "fields": {
             "post": "5",
-            "content": "comment of aaaa",
+            "content": "comment of aaa",
             "author": "3"
         }
     },
@@ -121,8 +97,17 @@
         "pk": 11,
         "fields": {
             "post": "6",
-            "content": "comment of bbbb",
+            "content": "comment of bbb",
             "author": "4"
+        }
+    },
+    {
+        "model": "shallWeGame.Comment",
+        "pk": 12,
+        "fields": {
+            "post": "7",
+            "content": "comment of ccc",
+            "author": "3"
         }
     }
 ]
