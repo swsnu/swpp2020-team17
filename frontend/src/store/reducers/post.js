@@ -15,14 +15,14 @@ const reducer = (state = {
             return { ...state, selectedPost: action.post };
         case actionTypes.PutPost:
             const modifiedPosts = state.postList.map(post => {
-                if (post.ID === action.post.ID) {
+                if (post.id === action.post.id) {
                   return { ...action.post };
                 } else return { ...post };
             })
             return { ...state, postList: modifiedPosts };
         case actionTypes.DeletePost:
             const deletedPosts = state.postList.filter(post => {
-                return post.ID !== action.post.ID;
+                return post.id !== action.post.id;
             });
             return { ...state, postList: deletedPosts};
         default:

@@ -3,14 +3,14 @@ import store from '../store';
 import * as actionCreators from './post';
 
 const stubPost1 = {
-    ID: 1,
+    id: 1,
     image: null, 
     content: 'content 1', 
     author: 1, 
     tag: 1
 }
 const stubPost2 = {
-    ID: 1,
+    id: 1,
     image: null, 
     content: 'content 2', 
     author: 2, 

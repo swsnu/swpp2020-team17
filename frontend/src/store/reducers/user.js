@@ -16,11 +16,11 @@ const reducer = (state = {
             return { ...state, selectedUser: action.user }
         case actionTypes.PutUser:
             const modifiedUserList = state.userList.map((user) => {
-                if (user.ID === action.user.ID) {
+                if (user.id === action.user.id) {
                     return { ...action.user };
                 } else return { ...user };
             })
-            const modifiedCurrentuser = ((state.currentUser.ID === action.user.ID) ? action.user : state.currentUser);
+            const modifiedCurrentuser = ((state.currentUser.id === action.user.id) ? action.user : state.currentUser);
             return { ...state , currentUser: modifiedCurrentuser, userList: modifiedUserList}
         default:
             break;

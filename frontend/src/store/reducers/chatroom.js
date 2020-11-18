@@ -14,14 +14,15 @@ const reducer = (state = {
             return { ...state, selectedChatroom: action.chatroom };
         case actionTypes.PutChatroom:
             const modifiedChatrooms = state.chatroomList.map(chatroom => {
-                if (chatroom.ID === action.chatroom.ID) {
+                if (chatroom.id === action.chatroom.id) {
                     return { ...action.chatroom };
                 } else return { ...chatroom };
             })
-            return { ...state, chatroomList: modifiedChatrooms };
+            const modifiedSelectedChatroom = ((state.selectedChatroom.id === action.chatroom.id) ? action.chatroom : state.selectedChatroom);
+            return { ...state, selectedChatroom: modifiedSelectedChatroom, chatroomList: modifiedChatrooms };
         case actionTypes.DeleteChatroom:
             const deletedChatrooms = state.chatroomList.filter(chatroom => {
-                return chatroom.ID !== action.chatroom.ID;
+                return chatroom.id !== action.chatroom.id;
             });
             return { ...state, chatroomList: deletedChatrooms};
         default:
