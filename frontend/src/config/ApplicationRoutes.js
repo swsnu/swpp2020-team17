@@ -5,8 +5,10 @@ import Lobby from "../containers/Lobby/Lobby";
 import RoomInfo from "../components/RoomInfo/RoomInfo";
 import Posts from "../containers/Post/Post";
 import SideNav from "../containers/layouts/sidebar";
-import File from "../containers/pages/files";
-import Videos from "../containers/pages/videos";
+
+// import File from "../containers/pages/files";
+// import Videos from "../containers/pages/videos";
+
 import Login from "../containers/Login/Login"
 import CreatePost from "../containers/CreatePost/CreatePost"
 import Search from "../containers/Search/Search"
@@ -57,8 +59,8 @@ const ApplicationRoutes = () => {
                     <Route path="/myPage" component={MyPage} />
                     <Route path="/createpost" component={CreatePost} />
 
-                    <Route path="/files" component={File} />
-                    <Route path="/videos" component={Videos} />
+                    {/* <Route path="/files" component={File} />
+                    <Route path="/videos" component={Videos} /> */}
 
                     <Redirect to="/login" from="/" />
                 </Switch>

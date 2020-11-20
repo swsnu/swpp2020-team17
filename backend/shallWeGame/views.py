@@ -161,10 +161,13 @@ def user_info(request, id=0):
             user_shallWeRoom = req_data['shallWeRoomList']
             user_watchedPosts= req_data['watchedPostList']
 
+            user_tags = req_data['tagList']
+
         except (KeyError, JSONDecodeError) as e:
             print(e)
             return HttpResponseBadRequest()
 
+        print(user_tags)
         user.username = user_username
         user.login = user_login
         user.avatar = user_avatar
@@ -175,17 +178,11 @@ def user_info(request, id=0):
         user.postlist.set([Post.objects.get(id=post_id) for post_id in user_postlist])
         user.shallWeRoom.set([Chatroom.objects.get(id=room_id) for room_id in user_shallWeRoom])
         user.watchedPosts.set([Post.objects.get(id=post_id) for post_id in user_watchedPosts])
+        user.tags.set([Tag.objects.get(id=tag_id) for tag_id in user_tags])
         user.save()
-        print(user)
 
-        return JsonResponse(model_to_dict(user), status=200)
-        
-        # response_dict = {"id": user.id, "username": user.username, "login": user.login,
-        #                 "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
-        #                 "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
-        # print(response_dict)
-        # return HttpResponse(content=json.dumps(response_dict), status=200)
-        
+        return HttpResponse(status=200)
+
 
 ######################
 # post
