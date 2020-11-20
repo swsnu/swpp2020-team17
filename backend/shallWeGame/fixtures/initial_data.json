@@ -22,26 +22,9 @@
             "image": null
         }
     },
-
-    {
-        "model": "shallWeGame.Tag",
-        "pk": 1,
-        "fields": {
-            "image": "",
-            "name": "LOL"
-        }
-    },
-    {
-        "model": "shallWeGame.Tag",
-        "pk": 2,
-        "fields": {
-            "image": "",
-            "name": "HS"
-        }
-    },
     {
         "model": "shallWeGame.DiscordUser",
-        "pk": 3,
+        "pk": 4,
         "fields": {
             "avatar": "https://icon2.cleanpng.com/20180320/sqe/kisspng-twitch-computer-icons-streaming-media-youtube-live-tv-twitch-icon-5ab19172461392.001176751521586546287.jpg",
             "email": "lol@lol.com",
@@ -50,7 +33,7 @@
     },
     {
         "model": "shallWeGame.DiscordUser",
-        "pk": 4,
+        "pk": 5,
         "fields": {
             "avatar": "https://icon2.cleanpng.com/20180320/sqe/kisspng-twitch-computer-icons-streaming-media-youtube-live-tv-twitch-icon-5ab19172461392.001176751521586546287.jpg",
             "email": "lol@lol.com",
@@ -59,27 +42,27 @@
     },
     {
         "model": "shallWeGame.Post",
-        "pk": 5,
+        "pk": 6,
         "fields": {
             "image": "https://cdn.pixabay.com/photo/2012/04/18/23/22/joystick-38228_960_720.png",
             "content": "aaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "author": "3",
+            "author": "4",
             "tag": "1"
         }
     },
     {
         "model": "shallWeGame.Post",
-        "pk": 6,
+        "pk": 7,
         "fields": {
             "image": "https://cdn.pixabay.com/photo/2015/10/11/12/48/chess-982260_960_720.jpg",
             "content": "bbbbbbbbbbbbbbbbbbbbbbbbbbb",
-            "author": "3",
+            "author": "5",
             "tag": "2"
         }
     },
     {
         "model": "shallWeGame.Post",
-        "pk": 7,
+        "pk": 8,
         "fields": {
             "image": "https://cdn.pixabay.com/photo/2016/04/16/09/03/video-game-1332694_960_720.png",
             "content": "cccccccccccccccccccccccccccc",
@@ -89,31 +72,22 @@
     },
     {
         "model": "shallWeGame.Post",
-        "pk": 8,
+        "pk": 9,
         "fields": {
             "image": "https://cdn.pixabay.com/photo/2017/08/28/16/17/super-mario-2690254_960_720.jpg",
             "content": "dddddddddddddddddddddddddddd",
-            "author": "4",
+            "author": "5",
             "tag": "2"
         }
     },
     {
         "model": "shallWeGame.Post",
-        "pk": 9,
+        "pk": 10,
         "fields": {
             "image": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3750&q=80",
             "content": "eeeeeeeeeeeeeeeeeeeeeeeeeeee",
-            "author": "3",
+            "author": "5",
             "tag": "1"
-        }
-    },
-    {
-        "model": "shallWeGame.Comment",
-        "pk": 10,
-        "fields": {
-            "post": "5",
-            "content": "comment of aaaa",
-            "author": "3"
         }
     },
     {
@@ -121,8 +95,17 @@
         "pk": 11,
         "fields": {
             "post": "6",
-            "content": "comment of bbbb",
+            "content": "comment of aaaa",
             "author": "4"
+        }
+    },
+    {
+        "model": "shallWeGame.Comment",
+        "pk": 12,
+        "fields": {
+            "post": "7",
+            "content": "comment of bbbb",
+            "author": "5"
         }
     }
 ]

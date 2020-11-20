@@ -25,8 +25,8 @@ const reducer = (state = {
                 return post.id !== action.post.id;
             });
             return { ...state, postList: deletedPosts};
-        case actionTypes.GetPostComment:
-            return { ...state, commentList: action.comments}
+        case actionTypes.GetCommentList:
+            return { ...state, commentList: action.commentList }
         default:
             break;
     }

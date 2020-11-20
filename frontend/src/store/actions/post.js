@@ -89,16 +89,16 @@ export const deletePost = (id) => {
     }
 }
 
-const getPostComment_ = (comments) => {
+const getCommentList_ = (commentList) => {
     return {
-        type: actionTypes.GetPostComment,
-        comments: comments
+        type: actionTypes.GetCommentList,
+        commentList: commentList
     }
 }
 
-export const getPostComment = (id) => {
+export const getCommentList = () => {
     return dispatch => {
-        return axios.get('api/post/' + id + '/comment/')
-        .then(res => dispatch(getPostComment_(res.data)))
+        return axios.get('api/comment/')
+        .then(res => dispatch(getCommentList_(res.data)))
     }
 }

@@ -12,7 +12,7 @@ export {
     getPost,
     putPost,
     deletePost,
-    getPostComment
+    getCommentList,
 } from './post'
 
 export {

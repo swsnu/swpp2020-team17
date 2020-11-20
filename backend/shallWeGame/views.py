@@ -197,7 +197,8 @@ def post_list(request):
         return HttpResponseNotAllowed(['GET', 'POST'])
 
     if request.method == 'GET':
-        post_response_list= [{"id": post.id, "image": post.image, "content": post.content, "author": post.author_id, "author_name": post.author.username, "tag": post.tag_id, "likingUsers": list(post.likingUsers.all())} for post in Post.objects.all()]
+        post_response_list= [{"id": post.id, "image": post.image, "content": post.content, "author": post.author_id, "author_name": post.author.username,
+        "author_avatar": post.author.avatar, "tag": post.tag_id, "likes": post.likes, "likingUsers": list(post.likingUsers.all())} for post in Post.objects.all()]
         return JsonResponse(post_response_list, safe=False)
     else:   # request.method == 'POST'
         try:
@@ -210,7 +211,8 @@ def post_list(request):
         post_author = request.user
         tag = Tag.objects.get(id=int(post_tag))
         post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
-        response_dict = {"id": post.id, "image": post.image, "content": post.content, "author": post.author_id, "author_name": post.author.username, "tag": post.tag.id, "likingUsers": list(post.likingUsers.all())}
+        response_dict = {"id": post.id, "image": post.image, "content": post.content, "author": post.author_id, "author_name": post.author.username,
+        "author_avatar": post.author.avatar, "tag": post.tag.id, "likes": post.likes, "likingUsers": list(post.likingUsers.all())}
         print(response_dict)
         return HttpResponse(content=json.dumps(response_dict), status=201)
 
@@ -231,7 +233,8 @@ def post_info(request, id=0):
         likingUser_response_list = []
         for likingUser in likingUser_object_list:
             likingUser_response_list.append(likingUser.id)
-        return JsonResponse({"id": post.id, "image": post.image, "content": post.content, "author": post.author_id, "author_name": post.author.username, "tag": post.tag.id, "likingUsers": list(post.likingUsers.all()) })
+        return JsonResponse({"id": post.id, "image": post.image, "content": post.content, "author": post.author_id, "author_name": post.author.username,
+        "author_avatar": post.author.avatar, "tag": post.tag.id, "likes": post.likes, "likingUsers": list(post.likingUsers.all()) })
     elif request.method == 'PUT':
         post = Post.objects.get(id=id)
         # non-author returns 403
@@ -246,7 +249,8 @@ def post_info(request, id=0):
         likingUser_response_list = []
         for likingUser in likingUser_object_list:
             likingUser_response_list.append(likingUser.id)
-        response_dict = {"id": post.id, "image": post.image, "content": post_content, "author": post.author_id, "author_name": post.author.username, "tag": post.tag.id, "likingUsers": list(post.likingUsers.all())}
+        response_dict = {"id": post.id, "image": post.image, "content": post_content, "author": post.author_id, "author_name": post.author.username,
+        "author_avatar": post.author.avatar, "tag": post.tag.id, "likes": post.likes, "likingUsers": list(post.likingUsers.all())}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     else:   #request.method == 'DELETE'
         post = Post.objects.get(id=id)
@@ -303,7 +307,7 @@ def comment_list(request, id=0):
         return HttpResponseNotAllowed(['GET', 'POST'])
 
     if request.method == 'GET':
-        comment_object_list = [comment for comment in Comment.objects.all().values()]
+        comment_object_list = [comment for comment in Comment.objects.all()]
         comment_response_list = []
         for comment in comment_object_list:
             comment_response_list.append({"post": comment.post.id, "content": comment.content, "author": comment.author.id, "author_name": comment.author.username})

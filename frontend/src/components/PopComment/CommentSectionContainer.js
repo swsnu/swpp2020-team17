@@ -5,6 +5,7 @@ import './Comment.css';
 
 const CommentSection = (props) => {
     const [commentList] = useState(props.commentList)
+    const [postID] = useState(props.postID)
     return (
         <div>
             {/* map through the comments data and return the Comment component */}

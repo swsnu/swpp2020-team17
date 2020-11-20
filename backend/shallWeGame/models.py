@@ -76,6 +76,7 @@ class Post(models.Model):
         Tag,
         on_delete=models.CASCADE,
     )
+    likes = models.IntegerField(default=0)
     likingUsers = models.ManyToManyField(
         DiscordUser,
         related_name='likingPosts',

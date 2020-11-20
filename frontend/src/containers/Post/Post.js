@@ -4,6 +4,7 @@ import { connect, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import * as actionCreators from '../../store/actions/index';
 import dummyData from "./dummy-data.js";
+import { GetCommentList } from '../../store/actions/actionTypes';
 
 // import * as userAPI from '../../store/actions/user'
 
@@ -11,19 +12,19 @@ import dummyData from "./dummy-data.js";
 class Post extends Component {
 
   componentDidMount() {
-    this.props.getPostList();
     this.props.getCurrentUser();
-    console.log(this.props)
+    this.props.getPostList();
+    this.props.getCommentList();
+    console.log(this.props.commentList)
   }
 
 
   // Redirect removed
   render() {
+    let commentList = this.props.commentList
     let posts = this.props.postList.map((post, index) => {
       return (
-        <div className="MainPostWrapper">
-          <MainPost key={index} dataFromParent={post} />
-        </div>
+          <MainPost key={index} dataFromParent={post}/>
       )
     })
 
@@ -48,6 +49,10 @@ const mapDispatchToProps = (dispatch) => {
 
     getPostList: () => {
       dispatch(actionCreators.getPostList())
+    },
+
+    getCommentList: () => {
+      dispatch(actionCreators.getCommentList())
     }
   }
 }
@@ -55,7 +60,8 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     currentUser: state.ur.currentUser,
-    postList: state.ps.postList
+    postList: state.ps.postList,
+    commentList: state.ps.commentList
   }
 }
 
