@@ -14,6 +14,7 @@ const MainPost = (props) => {
 
     const commentList = useSelector((state) => state.ps.commentList)
     
+    
     const [likes, setLikes] = useState(
         props.dataFromParent.likes
     );
@@ -48,7 +49,7 @@ const MainPost = (props) => {
             <p> {props.dataFromParent.content} </p>
             </div>
             <LikeSection
-                incrementLike={dispatch(incrementLike)}
+                incrementLike={incrementLike}
                 likes={likes}
             />
             <CommentSection

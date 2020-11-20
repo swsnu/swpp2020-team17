@@ -31,7 +31,7 @@ class Post extends Component {
 
     return (
       <div>
-        <div className="TagWrapper"></div>
+        <button className="CreatePost" onClick={() => this.props.history.push('/createPost/')}>Create Post</button>
 
         <div className="MainPostWrapper">
           {posts}
