@@ -76,20 +76,7 @@ def discord_logout(request):
 def currentUser(request):  # get current user information
     user = request.user
     
-    # tag1 = Tag.objects.get(id=1)
-    # tag2 = Tag.objects.get(id=2)
-    # user.tags.add(tag1)
-    # user.tags.add(tag2)
-    # print("user tags")
-    # print(user.tags.all().values())
-    # print("tags user")
-    # print(tag1.user.all().values())
-
-    try:
-        tempChat = Chatroom.objects.create(id= -1, toggleGlobal=True, title='temp', tag=Tag.objects.get(id=1), maxPersonnel=0)
-    except:
-        tempChat = Chatroom.objects.get(id= -1)
-    chatroom = user.chatroom.id if user.chatroom is not None else tempChat.id
+    chatroom = user.chatroom.id if user.chatroom is not None else -1
     friendList = [friend['id'] for friend in user.friends.all().values()]
     postList = [post['id'] for post in user.postlist.all().values()]
     shallWeRoomList = [room['id'] for room in user.shallWeRoom.all().values()]
@@ -98,6 +85,7 @@ def currentUser(request):  # get current user information
     response_dict = {"id": user.id, "username": user.username, "login": user.login,
                     "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
                     "postList": postList, "shallWeRoomList": shallWeRoomList, "watchedPostList": watchedPostList, "tagList": tagList}
+    print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
     
 def user_list(request):
@@ -171,7 +159,7 @@ def user_info(request, id=0):
         user.username = user_username
         user.login = user_login
         user.avatar = user_avatar
-        # tempChat = Chatroom.objects.create(id= -1, toggleGlobal=True, title='temp', tag=Tag.objects.get(id=1), maxPersonnel=0)
+        # tempChat = Chatroom.objects.create(id= -1, isGlobal=True, title='temp', tag=Tag.objects.get(id=1), maxPersonnel=0)
         tempChat = Chatroom.objects.get(id=user_chatroom)
         user.chatroom = tempChat
         user.friendList.set([DiscordUser.objects.get(id=user_id) for user_id in user_friendList])
@@ -398,24 +386,28 @@ def chatroom_list(request):
         return HttpResponseNotAllowed(['GET', 'POST'])
 
     if request.method == 'GET':
-        chatroom_object_list = {chatroom for chatroom in Chatroom.objects.all().values()}
+        chatroom_object_list = [chatroom for chatroom in Chatroom.objects.all()]
         chatroom_response_list = []
         for chatroom in chatroom_object_list:
-            chatroom_response_list.append({"toggleGlobal": chatroom.toggleGlobal, "title": chatroom.title, "members": chatroom.members, "tag": chatroom.tag, "maxPersonnel": maxPersonnel, "discordLink": chatroom.discordLink})
+            members = [member['id'] for member in chatroom.members.all().values()]
+            chatroom_response_list.append({"id": chatroom.id, "isGlobal": chatroom.isGlobal, "title": chatroom.title, "members": members, "tag": chatroom.tag.id, "maxPersonnel": chatroom.maxPersonnel, "discordLink": chatroom.discordLink})
         return JsonResponse(chatroom_response_list, safe=False)
     else:   # request.method == 'POST
         try:
             req_data = json.loads(request.body.decode())
+            chatroom_isGlobal = req_data['isGlobal']
             chatroom_title = req_data['title']
             chatroom_tag = req_data['tag']
             chatroom_maxPersonnel = req_data['maxPersonnel']
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest()
         ## to be added. discord link 생성
-        chatroom_discordLink = None
-        chatroom = Chatroom(toggleGlobal=False, title=chatroom_title, members=request.user, maxPersonnel=chatroom_maxPersonnel, discordLink=chatroom_discordLink)
+        chatroom_discordLink = "not yet"
+        tag = Tag.objects.get(id=chatroom_tag)
+        chatroom = Chatroom(isGlobal=chatroom_isGlobal, title=chatroom_title, tag=tag, maxPersonnel=chatroom_maxPersonnel, discordLink=chatroom_discordLink)
         chatroom.save()
-        response_dict = {"id": chatroom.id, "toggleGlobal": chatroom.toggleGlobal, "title": chatroom.title, "tag": chatroom.tag, "maxPersonnel": maxPersonnel, "discordLink": chatroom.discordLink}
+        chatroom.members.add(request.user)
+        response_dict = {"id": chatroom.id, "isGlobal": chatroom.isGlobal, "title": chatroom.title, "tag": chatroom.tag.id, "maxPersonnel": chatroom.maxPersonnel, "discordLink": chatroom.discordLink}
         return HttpResponse(content=json.dumps(response_dict), status=200)
 
 
@@ -432,21 +424,21 @@ def chatroom_info(request, id=0):
 
     if request.method == 'GET':
         chatroom = Chatroom.objects.get(id=id)
-        return JsonResponse({"toggleGlobal": chatroom.toggleGlobal, "title": chatroom.title, "members": chatroom.members, "tag": chatroom.tag, "maxPersonnel": maxPersonnel, "discordLink": chatroom.discordLink})
+        return JsonResponse({"isGlobal": chatroom.isGlobal, "title": chatroom.title, "members": chatroom.members, "tag": chatroom.tag, "maxPersonnel": maxPersonnel, "discordLink": chatroom.discordLink})
     elif request.method == 'PUT':
         chatroom = Chatroom.objects.get(id=id)
         ## to be added. non-host returns 403
         try:
             req_data = json.loads(request.body.decode())
+            chatroom_isGlobal = req_data['isGlobal']
             chatroom_title = req_data['title']
-            chatroom_tag = req_data['tag']
             chatroom_maxPersonnel = req_data['maxPersonnel']
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest()
+        chatroom.isGlobal = chatroom_isGlobal
         chatroom.title = chatroom_title
-        chatroom.tag = chatroom_tag
         chatroom.maxPersonnel = chatroom_maxPersonnel
-        response_dict = {"id": chatroom.id, "toggleGlobal": chatroom.toggleGlobal, "title": chatroom.title, "tag": chatroom.tag, "maxPersonnel": maxPersonnel, "discordLink": chatroom.discordLink}
+        response_dict = {"id": chatroom.id, "isGlobal": chatroom.isGlobal, "title": chatroom.title, "tag": chatroom.tag, "maxPersonnel": maxPersonnel, "discordLink": chatroom.discordLink}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     else:   # request.method == 'DELETE'
         chatroom = Chatroom.objects.get(id=id)
@@ -465,10 +457,10 @@ def chatroom_global_toggle(request, id=0):
     except Chatroom.DoesNotExist:
         return HttpResponseNotFound()
     # request.method == 'PUT'
-    if chatroom.toggleGlobal is True:
-        chatroom.toggleGlobal = False
+    if chatroom.isGlobal is True:
+        chatroom.isGlobal = False
     else: 
-        chatroom.toggleGlobal = True
+        chatroom.isGlobal = True
     return HttpResponse(status=200)
 
 

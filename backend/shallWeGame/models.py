@@ -29,6 +29,7 @@ class DiscordUser(AbstractBaseUser):
     chatroom = models.ForeignKey(
         'Chatroom',
         null=True,
+        related_name='members',
         on_delete=models.CASCADE
     )
     friends = models.ManyToManyField(
@@ -96,7 +97,7 @@ class Comment(models.Model):
     )
 
 class Chatroom(models.Model):
-    toggleGlobal = models.BooleanField()
+    isGlobal = models.BooleanField()
     title = models.CharField(max_length=100)
     tag = models.ForeignKey(
         Tag,
@@ -104,10 +105,10 @@ class Chatroom(models.Model):
     )
     maxPersonnel = models.IntegerField()
     discordLink = models.TextField(default="")
-    shallWeReceivers = models.ManyToManyField(
-        DiscordUser,
-        related_name='shallWeRooms'
-    )
+    # shallWeReceivers = models.ManyToManyField(
+    #     DiscordUser,
+    #     related_name='shallWeRooms'
+    # )
 
 class Message(models.Model):
     author = models.ForeignKey(

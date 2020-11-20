@@ -18,7 +18,8 @@ const reducer = (state = {
                     return { ...action.chatroom };
                 } else return { ...chatroom };
             })
-            return { ...state, chatroomList: modifiedChatrooms };
+            const modifiedSelectedChatroom = ((state.selectedChatroom.id === action.chatroom.id) ? action.chatroom : state.selectedChatroom);
+            return { ...state, selectedChatroom: modifiedSelectedChatroom, chatroomList: modifiedChatrooms };
         case actionTypes.DeleteChatroom:
             const deletedChatrooms = state.chatroomList.filter(chatroom => {
                 return chatroom.id !== action.chatroom.id;
