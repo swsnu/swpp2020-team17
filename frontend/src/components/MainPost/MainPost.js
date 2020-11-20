@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, Component } from 'react';
 import CommentSection from "../PopComment/CommentSectionContainer";
 import LikeSection from "./LikeSection";
 import PostHeader from "./PostHeader";
+import { useDispatch, useSelector } from 'react-redux';
+import * as actionCreators from '../../store/actions/index';
+import { getCommentList } from '../../store/actions/index'
 // import TagsInput from "../../components/Tag/TagsInput"
 import {Button} from 'antd';
 import './MainPost.css';
+import useSelection from 'antd/lib/table/hooks/useSelection';
 
-const MainPost = props => {
+const MainPost = (props) => {
+
+    const commentList = useSelector((state) => state.ps.commentList)
+    
+    
     const [likes, setLikes] = useState(
         props.dataFromParent.likes
     );
@@ -15,22 +23,30 @@ const MainPost = props => {
     const incrementLike = () => {
         setLikes(likes => likes + 1);
     };
+
+    const dispatch = useDispatch();
+
+    const postCommentList = commentList.filter(comment => comment.post == props.dataFromParent.id)
+
     return (
         <div className="post-border">
             <PostHeader
                 username={
-                    props.dataFromParent.username
+                    props.dataFromParent.author_name
                 }
                 thumbnailUrl={
-                    props.dataFromParent.thumbnailUrl
+                    props.dataFromParent.author_avatar
                 }
             />
             <div className="post-image-wrapper">
                 <img
                     alt="post thumbnail"
                     className="post-image"
-                    src={props.dataFromParent.imageUrl}
+                    src={props.dataFromParent.image}
                 />
+            </div>
+            <div className="post-content-wrapper">
+            <p> {props.dataFromParent.content} </p>
             </div>
             <LikeSection
                 incrementLike={incrementLike}
@@ -38,49 +54,14 @@ const MainPost = props => {
             />
             <CommentSection
                 postId={
-                    props.dataFromParent.imageUrl
+                    props.dataFromParent.id
                 }
-                comments={
-                    props.dataFromParent.comments
+                commentList={
+                    postCommentList
                 }
             />
         </div>
     );
 };
 
-export default MainPost;
-
-// class Post extends Component {
-
-//     shallwehandler = () => {
-
-//     }
-
-//     likehandler = () => {
-
-//     }
-
-//     commenthandler=() => {
-
-//     }
-
-//     render() {
-//         return (
-//             <div className="MainPost">
-//                 <div className="shallWe">
-//                     <button onClick={this.shallwehandler}>shallWe</button>
-//                 </div> 
-//                 <div className="like">
-//                     <button onClick={this.likehandler}>Like</button>
-//                 </div> 
-//                 <div className="comment">
-//                     <button onClick={this.commenthandler}>Comment</button>
-//                 </div> 
-//                 <div className="image">Image</div>
-//                 <div className="content">Content</div>
-//             </div>
-//         )
-//     }
-// }
-
-// export default Post
+  export default MainPost;

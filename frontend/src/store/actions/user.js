@@ -46,10 +46,10 @@ export const getUserList = () => {
     }
 }
 
-const getCurrentUser_= (user) => {
+const getCurrentUser_= (currentUser) => {
     return {
         type: actionTypes.GetCurrentUser,
-        currentUser: user,
+        currentUser: currentUser,
     }
 }
 
@@ -69,9 +69,9 @@ export const getUser_ = (user) => {
     }
 }
 
-export const getUser = (ID) => {        // Get user with id
+export const getUser = (id) => {        // Get user with id
     return dispatch => {
-        return axios.get('/api/user/' + ID)
+        return axios.get('/api/user/' + id)
         .then(res => {
             dispatch(getUser_(res.data))
         })
@@ -87,7 +87,7 @@ export const putUser_ = (user) => {
 
 export const putUser = (user) => {
     return dispatch => {
-        return axios.put('/api/user/' + user.ID, user)
+        return axios.put('/api/user/' + user.id, user)
         .then(res => dispatch(putUser_(res.data)))
     }
 }

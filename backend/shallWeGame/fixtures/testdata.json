@@ -1,30 +1,23 @@
-[{
+[
+    {
         "model": "shallWeGame.Tag",
         "pk": 1,
         "fields": {
-            "name": "LOL",
-            "image": null
+            "image": "",
+            "name": "LOL"
         }
     },
     {
         "model": "shallWeGame.Tag",
         "pk": 2,
         "fields": {
-            "name": "HearthStone",
-            "image": null
-        }
-    },
-    {
-        "model": "shallWeGame.Tag",
-        "pk": 3,
-        "fields": {
-            "name": "MapleStory",
-            "image": null
+            "image": "",
+            "name": "HS"
         }
     },
     {
         "model": "shallWeGame.DiscordUser",
-        "pk": 4,
+        "pk": 3,
         "fields": {
             "avatar": "https://icon2.cleanpng.com/20180320/sqe/kisspng-twitch-computer-icons-streaming-media-youtube-live-tv-twitch-icon-5ab19172461392.001176751521586546287.jpg",
             "email": "lol@lol.com",
@@ -33,7 +26,7 @@
     },
     {
         "model": "shallWeGame.DiscordUser",
-        "pk": 5,
+        "pk": 4,
         "fields": {
             "avatar": "https://icon2.cleanpng.com/20180320/sqe/kisspng-twitch-computer-icons-streaming-media-youtube-live-tv-twitch-icon-5ab19172461392.001176751521586546287.jpg",
             "email": "lol@lol.com",
@@ -42,29 +35,29 @@
     },
     {
         "model": "shallWeGame.Post",
+        "pk": 5,
+        "fields": {
+            "image": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3750&q=80",
+            "content": "aaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "author": "3",
+            "tag": "1"
+        }
+    },
+    {
+        "model": "shallWeGame.Post",
         "pk": 6,
         "fields": {
-            "image": "https://cdn.pixabay.com/photo/2012/04/18/23/22/joystick-38228_960_720.png",
-            "content": "aaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "author": "4",
-            "tag": "1"
+            "image": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3750&q=80",
+            "content": "bbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "author": "3",
+            "tag": "2"
         }
     },
     {
         "model": "shallWeGame.Post",
         "pk": 7,
         "fields": {
-            "image": "https://cdn.pixabay.com/photo/2015/10/11/12/48/chess-982260_960_720.jpg",
-            "content": "bbbbbbbbbbbbbbbbbbbbbbbbbbb",
-            "author": "5",
-            "tag": "2"
-        }
-    },
-    {
-        "model": "shallWeGame.Post",
-        "pk": 8,
-        "fields": {
-            "image": "https://cdn.pixabay.com/photo/2016/04/16/09/03/video-game-1332694_960_720.png",
+            "image": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3750&q=80",
             "content": "cccccccccccccccccccccccccccc",
             "author": "4",
             "tag": "1"
@@ -72,22 +65,31 @@
     },
     {
         "model": "shallWeGame.Post",
-        "pk": 9,
+        "pk": 8,
         "fields": {
-            "image": "https://cdn.pixabay.com/photo/2017/08/28/16/17/super-mario-2690254_960_720.jpg",
+            "image": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3750&q=80",
             "content": "dddddddddddddddddddddddddddd",
-            "author": "5",
+            "author": "4",
             "tag": "2"
         }
     },
     {
         "model": "shallWeGame.Post",
-        "pk": 10,
+        "pk": 9,
         "fields": {
             "image": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3750&q=80",
             "content": "eeeeeeeeeeeeeeeeeeeeeeeeeeee",
-            "author": "5",
+            "author": "3",
             "tag": "1"
+        }
+    },
+    {
+        "model": "shallWeGame.Comment",
+        "pk": 10,
+        "fields": {
+            "post": "5",
+            "content": "comment of aaa",
+            "author": "3"
         }
     },
     {
@@ -95,7 +97,7 @@
         "pk": 11,
         "fields": {
             "post": "6",
-            "content": "comment of aaaa",
+            "content": "comment of bbb",
             "author": "4"
         }
     },
@@ -104,8 +106,8 @@
         "pk": 12,
         "fields": {
             "post": "7",
-            "content": "comment of bbbb",
-            "author": "5"
+            "content": "comment of ccc",
+            "author": "3"
         }
     }
 ]

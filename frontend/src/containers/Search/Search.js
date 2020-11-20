@@ -25,22 +25,22 @@ class Search extends Component {
         else this.setState({ searchInput: null });
     };
 
-    onClickUserButton = (user_ID, addOrDelete) => {
+    onClickUserButton = (user_id, addOrDelete) => {
         let user = this.props.storedCurrentUser;
-        if (addOrDelete === 'Add') user.friendList.push(user_ID);
-        else user.friendList = user.friendList.filter(ID => {
-            return ID !== user_ID
+        if (addOrDelete === 'Add') user.friendList.push(user_id);
+        else user.friendList = user.friendList.filter(id => {
+            return id !== user_id
         });
         this.props.onPutUser(user);
         // this.props.onGetCurrentUser();
         return
     }
 
-    onClickTagButton = (tag_ID, addOrDelete) => {
+    onClickTagButton = (tag_id, addOrDelete) => {
         let user = this.props.storedCurrentUser;
-        if (addOrDelete === 'Add') user.tagList.push(tag_ID);
-        else user.tagList = user.tagList.filter(ID => {
-            return ID !== tag_ID
+        if (addOrDelete === 'Add') user.tagList.push(tag_id);
+        else user.tagList = user.tagList.filter(id => {
+            return id !== tag_id
         });
         this.props.onPutUser(user);
         // this.props.onGetCurrentUser();
@@ -59,19 +59,19 @@ class Search extends Component {
         if (this.state.searchInput != null) {
             if (this.props.storedCurrentUser && this.props.storedUserList && this.props.storedTagList)  {
                 users = this.props.storedUserList.map(user => {
-                    if (user.ID == this.props.storedCurrentUser.ID) return;
+                    if (user.id == this.props.storedCurrentUser.id) return;
                     if (user.username.toLowerCase().includes(this.state.searchInput)) {
                         let addOrDelete = 'Add';
-                        if (user.friendList.find(ID => ID===this.props.storedCurrentUser.ID) !== undefined) addOrDelete = 'Delete'
-                        return <SearchedUser username={user.username} addOrDelete={addOrDelete} onClick={() => this.onClickUserButton(user.ID, addOrDelete)}/>
+                        if (user.friendList.find(id => id===this.props.storedCurrentUser.id) !== undefined) addOrDelete = 'Delete'
+                        return <SearchedUser username={user.username} addOrDelete={addOrDelete} onClick={() => this.onClickUserButton(user.id, addOrDelete)}/>
                     }
                     return;
                 });
                 tags = this.props.storedTagList.map(tag => {
                     if (tag.name.toLowerCase().includes(this.state.searchInput)) {
                         let addOrDelete = 'Add';
-                        if (this.props.storedCurrentUser.tagList.find(ID => ID===tag.ID) !== undefined) addOrDelete = 'Delete'
-                        return <SearchedTag tagname={tag.name} addOrDelete={addOrDelete} onClick={() => this.onClickTagButton(tag.ID, addOrDelete)}/>
+                        if (this.props.storedCurrentUser.tagList.find(id => id===tag.id) !== undefined) addOrDelete = 'Delete'
+                        return <SearchedTag tagname={tag.name} addOrDelete={addOrDelete} onClick={() => this.onClickTagButton(tag.id, addOrDelete)}/>
                     }
                     return;
                 });

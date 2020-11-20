@@ -60,9 +60,9 @@ const getChatroom_ = (chatroom) => {
         chatroom: chatroom
     }
 }
-export const getChatroom = (ID) => {
+export const getChatroom = (id) => {
     return dispatch => {
-        return axios.get('api/chatroom/' + ID)
+        return axios.get('api/chatroom/' + id)
         .then(res => {
             dispatch(getChatroom_(res.data))
         })
@@ -77,7 +77,7 @@ const putChatroom_ = (chatroom) => {
 }
 export const putChatroom = (chatroom) => {
     return dispatch => {
-        return axios.put('api/chatroom/' + chatroom.ID, chatroom)
+        return axios.put('api/chatroom/' + chatroom.id, chatroom)
         .then(res => {
             dispatch(putChatroom_(res.data))
         })
@@ -90,9 +90,9 @@ const deleteChatroom_ = (chatroom) => {
         chatroom: chatroom
     }
 }
-export const deleteChatroom = (ID) => {
+export const deleteChatroom = (id) => {
     return dispatch => {
-        return axios.delete('api/chatroom/' + ID)
+        return axios.delete('api/chatroom/' + id)
         .then(res => {
             dispatch(deleteChatroom_(res.data))
         })
