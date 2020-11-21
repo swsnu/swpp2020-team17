@@ -1,17 +1,25 @@
-import ChatroomList from '../../components/ChatroomList/ChatroomList'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import ChatroomList from '../../components/ChatroomList/ChatroomList';
+import GameTag from '../../components/GameTag/GameTag';
+
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
 
 import { withRouter } from 'react-router';
 import { Table, Row, Col, Button, Typography } from 'antd';
 
-
-
 class Lobby extends Component{
+
+    state = {
+        toggledTagList: [],
+    }
+
     componentDidMount() {
         this.props.onGetCurrentUser();
         this.props.onGetChatroomList();
+        if (this.props.storedCurrentUser) {
+            this.setState({ toggledTagList: this.props.storedCurrentUser.tagList });
+        }
     }
 
     onClickCreateRoom= () => {
@@ -38,28 +46,38 @@ class Lobby extends Component{
     onClickSorry = (id) => {
         this.props.deleteChatroom(id);
     }
+    
 
     render() {
         let shallWeList = []
         let chatroomList = []
         let tagList = []
+        let tagToggle = []
         const { Title } = Typography;
 
         if (this.props.storedCurrentUser && this.props.storedChatroomList && this.props.storedTagList) {
             console.log(this.props.storedTagList)
             console.log(this.props.storedChatroomList);
+            console.log(this.props.storedCurrentUser);
             tagList = this.props.storedTagList;
             let user = this.props.storedCurrentUser;
+            tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
+                return <GameTag id={tag_id} />
+            })
             shallWeList = this.props.storedChatroomList.filter(room => {
-                return user.shallWeRoomList.includes(room.id);
+                return user.shallWeRoomList.includes(room.id) && this.state.toggledTagList.includes(room.tag);
             });
             chatroomList = this.props.storedChatroomList.filter(room => {
-                return !user.shallWeRoomList.includes(room.id) && room.isGlobal;
+                return !user.shallWeRoomList.includes(room.id) && room.isGlobal && this.state.toggledTagList.includes(room.tag);
             });
         }
         return (
             <div className="Lobby">
-                <Row gutter={[40, 0]}>
+                <div>
+                {tagToggle}
+                </div>
+                
+                <Row gutter={[40, 0]}>    
                     <Col span={18}>
                         <Title level={2}>
                             ShallWe List
@@ -115,12 +133,18 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onGetCurrentUser: () => dispatch(actionCreators.getCurrentUser()),
-        onPutUser: (user) => dispatch(actionCreators.putUser(user)),
-        onGetChatroomList: () => dispatch(actionCreators.getChatroomList()),
-        onPutChatroom: (room) => dispatch(actionCreators.putChatroom(room)),
-        onDeleteChatroom: (id) => dispatch(actionCreators.deleteChatroom(id)),
-        onGetTagList: () => dispatch(actionCreators.getTagList()),
+        onGetCurrentUser: () => 
+            dispatch(actionCreators.getCurrentUser()),
+        onPutUser: (user) => 
+            dispatch(actionCreators.putUser(user)),
+        onGetChatroomList: () => 
+            dispatch(actionCreators.getChatroomList()),
+        onPutChatroom: (room) => 
+            dispatch(actionCreators.putChatroom(room)),
+        onDeleteChatroom: (id) => 
+            dispatch(actionCreators.deleteChatroom(id)),
+        onGetTagList: () => 
+            dispatch(actionCreators.getTagList()),
     }
 }
 

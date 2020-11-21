@@ -1,6 +1,6 @@
 import React from 'react'; 
 import './SearchedTag.css';
-import { Avatar } from 'antd';
+import { Avatar, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 
@@ -14,9 +14,9 @@ const SearchedTag = props => {
                 {props.tagname}
             </div>
             <div className="right">
-                <button onClick={props.onClick}>
+                <Button onClick={props.onClick}>
                     {props.addOrDelete}
-                </button>
+                </Button>
             </div>
         </div>
     ); 
