@@ -6,23 +6,34 @@ import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
 
 import { withRouter } from 'react-router';
-import { Table, Row, Col, Button, Typography } from 'antd';
+import { Table, Row, Col, Button, Typography, Tag } from 'antd';
 
+const { CheckableTag } = Tag;
+const { Title } = Typography;
 class Lobby extends Component{
 
     state = {
-        toggledTagList: [],
-    }
+        selectedTagList: [],
+    };
 
     componentDidMount() {
         this.props.onGetCurrentUser();
         this.props.onGetChatroomList();
+        this.props.onGetTagList();
         if (this.props.storedCurrentUser) {
-            this.setState({ toggledTagList: this.props.storedCurrentUser.tagList });
+            this.setState({ selectedTagList: this.props.storedCurrentUser.tagList });
         }
     }
+    
+    onToggleTag = (tag_id) => {
+        const checked = this.state.selectedTagList.indexOf(tag_id) > -1;
+        const { selectedTagList } = this.state;
+        const nextSelectedTags = checked ? selectedTagList.filter(id => id !== tag_id) : [...selectedTagList, tag_id];
+        console.log('You are interested in: ', nextSelectedTags);
+        this.setState({ selectedTagList: nextSelectedTags });
+    }
 
-    onClickCreateRoom= () => {
+    onClickCreateRoom = () => {
         this.props.history.push('/RoomInfo')
     }
 
@@ -53,28 +64,35 @@ class Lobby extends Component{
         let chatroomList = []
         let tagList = []
         let tagToggle = []
-        const { Title } = Typography;
-
+        let user = null
+        
+        if (this.props.storedCurrentUser) console.log(this.props.storedCurrentUser);
+        if (this.props.storedChatroomList) console.log(this.props.storedChatroomList);
+        if (this.props.storedTagList) console.log(this.props.storedTagList);
         if (this.props.storedCurrentUser && this.props.storedChatroomList && this.props.storedTagList) {
-            console.log(this.props.storedTagList)
-            console.log(this.props.storedChatroomList);
-            console.log(this.props.storedCurrentUser);
             tagList = this.props.storedTagList;
-            let user = this.props.storedCurrentUser;
+            user = this.props.storedCurrentUser;
             tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
-                return <GameTag id={tag_id} />
-            })
+                return (
+                    <GameTag 
+                        id={tag_id} 
+                        isChecked={this.state.selectedTagList.includes(tag_id)}
+                        onClick={() => this.onToggleTag(tag_id)}
+                    />
+                );
+            });
             shallWeList = this.props.storedChatroomList.filter(room => {
-                return user.shallWeRoomList.includes(room.id) && this.state.toggledTagList.includes(room.tag);
+                return user.shallWeRoomList.includes(room.id) && this.state.selectedTagList.includes(room.tag);
             });
             chatroomList = this.props.storedChatroomList.filter(room => {
-                return !user.shallWeRoomList.includes(room.id) && room.isGlobal && this.state.toggledTagList.includes(room.tag);
+                return !user.shallWeRoomList.includes(room.id) && room.isGlobal && this.state.selectedTagList.includes(room.tag);
             });
         }
         return (
             <div className="Lobby">
-                <div>
-                {tagToggle}
+                <div className="tagToggle">
+                    <span style={{ marginRight: 8 }}>Your Games:</span>
+                    {tagToggle}
                 </div>
                 
                 <Row gutter={[40, 0]}>    
