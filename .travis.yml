@@ -15,7 +15,6 @@ matrix:
         - yarn install
       script:
         - ./node_modules/.bin/eslint src/
-        - yarn test --coverage --watchAll=false
         - cd .. && sonar-scanner
 
     - language: python
@@ -28,5 +27,3 @@ matrix:
         - pip install -r requirements.txt
       script:
         - pylint **/*.py --load-plugins pylint_django
-        - coverage run --source='.' manage.py test
-        - coverage xml
