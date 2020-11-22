@@ -2,8 +2,8 @@
 
 import json
 from json import JSONDecodeError
-from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, HttpResponseBadRequest,\
-    HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, \
+    HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -11,14 +11,14 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from .models import DiscordUser, Post, Comment, Tag, Chatroom
 
-auth_url_discord = 'https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redi' \
+AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redi' \
                    'rect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_typ' \
                    'e=code&scope=identify'
 
 
 def discord_login(request):
     '''Redirect to Auth Page'''
-    return redirect(auth_url_discord)
+    return redirect(AUTH_URL_DISCORD)
 
 @ensure_csrf_cookie
 def discord_login_redirect(request):
@@ -174,7 +174,8 @@ def user_info(request, user_id=0):
         user.login = user_login
         user.avatar = user_avatar
         user.chatroom = Chatroom.objects.get(id=user_chatroom) if user_chatroom != -1 else None
-        user.friend_list.set([DiscordUser.objects.get(id=friend_id) for friend_id in user_friend_list])
+        user.friend_list.set([DiscordUser.objects.get(id=friend_id) \
+            for friend_id in user_friend_list])
         user.post_list.set([Post.objects.get(id=post_id) for post_id in user_post_list])
         user.shallwe_room.set([Chatroom.objects.get(id=room_id) for room_id in user_shallwe_room])
         user.watched_post_list.set(
@@ -246,7 +247,7 @@ def post_info(request, post_id=0):
              "authorName": post.author.username,
              "authorAvatar": post.author.avatar, "tag": post.tag.id, "likeNum": post.like_num,
              "likingUserList": list(post.liking_user_list.all())})
-    elif request.method == 'PUT':
+    if request.method == 'PUT':
         post = Post.objects.get(id=post_id)
         # non-author returns 403
         if post.author != request.user:
@@ -308,7 +309,8 @@ def post_info(request, post_id=0):
 #     comment_object_list = [comment for comment in Comment.objects.filter(post=post)]
 #     comment_response_list = []
 #     for comment in comment_object_list:
-#         comment_response_list.append({"post": comment.post.id, "content": comment.content, "author": comment.author.id, "author_name": comment.author.username})
+#         comment_response_list.append({"post": comment.post.id, \
+    # "content": comment.content, "author": comment.author.id, "author_name": comment.author.username})
 #     return JsonResponse(comment_response_list, safe=False)
 
 
@@ -457,13 +459,11 @@ def chatroom_list(request):
                         max_personnel=chatroom_max_personnel,
                         discord_link=chatroom_discord_link)
     chatroom.save()
-    chatroom.member_list.add(request.user)
+    # chatroom.member_list.add(request.user)
     response_dict = {"id": chatroom.id, "isGlobal": chatroom.is_global, "title": chatroom.title,
                         "tag": chatroom.tag.id, "maxPersonnel": chatroom.max_personnel,
                         "discordLink": chatroom.discord_link}
     return HttpResponse(content=json.dumps(response_dict), status=200)
-
-
 
 @login_required(login_url='/api/login/')
 def chatroom_info(request, chatroom_id=0):
@@ -481,9 +481,9 @@ def chatroom_info(request, chatroom_id=0):
         chatroom = Chatroom.objects.get(id=chatroom_id)
         return JsonResponse({"isGlobal": chatroom.is_global, "title": chatroom.title,
                              "memberList": chatroom.member_list, "tag": chatroom.tag,
-                             "maxPersonnel": chatroom.max_personnel, 
+                             "maxPersonnel": chatroom.max_personnel,
                              "discordLink": chatroom.discord_link})
-    elif request.method == 'PUT':
+    if request.method == 'PUT':
         chatroom = Chatroom.objects.get(id=chatroom_id)
         ## to be added. non-host returns 403
         try:
@@ -505,7 +505,6 @@ def chatroom_info(request, chatroom_id=0):
     chatroom.delete()
     return HttpResponse(status=200)
 
-
 # @login_required(login_url='/api/login/')
 # def chatroom_global_toggle(request, id=0):
 #     # non-allowed requests returns 405
@@ -519,10 +518,9 @@ def chatroom_info(request, chatroom_id=0):
 #     # request.method == 'PUT'
 #     if chatroom.isGlobal is True:
 #         chatroom.isGlobal = False
-#     else: 
+#     else:
 #         chatroom.isGlobal = True
 #     return HttpResponse(status=200)
-
 
 # @login_required(login_url='/api/login/')
 # def chatroom_message(request, id=0):
@@ -542,7 +540,7 @@ def chatroom_info(request, chatroom_id=0):
 #         return HttpResponseBadRequest()
 #     message = Message(author=request.user, chatroom=chatroom, content=message_content)
 #     message.save()
-#     response_dict = {"id": message.id, "author": message.author.id, 
+#     response_dict = {"id": message.id, "author": message.author.id,
 #                       "chatroom": message.chatroom.id, "content": message.content}
 #     return HttpResponse(content=json.dumps(response_dict), status=200)
 

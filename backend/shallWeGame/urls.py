@@ -1,9 +1,10 @@
+'''
+shallWeGame.urls
+'''
 # urls.py
 
-from django.urls import path, include
+from django.urls import path
 from . import views
-from django.conf.urls import url
-from django.conf import settings
 
 urlpatterns = [
     path('login/', views.discord_login, name='discord_login'),
@@ -21,7 +22,7 @@ urlpatterns = [
     path('comment/<int:post_id>/', views.comment_info, name='comment_info'),
     path('tag/', views.tag_list, name='tag'),
     path('tag/<int:tag_id>/', views.tag_info, name='tag_info'),
-    
+
     path('chatroom/', views.chatroom_list, name='chatroom_list'),
     path('chatroom/<int:chatroom_id>/', views.chatroom_info, name='chatroom_info'),
     # path('chatroom/<int:id>/global/', views.chatroom_global_toggle, name='post_global_toggle'),
