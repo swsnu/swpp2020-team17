@@ -26,4 +26,6 @@ matrix:
       install:
         - pip install -r requirements.txt
       script:
+        - python manage.py migrate --run-syncdb
+        - python manage.py loaddata initial_data.json
         - pylint **/*.py --load-plugins pylint_django
