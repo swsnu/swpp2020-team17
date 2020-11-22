@@ -4,12 +4,15 @@ import GameTag from '../../components/GameTag/GameTag';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
-
+import styled from 'styled-components';
 import { withRouter } from 'react-router';
 import { Table, Row, Col, Button, Typography, Tag } from 'antd';
 
-const { CheckableTag } = Tag;
 const { Title } = Typography;
+const GameTagWrapper = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+`;
 class Lobby extends Component{
 
     state = {
@@ -91,8 +94,10 @@ class Lobby extends Component{
         return (
             <div className="Lobby">
                 <div className="tagToggle">
-                    <span style={{ marginRight: 8 }}>Your Games:</span>
-                    {tagToggle}
+                    <GameTagWrapper>
+                        <span style={{ marginRight: 8 }}>Your Games:</span>
+                        {tagToggle}
+                    </GameTagWrapper> 
                 </div>
                 
                 <Row gutter={[40, 0]}>    
