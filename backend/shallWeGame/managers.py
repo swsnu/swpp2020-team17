@@ -1,3 +1,5 @@
+# managers.py
+
 from django.contrib.auth import models
 
 class DiscordUserOAuth2Manager(models.UserManager):
@@ -14,3 +16,4 @@ class DiscordUserOAuth2Manager(models.UserManager):
             discord_tag=discord_tag
         )
         return new_user
+        

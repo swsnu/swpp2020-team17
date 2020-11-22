@@ -1,3 +1,5 @@
+# auth.py
+
 from django.contrib.auth.backends import BaseBackend
 from .models import DiscordUser
 from django.contrib.auth.models import User
@@ -17,3 +19,4 @@ class DiscordAuthenticationBackend(BaseBackend):
             return DiscordUser.objects.get(pk=user_id)
         except DiscordUser.DoesNotExist:
             return None
+            

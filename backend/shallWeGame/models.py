@@ -1,7 +1,10 @@
+# models.py
+
 from django.db import models
 from .managers import DiscordUserOAuth2Manager
 from django.contrib.auth.models import AbstractBaseUser
 
+## Customized User
 class DiscordUser(AbstractBaseUser):
     objects = DiscordUserOAuth2Manager()
 
@@ -29,62 +32,62 @@ class DiscordUser(AbstractBaseUser):
     chatroom = models.ForeignKey(
         'Chatroom',
         null=True,
-        related_name='members',
+        related_name='member_list',
         on_delete=models.CASCADE
     )
-    friends = models.ManyToManyField(
+    friend_list = models.ManyToManyField(
         'DiscordUser',
         blank=True,
-        related_name='friendList',
-        db_table='friends'
+        db_table='friend_list'
     )
-    watchedPosts = models.ManyToManyField(
+    watched_post_list = models.ManyToManyField(
         'Post', 
         blank=True,
-        related_name='watchedUser',
-        db_table='wacthedPosts'
+        related_name='watched_user',
+        db_table='watched_post_list'
     )
-    tags = models.ManyToManyField(
+    tag_list = models.ManyToManyField(
         'Tag',
         blank=True,
         related_name='user',
-        db_table='tags'
+        db_table='tag_list'
     )
-    shallWeRoom = models.ManyToManyField(
+    shallwe_room = models.ManyToManyField(
         'Chatroom',
         blank=True,
-        related_name='shallWe',
-        db_table='shallWeRoom'
+        related_name='shallwe_receiver',
+        db_table='shallwe_room'
     )
 
     def is_authenticated(self, request):
         return True
         
-
+## Tag
 class Tag(models.Model):
     image = models.ImageField(blank=True)
     name = models.CharField(max_length=30)
 
+## Post
 class Post(models.Model):
     image = models.TextField(blank=True, null=True)
     content = models.TextField(default="")
     author = models.ForeignKey(
         DiscordUser,
-        related_name='postlist',
+        related_name='post_list',
         on_delete=models.CASCADE,
     )
     tag = models.ForeignKey(
         Tag,
         on_delete=models.CASCADE,
     )
-    likes = models.IntegerField(default=0)
-    likingUsers = models.ManyToManyField(
+    like_num = models.IntegerField(default=0)
+    liking_user_list = models.ManyToManyField(
         DiscordUser,
-        related_name='likingPosts',
+        related_name='liking_post_list',
         blank=True
     )
 
-
+## Comment
 class Comment(models.Model):
     post = models.ForeignKey(
         Post,
@@ -96,28 +99,29 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
     )
 
+## Chatroom
 class Chatroom(models.Model):
-    isGlobal = models.BooleanField()
+    is_global = models.BooleanField()
     title = models.CharField(max_length=100)
     tag = models.ForeignKey(
         Tag,
         on_delete=models.CASCADE,
     )
-    maxPersonnel = models.IntegerField()
-    discordLink = models.TextField(default="")
+    max_personnel = models.IntegerField()
+    discord_link = models.TextField(default="")
     # shallWeReceivers = models.ManyToManyField(
     #     DiscordUser,
     #     related_name='shallWeRooms'
     # )
 
-class Message(models.Model):
-    author = models.ForeignKey(
-        DiscordUser,
-        on_delete=models.CASCADE,
-    )
-    timestamp = models.DateTimeField(null=True)
-    chatroom = models.ForeignKey(
-        Chatroom, 
-        on_delete=models.CASCADE,
-    )
-    content = models.TextField(default="")
+# class Message(models.Model):
+#     author = models.ForeignKey(
+#         DiscordUser,
+#         on_delete=models.CASCADE,
+#     )
+#     timestamp = models.DateTimeField(null=True)
+#     chatroom = models.ForeignKey(
+#         Chatroom, 
+#         on_delete=models.CASCADE,
+#     )
+#     content = models.TextField(default="")
