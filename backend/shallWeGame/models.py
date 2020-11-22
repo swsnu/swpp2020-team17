@@ -1,11 +1,12 @@
-# models.py
+'''models.py'''
 
 from django.db import models
-from .managers import DiscordUserOAuth2Manager
 from django.contrib.auth.models import AbstractBaseUser
+from .managers import DiscordUserOAuth2Manager
 
-## Customized User
+
 class DiscordUser(AbstractBaseUser):
+    '''Customized User'''
     objects = DiscordUserOAuth2Manager()
 
     id = models.AutoField(primary_key=True)  # AutoField?
@@ -16,10 +17,12 @@ class DiscordUser(AbstractBaseUser):
     is_staff = models.IntegerField(default=False)
     is_active = models.IntegerField(default=False)
     date_joined = models.DateTimeField(default=None, null=True)
-    def has_perm(self, perm, obj=None):
+    def has_perm(self):
+        '''has_perm'''
         return self.is_superuser
 
-    def has_module_perms(self, app_label):
+    def has_module_perms(self):
+        '''has_module_perms'''
         return self.is_superuser
 
     # id = models.BigIntegerField(primary_key=True)
@@ -41,7 +44,7 @@ class DiscordUser(AbstractBaseUser):
         db_table='friend_list'
     )
     watched_post_list = models.ManyToManyField(
-        'Post', 
+        'Post',
         blank=True,
         related_name='watched_user',
         db_table='watched_post_list'
@@ -59,16 +62,15 @@ class DiscordUser(AbstractBaseUser):
         db_table='shallwe_room'
     )
 
-    def is_authenticated(self, request):
-        return True
-        
-## Tag
+    is_authenticated = True
+
 class Tag(models.Model):
+    '''Tag'''
     image = models.ImageField(blank=True)
     name = models.CharField(max_length=30)
 
-## Post
 class Post(models.Model):
+    '''Post'''
     image = models.TextField(blank=True, null=True)
     content = models.TextField(default="")
     author = models.ForeignKey(
@@ -87,8 +89,8 @@ class Post(models.Model):
         blank=True
     )
 
-## Comment
 class Comment(models.Model):
+    '''Comment'''
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
@@ -99,8 +101,8 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
     )
 
-## Chatroom
 class Chatroom(models.Model):
+    '''Chatroom'''
     is_global = models.BooleanField()
     title = models.CharField(max_length=100)
     tag = models.ForeignKey(
@@ -121,7 +123,7 @@ class Chatroom(models.Model):
 #     )
 #     timestamp = models.DateTimeField(null=True)
 #     chatroom = models.ForeignKey(
-#         Chatroom, 
+#         Chatroom,
 #         on_delete=models.CASCADE,
 #     )
 #     content = models.TextField(default="")

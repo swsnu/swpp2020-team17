@@ -16,13 +16,13 @@ auth_url_discord = 'https://discord.com/api/oauth2/authorize?client_id=771395876
                    'e=code&scope=identify'
 
 
-## Redirect to Auth Page
 def discord_login(request):
+    '''Redirect to Auth Page'''
     return redirect(auth_url_discord)
 
 @ensure_csrf_cookie
-## Redirect when Logged In
 def discord_login_redirect(request):
+    '''Redirect when Logged In'''
     code = request.GET.get('code')
     user = exchange_code(code)
     try:
@@ -43,8 +43,8 @@ def discord_login_redirect(request):
     return redirect("http://localhost:3000/post")
 
 
-## Exchange Code with Discord API
 def exchange_code(code: str):
+    '''Exchange Code with Discord API'''
     data = {
         "client_id": "771395876442734603",
         "client_secret": "qMMuitFLFVwqBMcpiH62uY0KXXO5PFZF",
@@ -69,8 +69,8 @@ def exchange_code(code: str):
 
 
 @ensure_csrf_cookie
-## Not Yet
 def discord_logout(request):
+    '''Not Implemented'''
     user = DiscordUser.objects.filter(id=request.user.id)
     user.login = False
     print(user.login)
@@ -81,8 +81,8 @@ def discord_logout(request):
 ######################
 # user
 ######################
-## Get Current User
 def current_user(request):  # get current user information
+    '''Get Current User'''
     user = request.user
 
     chatroom = user.chatroom.id if user.chatroom is not None else -1
@@ -98,9 +98,8 @@ def current_user(request):  # get current user information
     print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
 
-
-## Get User List
 def user_list(request):
+    '''Get User List'''
     # non-allowed requests returns 405
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
@@ -123,14 +122,14 @@ def user_list(request):
     return JsonResponse(user_response_list, safe=False)
 
 
-## Get User and Put User
-def user_info(request, id=0):
+def user_info(request, user_id=0):
+    '''Get User and Put User'''
     # non-allowed requests returns 405
     if request.method != 'GET' and request.method != 'PUT':
         return HttpResponseNotAllowed(['GET', 'PUT'])
     # non-existing user returns 404
     try:
-        user = DiscordUser.objects.get(id=id)
+        user = DiscordUser.objects.get(id=user_id)
     except DiscordUser.DoesNotExist:
         return HttpResponseNotFound()
 
@@ -147,7 +146,7 @@ def user_info(request, id=0):
         return HttpResponse(content=json.dumps(response_dict), status=201)
 
     if request.method == 'PUT':
-        user = DiscordUser.objects.get(id=id)
+        user = DiscordUser.objects.get(id=user_id)
         print('this : ', user)
         # non-author returns 403
         if user != request.user:
@@ -175,7 +174,7 @@ def user_info(request, id=0):
         user.login = user_login
         user.avatar = user_avatar
         user.chatroom = Chatroom.objects.get(id=user_chatroom) if user_chatroom != -1 else None
-        user.friend_list.set([DiscordUser.objects.get(id=user_id) for user_id in user_friend_list])
+        user.friend_list.set([DiscordUser.objects.get(id=friend_id) for friend_id in user_friend_list])
         user.post_list.set([Post.objects.get(id=post_id) for post_id in user_post_list])
         user.shallwe_room.set([Chatroom.objects.get(id=room_id) for room_id in user_shallwe_room])
         user.watched_post_list.set(
@@ -190,8 +189,8 @@ def user_info(request, id=0):
 # post
 ######################
 @login_required(login_url='/api/login/')
-## Get Post List and Post New Post
 def post_list(request):
+    '''Get Post List and Post New Post'''
     # non-allowed requests returns 405
     if request.method != 'GET' and request.method != 'POST':
         return HttpResponseNotAllowed(['GET', 'POST'])
@@ -224,19 +223,19 @@ def post_list(request):
 
 
 @login_required(login_url='/api/login/')
-## Get Post Info, Put Post, and Delete Post
-def post_info(request, id=0):
+def post_info(request, post_id=0):
+    '''Get Post Info, Put Post, and Delete Post'''
     # non-allowed requests returns 405
     if request.method != 'GET' and request.method != 'PUT' and request.method != 'DELETE':
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
     # non-existing post returns 404
     try:
-        post = Post.objects.get(id=id)
+        post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         return HttpResponseNotFound()
 
     if request.method == 'GET':
-        post = Post.objects.get(id=id)
+        post = Post.objects.get(id=post_id)
         liking_user_object_list = [liking_user for liking_user in
                                    post.liking_user_list.all().values()]
         liking_user_response_list = []
@@ -248,7 +247,7 @@ def post_info(request, id=0):
              "authorAvatar": post.author.avatar, "tag": post.tag.id, "likeNum": post.like_num,
              "likingUserList": list(post.liking_user_list.all())})
     elif request.method == 'PUT':
-        post = Post.objects.get(id=id)
+        post = Post.objects.get(id=post_id)
         # non-author returns 403
         if post.author != request.user:
             return HttpResponse(status=403)
@@ -257,7 +256,7 @@ def post_info(request, id=0):
             post_content = req_data['content']
         except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
-        post = Post.objects.get(id=id)
+        post = Post.objects.get(id=post_id)
         liking_user_response_list = []
         for liking_user in liking_user_object_list:
             liking_user_response_list.append(liking_user.id)
@@ -268,7 +267,7 @@ def post_info(request, id=0):
                          "likingUserList": list(post.liking_user_list.all())}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     # request.method == 'DELETE'
-    post = Post.objects.get(id=id)
+    post = Post.objects.get(id=post_id)
     # non-author returns 403
     if post.author != request.user:
         return HttpResponse(status=403)
@@ -318,8 +317,8 @@ def post_info(request, id=0):
 ######################
 
 @login_required(login_url='/api/login/')
-## Get Comment List and Post New Comment
-def comment_list(request, id=0):
+def comment_list(request, post_id=0):
+    '''Get Comment List and Post New Comment'''
     # non-allowed requests returns 405
     if request.method != 'GET' and request.method != 'POST':
         return HttpResponseNotAllowed(['GET', 'POST'])
@@ -339,7 +338,7 @@ def comment_list(request, id=0):
     except (KeyError, JSONDecodeError):
         return HttpResponseBadRequest()
     comment_author = request.user
-    comment_post = Post.objects.get(id=id)
+    comment_post = Post.objects.get(id=post_id)
     comment = Comment(post=comment_post, content=comment_content, author=comment_author)
     comment.save()
     response_dict = {"id": comment.id, "post": comment.post.id, "content": comment.content,
@@ -349,24 +348,24 @@ def comment_list(request, id=0):
 
 
 @login_required(login_url='/api/login/')
-## Get Comment Info, Put Comment, and Delete Comment
-def comment_info(request, id=0):
+def comment_info(request, comment_id=0):
+    '''Get Comment Info, Put Comment, and Delete Comment'''
     # non-allowed requests returns 405
     if request.method != 'GET' and request.method != 'PUT' and request.method != 'DELETE':
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
     # non-existing comment returns 404
     try:
-        comment = Comment.objects.get(id=id)
+        comment = Comment.objects.get(id=comment_id)
     except Comment.DoesNotExist:
         return HttpResponseNotFound()
 
     if request.method == 'GET':
-        comment = Comment.objects.get(id=id)
+        comment = Comment.objects.get(id=comment_id)
         return JsonResponse(
             {"post": comment.post.id, "content": comment.content, "author": comment.author.id,
              "authorName": comment.author.username})
     elif request.method == 'PUT':
-        comment = Comment.objects.get(id=id)
+        comment = Comment.objects.get(id=comment_id)
         # non-author returns 403
         if comment.author != request.user:
             return HttpResponse(status=403)
@@ -380,7 +379,7 @@ def comment_info(request, id=0):
                          "author": comment.author.id, "authorName": comment.author.username}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     # request.method == 'DELETE'
-    comment = Comment.objects.get(id=id)
+    comment = Comment.objects.get(id=comment_id)
     # non-author returns 403
     if comment.author != request.user:
         return HttpResponse(status=403)
@@ -391,8 +390,8 @@ def comment_info(request, id=0):
 ######################
 # tag
 ######################
-## Get Tag List
 def tag_list(request):
+    '''Get Tag List'''
     # non-allowed requests returns 405
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
@@ -406,19 +405,19 @@ def tag_list(request):
     return JsonResponse(tag_response_list, safe=False)
 
 
-## Get Tag Info
-def tag_info(request, id=0):
+def tag_info(request, tag_id=0):
+    '''Get Tag Info'''
     # non-allowed requests returns 405
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
     # non-existing tag return 404
     try:
-        tag = Tag.objects.get(id=id)
+        tag = Tag.objects.get(id=tag_id)
     except Tag.DoesNotExist:
         return HttpResponseNotFound()
 
     # request.method == 'GET'
-    tag = Tag.objects.get(id=id)
+    tag = Tag.objects.get(id=tag_id)
     return JsonResponse({'image': tag.image, 'name': tag.name})
 
 
@@ -426,8 +425,8 @@ def tag_info(request, id=0):
 # chatroom
 ######################
 @login_required(login_url='/api/login/')
-## Get Chatroom List and Post New Chatroom
 def chatroom_list(request):
+    '''Get Chatroom List and Post New Chatroom'''
     # non-allowed requests returns 405
     if request.method != 'GET' and request.method != 'POST':
         return HttpResponseNotAllowed(['GET', 'POST'])
@@ -467,25 +466,25 @@ def chatroom_list(request):
 
 
 @login_required(login_url='/api/login/')
-## Get Chatroom Info, Put Chatroom, and Delete Chatroom
-def chatroom_info(request, id=0):
+def chatroom_info(request, chatroom_id=0):
+    '''Get Chatroom Info, Put Chatroom, and Delete Chatroom'''
     # non-allowed requests returns 405
     if request.method != 'GET' and request.method != 'PUT' and request.method != 'DELETE':
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
     # non-existing chatroom returns 404
     try:
-        chatroom = Chatroom.objects.get(id=id)
+        chatroom = Chatroom.objects.get(id=chatroom_id)
     except Chatroom.DoesNotExist:
         return HttpResponseNotFound()
 
     if request.method == 'GET':
-        chatroom = Chatroom.objects.get(id=id)
+        chatroom = Chatroom.objects.get(id=chatroom_id)
         return JsonResponse({"isGlobal": chatroom.is_global, "title": chatroom.title,
                              "memberList": chatroom.member_list, "tag": chatroom.tag,
                              "maxPersonnel": chatroom.max_personnel, 
                              "discordLink": chatroom.discord_link})
     elif request.method == 'PUT':
-        chatroom = Chatroom.objects.get(id=id)
+        chatroom = Chatroom.objects.get(id=chatroom_id)
         ## to be added. non-host returns 403
         try:
             req_data = json.loads(request.body.decode())
@@ -502,7 +501,7 @@ def chatroom_info(request, id=0):
                          "discordLink": chatroom.discord_link}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     # request.method == 'DELETE'
-    chatroom = Chatroom.objects.get(id=id)
+    chatroom = Chatroom.objects.get(id=chatroom_id)
     chatroom.delete()
     return HttpResponse(status=200)
 
@@ -543,12 +542,13 @@ def chatroom_info(request, id=0):
 #         return HttpResponseBadRequest()
 #     message = Message(author=request.user, chatroom=chatroom, content=message_content)
 #     message.save()
-#     response_dict = {"id": message.id, "author": message.author.id, "chatroom": message.chatroom.id, "content": message.content}
+#     response_dict = {"id": message.id, "author": message.author.id, 
+#                       "chatroom": message.chatroom.id, "content": message.content}
 #     return HttpResponse(content=json.dumps(response_dict), status=200)
 
 @ensure_csrf_cookie
-## Get Token
 def token(request):
+    '''Get Token'''
     if request.method == 'GET':
         return HttpResponse(status=204)
     return HttpResponseNotAllowed(['GET'])

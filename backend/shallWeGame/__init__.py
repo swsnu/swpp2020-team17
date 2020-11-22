@@ -1,1 +1,1 @@
-# init.py
+'''init.py'''
