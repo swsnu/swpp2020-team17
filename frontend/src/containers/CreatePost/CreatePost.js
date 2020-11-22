@@ -1,6 +1,7 @@
 import React from "react";
 import {connect} from 'react-redux'
 import {createPost} from '../../Redux/actions'
+import * as actionCreators from '../../store/actions/index';
 import "antd/dist/antd.css";
 import {Form, Input, message, Button} from 'antd';
 // Add image uploading feature
@@ -49,7 +50,8 @@ class CreateNewPost extends React.Component {
 
     onFinish(values) {
         console.log(values);
-        this.props.createPost(values,this.info())
+        this.props.createPost(values)
+        this.props.history.push('/post')
     }
 
     info() {
@@ -58,9 +60,9 @@ class CreateNewPost extends React.Component {
 
     render() {
         const { loading, imageUrl } = this.state;
-        const posts = this.props.posts
+        const postList = this.props.postList
 
-        console.log(posts)
+        console.log(postList)
 
         const layout = {
             labelCol: {span: 5},
@@ -125,11 +127,14 @@ class CreateNewPost extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    posts: state.posts
+    postList: state.ps.postList
 })
 
-const mapDispatchToProps = {
-    createPost
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createPost: (post) =>
+            dispatch(actionCreators.createPost(post))
+    }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateNewPost)
