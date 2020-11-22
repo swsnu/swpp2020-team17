@@ -74,4 +74,3 @@ class ViewTestCase(TestCase):
 
     #     response = client.get('/api/currentUser/')
     #     self.assertEqual(response.status_code, 201)
-

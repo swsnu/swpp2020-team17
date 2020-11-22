@@ -27,4 +27,3 @@ urlpatterns = [
     # path('chatroom/<int:id>/message/', views.chatroom_message, name='chatroom_message'),
     path('token/', views.token, name='token'),
 ]
-

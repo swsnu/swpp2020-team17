@@ -550,4 +550,3 @@ def token(request):
     if request.method == 'GET':
         return HttpResponse(status=204)
     return HttpResponseNotAllowed(['GET'])
-
