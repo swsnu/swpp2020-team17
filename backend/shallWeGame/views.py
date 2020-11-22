@@ -120,10 +120,10 @@ def user_info(request, id=0):
         return HttpResponseNotFound()
 
     if request.method == 'GET':
-        friendList = [friend.id for friend in user.friends.all().values()]
-        postList = [post.id for post in user.postlist.all().values()]
-        shallWeRoomList = [room.id for room in user.shallWeRoom.all().values()]
-        watchedPostList = [post.id for post in user.watchedPosts.all().values()]
+        friendList = [friend['id'] for friend in user.friends.all().values()]
+        postList = [post['id'] for post in user.postlist.all().values()]
+        shallWeRoomList = [room['id'] for room in user.shallWeRoom.all().values()]
+        watchedPostList = [post['id'] for post in user.watchedPosts.all().values()]
         tagList = [tag.id for tag in user.tags.all().values()]
         response_dict = {"id": user.id, "username": user.username, "login": user.login,
                         "avatar": user.avatar, "chatroom": chatroom, "friendList": friendList,
@@ -152,23 +152,20 @@ def user_info(request, id=0):
             user_tags = req_data['tagList']
 
         except (KeyError, JSONDecodeError) as e:
-            print(e)
             return HttpResponseBadRequest()
 
-        print(user_tags)
+        print(user_friendList)
         user.username = user_username
         user.login = user_login
         user.avatar = user_avatar
-        # tempChat = Chatroom.objects.create(id= -1, isGlobal=True, title='temp', tag=Tag.objects.get(id=1), maxPersonnel=0)
-        tempChat = Chatroom.objects.get(id=user_chatroom)
-        user.chatroom = tempChat
+        user.chatroom = Chatroom.objects.get(id=user_chatroom) if user_chatroom != -1 else None
         user.friendList.set([DiscordUser.objects.get(id=user_id) for user_id in user_friendList])
         user.postlist.set([Post.objects.get(id=post_id) for post_id in user_postlist])
         user.shallWeRoom.set([Chatroom.objects.get(id=room_id) for room_id in user_shallWeRoom])
         user.watchedPosts.set([Post.objects.get(id=post_id) for post_id in user_watchedPosts])
         user.tags.set([Tag.objects.get(id=tag_id) for tag_id in user_tags])
         user.save()
-
+        
         return HttpResponse(status=200)
 
 

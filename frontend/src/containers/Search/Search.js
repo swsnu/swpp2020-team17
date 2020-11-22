@@ -14,12 +14,6 @@ class Search extends Component {
         this.props.onGetCurrentUser();
     }
 
-    // componentDidUpdate(prevProps, prevState) {
-    //     if(prevProps.storedCurrentUser !== this.props.storedCurrentUser) {
-    //         this.props.onGetCurrentUser();
-    //     }
-    // }
-
     onSearch = value => {
         if (value != '') this.setState({ searchInput: value.toLowerCase() });
         else this.setState({ searchInput: null });
@@ -32,7 +26,6 @@ class Search extends Component {
             return id !== user_id
         });
         this.props.onPutUser(user);
-        // this.props.onGetCurrentUser();
         return
     }
 
@@ -43,7 +36,6 @@ class Search extends Component {
             return id !== tag_id
         });
         this.props.onPutUser(user);
-        // this.props.onGetCurrentUser();
         return
     }
 
@@ -63,8 +55,8 @@ class Search extends Component {
                     if (user.id == this.props.storedCurrentUser.id) return;
                     if (user.username.toLowerCase().includes(this.state.searchInput)) {
                         let addOrDelete = 'Add';
-                        if (user.friendList.find(id => id===this.props.storedCurrentUser.id) !== undefined) addOrDelete = 'Delete'
-                        return <SearchedUser username={user.username} addOrDelete={addOrDelete} onClick={() => this.onClickUserButton(user.id, addOrDelete)}/>
+                        if (this.props.storedCurrentUser.friendList.find(id => id===user.id) !== undefined) addOrDelete = 'Delete'
+                        return <SearchedUser avatar={user.avatar} username={user.username} addOrDelete={addOrDelete} onClick={() => this.onClickUserButton(user.id, addOrDelete)}/>
                     }
                     return;
                 });
@@ -72,7 +64,7 @@ class Search extends Component {
                     if (tag.name.toLowerCase().includes(this.state.searchInput)) {
                         let addOrDelete = 'Add';
                         if (this.props.storedCurrentUser.tagList.find(id => id===tag.id) !== undefined) addOrDelete = 'Delete'
-                        return <SearchedTag tagname={tag.name} addOrDelete={addOrDelete} onClick={() => this.onClickTagButton(tag.id, addOrDelete)}/>
+                        return <SearchedTag id={tag.id} tagname={tag.name} addOrDelete={addOrDelete} onClick={() => this.onClickTagButton(tag.id, addOrDelete)}/>
                     }
                     return;
                 });
