@@ -10,7 +10,7 @@ const reducer = (state = {
         case actionTypes.GetPostList:
             return { ...state, postList: action.posts };
         case actionTypes.CreatePost:
-            return { ...state, postList: state.postList.concat(action.post), selectedPost: action.post };
+            return { ...state, selectedPost: action.post };
         case actionTypes.GetPost:
             return { ...state, selectedPost: action.post };
         case actionTypes.PutPost:
@@ -26,7 +26,9 @@ const reducer = (state = {
             });
             return { ...state, postList: deletedPosts};
         case actionTypes.GetCommentList:
-            return { ...state, commentList: action.commentList }
+            return { ...state, commentList: action.commentList };
+        case actionTypes.CreateComment:
+            return { ...state, commentList: state.commentList.concat(comment) };
         default:
             break;
     }

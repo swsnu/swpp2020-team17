@@ -187,12 +187,13 @@ def post_list(request):
             req_data = json.loads(request.body.decode())
             post_image = req_data['image']
             post_content = req_data['content']
-            post_tag = req_data['tag_id']
+            post_tag = req_data['tag']
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest()
         post_author = request.user
         tag = Tag.objects.get(id=int(post_tag))
         post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
+        post.save()
         response_dict = {"id": post.id, "image": post.image, "content": post.content, "author": post.author_id, "author_name": post.author.username,
         "author_avatar": post.author.avatar, "tag": post.tag.id, "likes": post.likes, "likingUsers": list(post.likingUsers.all())}
         print(response_dict)

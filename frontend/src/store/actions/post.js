@@ -102,3 +102,17 @@ export const getCommentList = () => {
         .then(res => dispatch(getCommentList_(res.data)))
     }
 }
+
+const createComment_ = (comment) => {
+    return {
+        type: actionTypes.CreateComment,
+        comment: comment
+    }
+}
+
+export const createComment = (comment, id) => {
+    return dispatch => {
+        return axios.post('api/post/' + id + '/comment/')
+        .then(res => dispatch(createComment_(res.data)))
+    }
+}

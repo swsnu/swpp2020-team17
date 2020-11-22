@@ -1,4 +1,4 @@
-import ChatRoomList from '../../components/ChatRoomList/ChatRoomList';
+import ChatroomList from '../../components/ChatRoomList/ChatRoomList';
 import GameTag from '../../components/GameTag/GameTag';
 
 import React, { Component } from 'react';
