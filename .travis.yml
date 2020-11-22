@@ -6,7 +6,7 @@ matrix:
         sonarcloud:
           organization: "swsnu"
           token:
-            secure: "MwQOWx8ibBUGltFurcNbPKBNDeMHdDkr5E911tBy6H7ZtLwJ/CX8caCXmCPzUrj1Xg8tW28W5IpXA2jW4ORB7TLmZioKYAkDBhIPTNooar3tvmJeWPNSunYgg40fgYvTtdTV/nSLl+L7rNoU4o+NT8V2H5uAmnu1aZx+u+zKvQzuc3tGa50TcEFQo/GsMOQrvTXUvgfAKmcpEHfmLtsoeVkPjgtBhnN/ZL57+b46ih04OJ9Fe0o+Y3gRGBTiC49t5rTCbuEDhF5vGnjXd/EbpTeGIHwmE/tKfEOdBRksw40IaMuRwDHen5rrzUB6jJNCuwX2ucn0tcAp54Pr8vduAUF/4UEYSmf0vqJqWwRDT+shigFPVofD6jtm9ewhVAKCtf/dZIZ9J0dD55Lp6heNixqT5sDiFWtP7VoPzhkcO1W/iMj+WO8sEx4bbsdFhO7tZfSp/HWmop0/GPDPXsENW6E6c7TCgJOthAy4U7tgFxMjQ5JdIwyQxiLMae7heTAjNnVy06tWsnxnB2iUqreeFEhoFe4TRfY/YTaQSZvJtgFswrNBMperAz/rdFkzLNtRrUoyi8o8PEyLZdZoNFH+8fZvuTqGGQy2NP/+taMhzX10M4tL876geItB5I3Ku160MsL+1wtpv/dZhpvpuSqTo5a+drDtGP0NIqAlXIGbM+I=" 
+            secure: "MwQOWx8ibBUGltFurcNbPKBNDeMHdDkr5E911tBy6H7ZtLwJ/CX8caCXmCPzUrj1Xg8tW28W5IpXA2jW4ORB7TLmZioKYAkDBhIPTNooar3tvmJeWPNSunYgg40fgYvTtdTV/nSLl+L7rNoU4o+NT8V2H5uAmnu1aZx+u+zKvQzuc3tGa50TcEFQo/GsMOQrvTXUvgfAKmcpEHfmLtsoeVkPjgtBhnN/ZL57+b46ih04OJ9Fe0o+Y3gRGBTiC49t5rTCbuEDhF5vGnjXd/EbpTeGIHwmE/tKfEOdBRksw40IaMuRwDHen5rrzUB6jJNCuwX2ucn0tcAp54Pr8vduAUF/4UEYSmf0vqJqWwRDT+shigFPVofD6jtm9ewhVAKCtf/dZIZ9J0dD55Lp6heNixqT5sDiFWtP7VoPzhkcO1W/iMj+WO8sEx4bbsdFhO7tZfSp/HWmop0/GPDPXsENW6E6c7TCgJOthAy4U7tgFxMjQ5JdIwyQxiLMae7heTAjNnVy06tWsnxnB2iUqreeFEhoFe4TRfY/YTaQSZvJtgFswrNBMperAz/rdFkzLNtRrUoyi8o8PEyLZdZoNFH+8fZvuTqGGQy2NP/+taMhzX10M4tL876geItB5I3Ku160MsL+1wtpv/dZhpvpuSqTo5a+drDtGP0NIqAlXIGbM+I="
       cache:
         - yarn: true
       before_install:
@@ -27,4 +27,4 @@ matrix:
         - pip install -r requirements.txt
       script:
         - python manage.py migrate --run-syncdb
-        - pylint **/*.py --load-plugins pylint_django
+        - pylint **/*.py --disable='tests' --load-plugins pylint_django
