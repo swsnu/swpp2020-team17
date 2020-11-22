@@ -1,6 +1,6 @@
 import { Table, Row, Col, Button, Typography } from 'antd';
 
-const ChatroomList = (props) => {
+const ChatRoomList = (props) => {
     const shallWeColumns = [
         {
             title: 'Game',
@@ -95,4 +95,4 @@ const ChatroomList = (props) => {
     
 }
 
-export default ChatroomList;
+export default ChatRoomList;
