@@ -48,7 +48,7 @@ const GameTag = (props) => {
         color_unchecked = 'geekblue'
     }
     return (
-        <div className="tag">
+        <div className="GameTag">
             <Tag
                 icon={
                     <img

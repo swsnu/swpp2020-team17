@@ -5,32 +5,17 @@ import { connectRouter, ConnectedRouter } from 'connected-react-router';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import { Button } from 'antd';
 
-import Search from './Search';
+import Lobby from './Lobby';
 import { getMockStore } from '../../test-utils/mocks'
 import { history } from '../../store/store'
 
 import userActionCreators from '../../store/actions/user';
 import tagActionCreators from '../../store/actions/tag';
 
-jest.mock('../../components/SearchedUser/SearchedUser', () => {
+jest.mock('../../components/ChatroomList/ChatroomList', () => {
     return jest.fn(props => {
         return (
-            <div className="spySearchedUser">
-                <div className="click-searched-user" onClick={props.onClick}> 
-                    {props.addOrDelete}
-                </div>
-            </div>
-        )
-    });
-});
-
-jest.mock('../../components/SearchedTag/SearchedTag', () => {
-    return jest.fn(props => {
-        return (
-            <div className="spySearchedTag">
-                <div className="click-searched-user" onClick={props.onClick}> 
-                    {props.addOrDelete}
-                </div>
+            <div className="spyChatroomList">
             </div>
         )
     });
@@ -38,42 +23,50 @@ jest.mock('../../components/SearchedTag/SearchedTag', () => {
 
 const stubInitialState = {
     userList: null,
+    selectedUser: null,
     currentUser: null,
+    chatroomList: null,
+    selectedChatroom: null,
     tagList: null,
 }
 
 const mockStore = getMockStore(stubInitialState);
 
-describe('<Search />', () => {
-    let search, spyGetUserList, spyGetCurrentUser, spyPutUser, spyGetTagList;
+describe('<Lobby />', () => {
+    let lobby, spyGetCurrentUser, spyPutUser, spyGetTagList, spyGetChatroomList, spyPutChatroom, spyDeleteChatroom;
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
     beforeEach(() => {
-        search = (
+        lobby = (
             <Provider store={mockStore}>
               <ConnectedRouter history={history}>
               <Switch>
-                <Route path='/' exact component={Search} />
+                <Route path='/' exact component={Lobby} />
               </Switch>
               </ConnectedRouter>
             </Provider>
         );
-        spyGetUserList = jest.spyOn(userActionCreators, 'getUserList')
-            .mockImplementation(() => { return dispatch => {}; });
+
         spyGetCurrentUser = jest.spyOn(userActionCreators, 'getCurrentUser')
             .mockImplementation(() => { return dispatch => {}; });
         spyPutUser = jest.spyOn(userActionCreators, 'putUser')
             .mockImplementation(() => { return dispatch => {}; });
         spyGetTagList = jest.spyOn(tagActionCreators, 'getTagList')
-            .mockImplementation(user => { return dispatch => {}; });
+            .mockImplementation(() => { return dispatch => {}; });
+        spyGetChatroomList = jest.spyOn(tagActionCreators, 'getChatroomList')
+            .mockImplementation(() => { return dispatch => {}; });
+        spyPutChatroom = jest.spyOn(tagActionCreators, 'putChatroom')
+            .mockImplementation(() => { return dispatch => {}; });
+        spyDeleteChatroom = jest.spyOn(tagActionCreators, 'deleteChatroom')
+            .mockImplementation(() => { return dispatch => {}; });
     })
 
-    it('should render SearchedUser', () => {
-        const component = mount(search);
-        const wrapper = component.find('.spySearchedUser');
+    it('should render ChatroomList', () => {
+        const component = mount(lobby);
+        const wrapper = component.find('.spyChatroomList');
         expect(wrapper.length).toBe(1);
         //expect(wrapper.at(0).text()).toBe('ARTICLE_TITLE');
     });

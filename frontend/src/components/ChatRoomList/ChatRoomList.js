@@ -1,9 +1,9 @@
 import { Table, Row, Col, Button, Typography } from 'antd';
 
-const ChatRoomList = (props) => {
+const ChatroomList = (props) => {
     const shallWeColumns = [
         {
-            title: 'Game',
+            title: 'Game',  
             dataIndex: 'game',
         },
         {
@@ -62,7 +62,7 @@ const ChatRoomList = (props) => {
             return data;
         });
         return (
-            <div>     
+            <div className="ChatroomList">     
                 <Row gutter={[40, 0]}>
                     <Col span={24}>
                         <Table columns={shallWeColumns} dataSource={data} />
@@ -72,7 +72,6 @@ const ChatRoomList = (props) => {
         );
     } else {
         props.list.map(room => {
-            console.log(props.tagList);
             data.push({
                 game: props.tagList.find(tag => tag.id == room.tag).name,
                 gamers: room.memberList.length,
@@ -83,7 +82,7 @@ const ChatRoomList = (props) => {
             return data;
         });
         return (
-            <div>     
+            <div className="ChatroomList">     
                 <Row gutter={[40, 0]}>
                     <Col span={24}>
                         <Table columns={chatroomColumns} dataSource={data} />
@@ -95,4 +94,4 @@ const ChatRoomList = (props) => {
     
 }
 
-export default ChatRoomList;
+export default ChatroomList;
