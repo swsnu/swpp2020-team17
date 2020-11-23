@@ -52,7 +52,7 @@ export const getMockStore = (initialState) => {
   const mockTagReducer = getMockTagReducer(initialState);
   const mockPostReducer = getMockPostReducer(initialState);
   const rootReducer = combineReducers({
-    us: mockUserReducer,
+    ur: mockUserReducer,
     chat: mockChatroomReducer,
     tg: mockTagReducer,
     ps: mockPostReducer,

@@ -4,7 +4,6 @@ import { Avatar, Button } from 'antd';
 import IconLOL from '../../static/icon_lol.png';
 import IconHearth from '../../static/icon_hearth.png';
 import IconMaple from '../../static/icon_maple.png';
-import { UserOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 
 const SearchedTag = props => {
@@ -31,7 +30,7 @@ const SearchedTag = props => {
                 {props.tagname}
             </div>
             <div className="right">
-                <Button onClick={props.onClick}>
+                <Button onClick={props.onButtonClick}>
                     {props.addOrDelete}
                 </Button>
             </div>

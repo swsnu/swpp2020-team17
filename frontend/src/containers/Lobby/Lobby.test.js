@@ -9,8 +9,9 @@ import Lobby from './Lobby';
 import { getMockStore } from '../../test-utils/mocks'
 import { history } from '../../store/store'
 
-import userActionCreators from '../../store/actions/user';
-import tagActionCreators from '../../store/actions/tag';
+import * as userActionCreators from '../../store/actions/user';
+import * as tagActionCreators from '../../store/actions/tag';
+import * as chatroomActionCreators from '../../store/actions/chatroom';
 
 jest.mock('../../components/ChatroomList/ChatroomList', () => {
     return jest.fn(props => {
@@ -22,12 +23,46 @@ jest.mock('../../components/ChatroomList/ChatroomList', () => {
 });
 
 const stubInitialState = {
-    userList: null,
-    selectedUser: null,
-    currentUser: null,
-    chatroomList: null,
-    selectedChatroom: null,
-    tagList: null,
+    currentUser: {
+        id: 1, 
+        username: 'User1',
+        login: true,
+        avatar: null, 
+        chatroom: -1, 
+        friendList: [2],
+        postList: [1, 5],
+        shallWeRoomList: [1, 2], 
+        watchedPostList: [1, 2, 3], 
+        tagList: [1]
+    },
+    chatroomList: [
+        {
+            id: 1, 
+            isGlobal: true, 
+            title: 'chatroom1', 
+            tag: 1, 
+            maxPersonnel: 10, 
+            discordLink: null,
+        },
+        {
+            id: 2, 
+            isGlobal: false, 
+            title: 'chatroom2', 
+            tag: 2, 
+            maxPersonnel: 20, 
+            discordLink: null,
+        }
+    ],
+    tagList: [
+        {
+            id: 1,
+            name: 'LOL',
+        },
+        {
+            id: 2,
+            name: 'HearthStone',
+        }
+    ],
 }
 
 const mockStore = getMockStore(stubInitialState);
@@ -56,11 +91,11 @@ describe('<Lobby />', () => {
             .mockImplementation(() => { return dispatch => {}; });
         spyGetTagList = jest.spyOn(tagActionCreators, 'getTagList')
             .mockImplementation(() => { return dispatch => {}; });
-        spyGetChatroomList = jest.spyOn(tagActionCreators, 'getChatroomList')
+        spyGetChatroomList = jest.spyOn(chatroomActionCreators, 'getChatroomList')
             .mockImplementation(() => { return dispatch => {}; });
-        spyPutChatroom = jest.spyOn(tagActionCreators, 'putChatroom')
+        spyPutChatroom = jest.spyOn(chatroomActionCreators, 'putChatroom')
             .mockImplementation(() => { return dispatch => {}; });
-        spyDeleteChatroom = jest.spyOn(tagActionCreators, 'deleteChatroom')
+        spyDeleteChatroom = jest.spyOn(chatroomActionCreators, 'deleteChatroom')
             .mockImplementation(() => { return dispatch => {}; });
     })
 
@@ -68,6 +103,5 @@ describe('<Lobby />', () => {
         const component = mount(lobby);
         const wrapper = component.find('.spyChatroomList');
         expect(wrapper.length).toBe(1);
-        //expect(wrapper.at(0).text()).toBe('ARTICLE_TITLE');
     });
 });
