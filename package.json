@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "kepler.gl": "^2.3.2"
+  }
+}
