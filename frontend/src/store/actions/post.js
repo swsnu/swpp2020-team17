@@ -112,7 +112,7 @@ const createComment_ = (comment) => {
 
 export const createComment = (comment, id) => {
     return dispatch => {
-        return axios.post('api/post/' + id + '/comment/')
+        return axios.post('api/post/' + id + '/comment/', comment)
         .then(res => dispatch(createComment_(res.data)))
     }
 }

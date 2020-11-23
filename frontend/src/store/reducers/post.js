@@ -28,7 +28,7 @@ const reducer = (state = {
         case actionTypes.GetCommentList:
             return { ...state, commentList: action.commentList };
         case actionTypes.CreateComment:
-            return { ...state, commentList: state.commentList.concat(comment) };
+            return { ...state, commentList: state.commentList.concat(action.comment) };
         default:
             break;
     }

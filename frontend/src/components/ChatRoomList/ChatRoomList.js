@@ -54,7 +54,7 @@ const ChatroomList = (props) => {
         props.list.map(room => {
             data.push({
                 game: props.tagList.find(tag => tag.id == room.tag).name,
-                gamers: room.members.length,
+                gamers: room.memberList.length,
                 title: room.title,
                 sorry: <Button type="primary" onClick={props.onClickSorry(room.id)}> Sorry </Button>,
                 sure: <Button type="primary" onClick={props.onClickSure(room.id)}> Sure </Button>,
@@ -75,7 +75,7 @@ const ChatroomList = (props) => {
             console.log(props.tagList);
             data.push({
                 game: props.tagList.find(tag => tag.id == room.tag).name,
-                gamers: room.members.length,
+                gamers: room.memberList.length,
                 title: room.title,
                 empty: null,
                 join: <Button type="primary" onClick={props.onClickJoin(room.id)}> Join </Button>,

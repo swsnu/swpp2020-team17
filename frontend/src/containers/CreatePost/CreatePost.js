@@ -1,5 +1,9 @@
 import React from "react";
+<<<<<<< HEAD
 import { connect } from 'react-redux'
+=======
+import {connect} from 'react-redux'
+>>>>>>> e8941026ceaa1fdae4ffd30864ad4119264660ba
 import * as actionCreators from '../../store/actions/index';
 import "antd/dist/antd.css";
 import { Form, Input, message, Button } from 'antd';

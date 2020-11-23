@@ -14,12 +14,11 @@ const MainPost = (props) => {
 
     const commentList = useSelector((state) => state.ps.commentList)
     
-    
     const [likes, setLikes] = useState(
         props.dataFromParent.likes
     );
-    // const selectedTags = ['Lol'];
 
+    // const selectedTags = ['Lol'];
     const incrementLike = () => {
         setLikes(likes => likes + 1);
     };
@@ -53,7 +52,7 @@ const MainPost = (props) => {
                 likes={likes}
             />
             <CommentSection
-                postId={
+                postID={
                     props.dataFromParent.id
                 }
                 commentList={

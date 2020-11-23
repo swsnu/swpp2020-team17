@@ -1,7 +1,11 @@
+'''managers.py'''
+
 from django.contrib.auth import models
 
 class DiscordUserOAuth2Manager(models.UserManager):
+    '''OAuth2Manager'''
     def create_new_discord_user(self, user):
+        '''create_user'''
         print('Inside Discord User Manager')
         discord_tag = '%s#%s' % (user['username'], user['discriminator'])
         new_user = self.create(
