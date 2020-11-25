@@ -140,7 +140,7 @@ def user_info(request, user_id=0):
         watched_post_list = [post['id'] for post in user.watched_post_list.all().values()]
         tag_list = [tag.id for tag in user.tag_list.all().values()]
         response_dict = {"id": user.id, "username": user.username, "login": user.login,
-                         "avatar": user.avatar, "chatroom": chatroom, "friendList": friend_list,
+                         "avatar": user.avatar, "chatroom": user.chatroom, "friendList": friend_list,
                          "postList": post_list, "shallWeRoomList": shallwe_room_list,
                          "watchedPostList": watched_post_list, "tagList": tag_list}
         return HttpResponse(content=json.dumps(response_dict), status=201)
@@ -203,7 +203,6 @@ def post_list(request):
              "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": post.like_num,
              "likingUserList": list(post.liking_user_list.all())} for post in Post.objects.all()]
         return JsonResponse(post_response_list, safe=False)
-<<<<<<< HEAD
     else:   # request.method == 'POST'
         try:
             req_data = json.loads(request.body.decode())
@@ -220,27 +219,6 @@ def post_list(request):
         "author_avatar": post.author.avatar, "tag": post.tag.id, "likes": post.likes, "likingUsers": list(post.likingUsers.all())}
         print(response_dict)
         return HttpResponse(content=json.dumps(response_dict), status=201)
-=======
-    # request.method == 'POST'
-    try:
-        req_data = json.loads(request.body.decode())
-        post_image = req_data['image']
-        post_content = req_data['content']
-        post_tag = req_data['tag_id']
-    except (KeyError, JSONDecodeError):
-        return HttpResponseBadRequest()
-    post_author = request.user
-    tag = Tag.objects.get(id=int(post_tag))
-    post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
-    response_dict = {"id": post.id, "image": post.image, "content": post.content,
-                        "author": post.author_id, "authorName": post.author.username,
-                        "authorAvatar": post.author.avatar, "tag": post.tag.id,
-                        "likeNum": post.like_num,
-                        "likingUserList": list(post.liking_user_list.all())}
-    print(response_dict)
-    return HttpResponse(content=json.dumps(response_dict), status=201)
-
->>>>>>> e8941026ceaa1fdae4ffd30864ad4119264660ba
 
 @login_required(login_url='/api/login/')
 def post_info(request, post_id=0):
