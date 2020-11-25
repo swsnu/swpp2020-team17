@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import ChatroomList from '../../components/ChatRoomList/ChatRoomList';
-=======
-import ChatroomList from '../../components/ChatroomList/ChatroomList';
->>>>>>> e8941026ceaa1fdae4ffd30864ad4119264660ba
 import GameTag from '../../components/GameTag/GameTag';
 
 import React, { Component } from 'react';
