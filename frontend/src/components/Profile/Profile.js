@@ -5,7 +5,6 @@ import Author from '../Author/Author'
 import GameTag from '../GameTag/GameTag'
 import styled from 'styled-components';
 
-
 const AuthorWrapper = styled.div`
     display: flex;
     justify-content: center;
@@ -40,39 +39,41 @@ const GameTagWrapper = styled.div`
                 }}
 */
 
-
-class Profile extends Component {
-    render() {
+const fetchGameTagList = (props) => {
+    let tagComponents = this.props.user.tagList.map(tag_id => {
         return (
-            <Card
-            >
-                <Card.Meta
-                    title={
-                        <AuthorWrapper>
-                            <Author showOnline="true" />
-                        </AuthorWrapper>
-                    }
-                    description={
-                        <GameTagWrapper>
-                            <GameTag
-                                id={1}
-                            />
-                            <GameTag
-                                id={2}
-                            />
-                            <GameTag
-                                id={3}
-                            />
-                        </GameTagWrapper>
-                    }
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                    }}
-                ></Card.Meta>
-            </Card>
+            <GameTag
+                id={tag_id}
+            />
         );
-    }
+    })
+
+    return tagComponents;
+}
+
+// @param: user
+const Profile = (props) => {
+    return (
+        <Card
+        >
+            <Card.Meta
+                title={
+                    <AuthorWrapper>
+                        <Author showOnline="true" user={props.user.id}/>
+                    </AuthorWrapper>
+                }
+                description={
+                    <GameTagWrapper>
+                        {fetchGameTagList}
+                    </GameTagWrapper>
+                }
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                }}
+            ></Card.Meta>
+        </Card>
+    );
 }
 
 export default Profile;
