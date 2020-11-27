@@ -59,7 +59,7 @@ const Profile = (props) => {
             <Card.Meta
                 title={
                     <AuthorWrapper>
-                        <Author showOnline="true" user={props.user.id}/>
+                        <Author showOnline="true" userID={props.user.id}/>
                     </AuthorWrapper>
                 }
                 description={
