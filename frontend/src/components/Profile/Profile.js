@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Card } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux';
+import { Card, Switch } from 'antd';
+import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import Author from '../Author/Author'
 import GameTag from '../GameTag/GameTag'
 import styled from 'styled-components';
@@ -39,11 +40,12 @@ const GameTagWrapper = styled.div`
                 }}
 */
 
-const fetchGameTagList = (props) => {
-    let tagComponents = this.props.user.tagList.map(tag_id => {
+const fetchGameTagList = (tagList) => {
+    let tagComponents = tagList.map(tag_id => {
         return (
             <GameTag
                 id={tag_id}
+                isChecked={true}
             />
         );
     })
@@ -52,28 +54,94 @@ const fetchGameTagList = (props) => {
 }
 
 // @param: user
-const Profile = (props) => {
-    return (
-        <Card
-        >
-            <Card.Meta
-                title={
-                    <AuthorWrapper>
-                        <Author showOnline="true" userID={props.user.id}/>
-                    </AuthorWrapper>
-                }
-                description={
-                    <GameTagWrapper>
-                        {fetchGameTagList}
-                    </GameTagWrapper>
-                }
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                }}
-            ></Card.Meta>
-        </Card>
-    );
+class Profile extends Component {
+    // FIXME: 지금은 임시로 Profile에서 Author에 관한 모든 prop을 가공해서 넘김
+    // state = {
+    //     tagList: [],
+    //     avatar: '',
+    //     name: '',
+    //     showOnline: true,
+    //     // showOnline: '', // user model에 추가 필요, 지금은 임시로 "login" key 이용
+    // }
+
+    // FIXME: User model 수정되면 currentUser 말고 user를 prop으로 받도록 수정 요함.
+    // componentDidMount() {
+    //     // if (this.props.storedCurrentUser === null) {
+    //     //     this.setState({
+    //     //         tagList: this.props.storeCurrentUser.tagList,
+    //     //         avatar: this.props.storeCurrentUser.avatar,
+    //     //         name: this.props.storeCurrentUser.username,
+    //     //         // showOnline: this.props.storeCurrentUser.login,
+    //     //     })
+    //     // }
+    //     this.props.onGetCurrentUser();
+    // }
+
+    //FIXME: 온라인 관련 prop 추가 예정
+    // onToggleOnlineSwitch(checked) {
+    //     this.setState({
+    //         showOnline: checked
+    //     })
+    // }
+
+    render() {
+        // // let user = this.props.storedCurrentUser;
+        // //FIXME: 온라인 관련 prop 추가 예정
+        // let name = this.props.storedCurrentUser.username;
+        // let avatar = this.props.storedCurrentUser.avatar;
+        // let tagList = this.props.storedCurrentUser.tagList;
+
+        return (
+            <Card
+                //FIXME: 추가예정
+                // extra={
+                //     <Switch
+                //         checkedChildren={<CheckOutlined />}
+                //         unCheckedChildren={<CloseOutlined />}
+                //         {...(this.state.showOnline)?{defaultChecked}:{}}
+                //         onChange={this.onToggleOnlineSwitch}
+                //     />
+                // }
+            >
+                <Card.Meta
+                    title={
+                        <AuthorWrapper>
+                            <Author
+                                name={this.props.name}
+                                avatar={this.props.avatar}
+                                //FIXME: model추가 필요
+                                showOnline={true}
+                            />
+                        </AuthorWrapper>
+                    }
+                    description={
+                        <GameTagWrapper>
+                            {fetchGameTagList(this.props.tagList)}
+                        </GameTagWrapper>
+                    }
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                    }}
+                ></Card.Meta>
+            </Card>
+        );
+    }
 }
 
 export default Profile;
+// const mapStateToProps = (state) => {
+//     return {
+//         storedCurrentUser: state.ur.currentUser,
+//     }
+// }
+
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         onGetCurrentUser: () => 
+//             dispatch(actionCreators.getCurrentUser()),
+//     }
+// }
+
+
+// export default connect(mapStateToProps, mapDispatchToProps)(Profile);

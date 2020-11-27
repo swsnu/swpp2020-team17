@@ -5,16 +5,16 @@ import { List, Divider, message, Avatar, Spin, Space, Button } from 'antd';
 import { MessageTwoTone, HeartTwoTone } from '@ant-design/icons';
 import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
-import Author_test_copy from './Author_test_copy'
+import Author from '../../components/Author/Author'
 
 /* Components */
 import GameTag from '../../components/GameTag/GameTag'
-import CommentList from './CommentList';
+// import CommentList from './CommentList';
 
 const PostPageWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    overflow: auto;
+    /* overflow: auto; */
   /* padding: 8px 24px; */
     height: 100%;
 `;
@@ -133,14 +133,14 @@ class Post extends Component {
 
         return (
             <PostPageWrapper>
-                <Divider orientation="left" style={{ marginTop: 0 }}> Your games </Divider>
+                <Divider orientation="left" style={{ marginTop: 0 }} plain> Your games </Divider>
                 <div className="tagToggle">
                     <GameTagWrapper>
                         {tagToggle}
                     </GameTagWrapper> 
                 </div>
 
-                <Divider orientation="left"> Posts </Divider>
+                <Divider orientation="left" plain> Posts </Divider>
                 {/* <InfiniteScroll
                     initialLoad={false}
                     pageStart={0}
@@ -155,7 +155,12 @@ class Post extends Component {
                                 <PostContainer>
                                     <PostHeaderContainer>
                                         <AuthorItem onClick={handleAuthorClicked} style={{ cursor: "pointer" }} >
-                                            <Author_test_copy data={item}/>
+                                            <Author
+                                                //FIXME: user로 넘기도록 수정해야함
+                                                name={item.authorName}
+                                                avatar={item.authorAvatar}
+                                                showOnline={true}
+                                            />
                                         </AuthorItem>
                                         <ButtonItem>
                                             <Button
@@ -171,6 +176,7 @@ class Post extends Component {
                                         <GameTagItem>
                                             <GameTag
                                                 id={item.tag}
+                                                // FIXME: 왜 default가 false지
                                                 isChecked={this.state.selectedTagList.includes(item.tag)}
                                             />
                                         </GameTagItem>
