@@ -19,27 +19,37 @@ const AuthorWrapper = styled.div`
     padding-bottom: 3px;
 `;
 
-// props : {showOnline}
-class Author_test_copy extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showOnline: props.showOnline,
-            isOnline: true, // 함수로 개선 필요
-            hasProfileImage: true, // 함수로 개선 필요
-        };
-    }
+// props : {name, avatar, showOnline}
+class Author extends Component {
+    //FIXME: user를 prop으로 전달하게 수정하면 state 필요해짐.
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {
+            // avatar: null,
+            // showOnline: props.showOnline,
+            // isOnline: true, // 함수로 개선 필요
+            // hasProfileImage: true, // 함수로 개선 필요
+    //         user: null,
+    //     };
+    // }
 
+    //FIXME: user를 prop으로 전달하게 수정하면 componentDidMount 필요해짐.
     /* TODO: 유저 정보 관련 */
     // online 가져오는 함수 필요
     // profile image 가져오는 함수 필요
     // nickname 가져오는 함수 필요
+    // componentDidMount() {
+    //     this.setState({
+    //         user: 
+    //     })
+    // }
 
     loadProfileImage() {
-        if (this.state.hasProfileImage) {
+        // if (this.state.hasProfileImage) {
+        if (this.props.avatar !== null) {
             return (
                 <Avatar
-                    src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" // 함수로 바꿔줘야함
+                    src={this.props.avatar} // 함수로 바꿔줘야함
                     size="default"
                 />
             );
@@ -52,53 +62,66 @@ class Author_test_copy extends Component {
             );
         }
     }
+
+    setAvatar() {
+        if (this.props.showOnline === true) {
+            return (
+                <Badge status={this.props.showOnline ? "success" : "default"}>
+                    {this.loadProfileImage()}
+                </Badge>
+            );
+        } else {
+            return (
+                <div>
+                    {this.loadProfileImage()}
+                </div>
+            );
+        }
+    }
                                     
     /* Render <Author /> */
     render() {
         // 프로필 있는 유저
-        if (this.state.showOnline === "true") {
-            // TODO: 함수로 대체해야 함.
-
-            return (
-                <AuthorWrapper>
-                        <Row align="middle">
-                            <Col flex="none" style={{ marginRight: 10 }}>
-                                <Badge status={this.state.isOnline ? "success" : "default"}>
-                                    {this.loadProfileImage()}
-                                </Badge>
-                            </Col>
-                            <Col flex="none" style={{ marginRight: 20 }}>
-                                <Nickname>
-                                    moovinzoo2
-                                </Nickname>
-                            </Col>
-                        </Row>
-                </AuthorWrapper>
-            );
-
-        // showOnline===false; 온라인 여부를 노출하길 원하지 않는경우
-        } else {
-            return (
-                <AuthorWrapper>
-                    <div>
-                        <Row align="middle">
-                            <Col flex="none" style={{ marginRight: 10 }}>
-                                {this.loadProfileImage()}
-                            </Col>
-                            <Col flex="none" style={{ marginRight: 20 }}>
-                                <Nickname>
-                                    moovinzoo2
-                                </Nickname>
-                            </Col>
-                        </Row>
-                    </div>
-                </AuthorWrapper>
-            );
-        }
+        //FIXME: line75: "login" 아니고 "online" 추가되어야 함, model에서
+        // if (this.props.showOnline === true) {
+        return (
+            <AuthorWrapper>
+                <Row align="middle">
+                    <Col flex="none" style={{ marginRight: 10 }}>
+                        {this.setAvatar()}
+                    </Col>
+                    <Col flex="none" style={{ marginRight: 20 }}>
+                        <Nickname>
+                            {this.props.name}
+                        </Nickname>
+                    </Col>
+                </Row>
+            </AuthorWrapper>
+        );
     }
 }
 
-export default Author_test_copy;
+export default Author;
+
+        // showOnline===false; 온라인 여부를 노출하길 원하지 않는경우
+        // } else {
+        //     return (
+        //         <AuthorWrapper>
+        //             <div>
+        //                 <Row align="middle">
+        //                     <Col flex="none" style={{ marginRight: 10 }}>
+        //                         {this.loadProfileImage()}
+        //                     </Col>
+        //                     <Col flex="none" style={{ marginRight: 20 }}>
+        //                         <Nickname>
+        //                             moovinzoo2
+        //                         </Nickname>
+        //                     </Col>
+        //                 </Row>
+        //             </div>
+        //         </AuthorWrapper>
+        //     );
+        // }
 
 /* TODO: profile 이미지 없을 때 아래 코드로 대체 */
 // class Author extends Component {

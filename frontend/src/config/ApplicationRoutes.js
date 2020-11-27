@@ -37,7 +37,7 @@ const ApplicationRoutes = () => {
   return (
       <Router>
         <Layout>
-          <Sider trigger={null} collapsible collapsed={collapse}>
+          <Sider trigger={null} collapsible collapsed={collapse} width="150">
             <SideNav />
           </Sider>
           <Layout>
