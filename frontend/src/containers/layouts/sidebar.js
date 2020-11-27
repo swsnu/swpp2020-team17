@@ -2,8 +2,8 @@ import React from 'react';
 import { Menu } from 'antd';
 import {
     UserOutlined,
-    VideoCameraOutlined,
-    UploadOutlined,
+    AliwangwangOutlined,
+    SearchOutlined,
     FormOutlined,
 } from '@ant-design/icons';
 import { useHistory } from 'react-router';
@@ -37,7 +37,7 @@ const SideNav = () => {
 
     return (
         <div>
-            <div style={{ height: "32px", background: "rgba(255, 255, 255, 0.2)", margin: "16px" }}></div>
+            <div style={{ height: "32px", background: "rgba(255, 255, 255, 0.2)", margin: "16px"}}></div>
             <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                 <Menu.Item key="1" onClick={handlePostClick}>
                     <FormOutlined />
@@ -45,12 +45,12 @@ const SideNav = () => {
                 </Menu.Item>
 
                 <Menu.Item key="2" onClick={handleLobbyClick}>
-                    <UserOutlined />
+                    <AliwangwangOutlined />
                     <span> Lobby </span>
                 </Menu.Item>
 
                 <Menu.Item key="3" onClick={handleSearchClick}>
-                    <UserOutlined />
+                    <SearchOutlined />
                     <span> Search</span>
                 </Menu.Item>
 
