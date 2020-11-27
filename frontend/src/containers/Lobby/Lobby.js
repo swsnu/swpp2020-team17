@@ -42,7 +42,6 @@ class Lobby extends Component{
 
     onClickJoin = (id) => {
         let user = this.props.storedCurrentUser;
-        console.log(user);
         user.chatroom = id;
         this.props.onPutUser(user);
         // this.props.history.push('')
@@ -70,16 +69,14 @@ class Lobby extends Component{
         let tagToggle = []
         let user = null
         
-        if (this.props.storedCurrentUser) console.log(this.props.storedCurrentUser);
-        if (this.props.storedChatroomList) console.log(this.props.storedChatroomList);
-        if (this.props.storedTagList) console.log(this.props.storedTagList);
         if (this.props.storedCurrentUser && this.props.storedChatroomList && this.props.storedTagList) {
             tagList = this.props.storedTagList;
             user = this.props.storedCurrentUser;
             tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
                 return (
                     <GameTag 
-                        id={tag_id} 
+                        key={tag_id}
+                        tagId={tag_id} 
                         isChecked={this.state.selectedTagList.includes(tag_id)}
                         onClick={() => this.onToggleTag(tag_id)}
                     />
@@ -108,7 +105,13 @@ class Lobby extends Component{
                         </Title>
                     </Col>
                     <Col span={6}>
-                        <Button id="create-chatroom-button" onClick={this.onClickCreateRoom} block>Create Room</Button>
+                        <Button 
+                            id="create-chatroom-button" 
+                            onClick={this.onClickCreateRoom} 
+                            block
+                        >
+                            Create Room
+                        </Button>
                     </Col>
                 </Row>
 
@@ -163,8 +166,6 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.putUser(user)),
         onGetChatroomList: () => 
             dispatch(actionCreators.getChatroomList()),
-        onPutChatroom: (room) => 
-            dispatch(actionCreators.putChatroom(room)),
         onDeleteChatroom: (id) => 
             dispatch(actionCreators.deleteChatroom(id)),
         onGetTagList: () => 

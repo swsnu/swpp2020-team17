@@ -51,7 +51,7 @@ const stubInitialState = {
         postList: [1, 5],
         shallWeRoomList: [1], 
         watchedPostList: [1, 2, 3], 
-        tagList: [1]
+        tagList: [1, 2]
     },
     chatroomList: [
         {
@@ -158,10 +158,42 @@ describe('<Lobby />', () => {
         expect(wrapper.length).toBe(1);
     });
 
-    // it('should handle onClickCreateRoom button', () => {
-    //     const component = mount(lobby);
-    //     const wrapper = component.find('#create-chatroom-button');
-    //     wrapper.simulate('click');
-    //     expect(wrapper.length).toBe(1);
-    // });
+    it('should handle onClickJoin button', () => {
+        const component = mount(lobby);
+        const wrapper = component.find('.spyChatroomList .click-join-button');
+        wrapper.simulate('click');
+        expect(wrapper.length).toBe(1);
+    });
+
+    it('should handle onToggleTag button', () => {
+        const component = mount(lobby);
+        let lobbyInstance = component.find(Lobby.WrappedComponent).instance();
+        expect(lobbyInstance.state.selectedTagList).toEqual([1, 2]);
+        const wrapper = component.find('.spyGameTag');
+        expect(wrapper.length).toBe(2);
+        wrapper.at(0).simulate('click');
+        lobbyInstance = component.find(Lobby.WrappedComponent).instance();
+        expect(lobbyInstance.state.selectedTagList).toEqual([2]);
+        wrapper.at(1).simulate('click');
+        lobbyInstance = component.find(Lobby.WrappedComponent).instance();
+        expect(lobbyInstance.state.selectedTagList).toEqual([]); 
+    });
+
+    it('should handle onClickCreateRoom button', () => {
+        const spyHistoryPush = jest.spyOn(history, 'push')
+            .mockImplementation(path => {});
+        const component = mount(lobby);
+        const wrapper = component.find('#create-chatroom-button');
+        wrapper.at(0).simulate('click');
+        expect(spyHistoryPush).toBeCalledTimes(1);
+    });
+
+    it('should handle onClickCreateRoom button', () => {
+        const spyHistoryPush = jest.spyOn(history, 'push')
+            .mockImplementation(path => {});
+        const component = mount(lobby);
+        const wrapper = component.find('#create-chatroom-button');
+        wrapper.at(0).simulate('click');
+        expect(spyHistoryPush).toBeCalledTimes(1);
+    });
 });

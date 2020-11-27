@@ -9,20 +9,20 @@ describe('<GameTag />', () => {
         expect(wrapper.length).toBe(1);
     });
 
-    it('should render without errors when id=1', () => {
-        const component = shallow(<GameTag id={1}/>);
+    it('should render without errors when tagId=1', () => {
+        const component = shallow(<GameTag tagId={1}/>);
         const wrapper = component.find('.GameTag');
         expect(wrapper.length).toBe(1);
     });
 
-    it('should render without errors when id=2', () => {
-        const component = shallow(<GameTag id={2}/>);
+    it('should render without errors when tagId=2', () => {
+        const component = shallow(<GameTag tagId={2}/>);
         const wrapper = component.find('.GameTag');
         expect(wrapper.length).toBe(1);
     });
 
-    it('should render without errors when id=3', () => {
-        const component = shallow(<GameTag id={3}/>);
+    it('should render without errors when tagId=3', () => {
+        const component = shallow(<GameTag tagId={3}/>);
         const wrapper = component.find('.GameTag');
         expect(wrapper.length).toBe(1);
     });
