@@ -62,8 +62,8 @@ class RoomInfo extends Component {
                 </Row>
                 <Row gutter={[40, 0]}>
                     <Col span={18}>
-                        <Form {...layout} onFinish={this.handleSubmit}>
-                            <Form.Item name="title" label="Title"
+                        <Form id="submit-form" {...layout} onFinish={this.handleSubmit}>
+                            <Form.Item id="title-input" name="title" label="Title"
                                 rules={[
                                     {
                                         required: true,
@@ -73,7 +73,7 @@ class RoomInfo extends Component {
                             >
                                 <Input placeholder="Enter Title" />
                             </Form.Item>
-                            <Form.Item name="tag" label="Tags"
+                            <Form.Item id="tag-input" name="tag" label="Tags"
                                 rules={[
                                     {
                                         required: true,
@@ -87,7 +87,7 @@ class RoomInfo extends Component {
                                     <Select.Option value="3">MapleStory</Select.Option>
                                 </Select>
                             </Form.Item>
-                            <Form.Item name="maxPersonnel" label="Max Personnel"
+                            <Form.Item id="maxPersonnel-input" name="maxPersonnel" label="Max Personnel"
                                 rules={[
                                     {
                                         required: true,
@@ -97,15 +97,15 @@ class RoomInfo extends Component {
                             >
                                 <Slider />
                             </Form.Item>
-                            <Form.Item name="isGlobal" label="Public" valuePropName="checked"
+                            <Form.Item id="isGlobal-input" name="isGlobal" label="Public" valuePropName="checked"
                             >
                                 <Switch />
                             </Form.Item>
                             <div style={{ textAlign: "right" }}>
-                                <Button type="primary" htmlType="submit">
+                                <Button id="save-button" type="primary" htmlType="submit">
                                     Save
                 </Button>{' '}
-                                <Button type="danger" htmlType="button" onClick={() => this.props.history.push('/lobby')}>
+                                <Button id="back-button" type="danger" htmlType="button" onClick={() => this.props.history.push('/lobby')}>
                                     Back
                 </Button>
                             </div>

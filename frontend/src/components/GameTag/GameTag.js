@@ -1,3 +1,4 @@
+import React from 'react'; 
 import { Tag } from 'antd';
 import { BackwardOutlined } from '@ant-design/icons';
 import IconLOL from '../../static/icon_lol.png';
@@ -26,17 +27,17 @@ const GameTag = (props) => {
     let icon, name, color_checked, color_unchecked;
     const iconWidth = 20;
 
-    if (props.id === 1) {
+    if (props.tagId === 1) {
         icon = IconLOL
         name = 'LOL'
         color_checked = '#1A516E'
         color_unchecked = 'geekblue'
-    } else if (props.id === 2) {
+    } else if (props.tagId === 2) {
         icon = IconHearth
         name = 'HearthStone'
         color_checked = '#51331D'
         color_unchecked = 'geekblue'
-    } else if (props.id === 3) {
+    } else if (props.tagId === 3) {
         icon = IconMaple
         name = 'MapleStory'
         color_checked = '#F5A009'
@@ -48,7 +49,7 @@ const GameTag = (props) => {
         color_unchecked = 'geekblue'
     }
     return (
-        <div className="tag">
+        <div className="GameTag">
             <Tag
                 icon={
                     <img

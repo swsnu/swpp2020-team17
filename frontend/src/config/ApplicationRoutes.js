@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 import Lobby from "../containers/Lobby/Lobby";
-import RoomInfo from "../components/RoomInfo/RoomInfo";
+import RoomInfo from "../containers/RoomInfo/RoomInfo";
 import Posts from "../containers/Post/Post";
 import SideNav from "../containers/layouts/sidebar";
 

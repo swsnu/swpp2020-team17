@@ -15,7 +15,7 @@ const SearchedUser = props => {
                     {props.username}
                 </div>
                 <div className="right">
-                    <Button onClick={props.onClick}>
+                    <Button onClick={props.onButtonClick}>
                         {props.addOrDelete}
                     </Button>
                 </div>
