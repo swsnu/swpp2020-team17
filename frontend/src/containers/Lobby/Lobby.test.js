@@ -177,6 +177,9 @@ describe('<Lobby />', () => {
         wrapper.at(1).simulate('click');
         lobbyInstance = component.find(Lobby.WrappedComponent).instance();
         expect(lobbyInstance.state.selectedTagList).toEqual([]); 
+        wrapper.at(1).simulate('click');
+        lobbyInstance = component.find(Lobby.WrappedComponent).instance();
+        expect(lobbyInstance.state.selectedTagList).toEqual([2]); 
     });
 
     it('should handle onClickCreateRoom button', () => {
@@ -196,4 +199,22 @@ describe('<Lobby />', () => {
         wrapper.at(0).simulate('click');
         expect(spyHistoryPush).toBeCalledTimes(1);
     });
+
+    it('should render nothing when there is no current user', () => {
+        const stubInitialState = {
+            currentUser: null
+        }
+        const mockStore = getMockStore(stubInitialState);
+        lobby = (
+            <Provider store={mockStore}>
+              <ConnectedRouter history={history}>
+              <Switch>
+                <Route path='/' exact component={Lobby} />
+              </Switch>
+              </ConnectedRouter>
+            </Provider>
+        );
+        const component = mount(lobby);
+    });
+
 });
