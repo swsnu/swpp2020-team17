@@ -62,6 +62,7 @@ class Search extends Component {
                 tags = this.props.storedTagList.map(tag => {
                     if (tag.name.toLowerCase().includes(this.state.searchInput)) {
                         let addOrDelete = 'Add';
+                        console.log(tag.name);
                         if (this.props.storedCurrentUser.tagList.find(id => id===tag.id) !== undefined) addOrDelete = 'Delete'
                         return <SearchedTag key={tag.id} id={tag.id} tagname={tag.name} addOrDelete={addOrDelete} onButtonClick={() => this.onClickTagButton(tag.id, addOrDelete)}/>
                     }

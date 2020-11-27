@@ -41,24 +41,25 @@ class Lobby extends Component{
     }
 
     onClickJoin = (id) => {
-        // let user = this.props.currentUser;
-        // user.chatroom = id;
-        // this.props.onPutUser(user);
+        let user = this.props.storedCurrentUser;
+        console.log(user);
+        user.chatroom = id;
+        this.props.onPutUser(user);
         // this.props.history.push('')
     }
 
     onClickSure = (id) => {
-        let user = this.props.currentUser;
-        // user.shallWeRoomList.filter(room => {
-        //     return room.id != id;
-        // });
-        // user.chatroom = id;
-        // this.props.onPutUser(user);
+        let user = this.props.storedCurrentUser;
+        user.shallWeRoomList.filter(room => {
+            return room.id != id;
+        });
+        user.chatroom = id;
+        this.props.onPutUser(user);
         // this.props.history.push('')
     }
     
     onClickSorry = (id) => {
-        this.props.deleteChatroom(id);
+        this.props.onDeleteChatroom(id);
     }
     
 
@@ -107,7 +108,7 @@ class Lobby extends Component{
                         </Title>
                     </Col>
                     <Col span={6}>
-                        <Button onClick={this.onClickCreateRoom} block>Create Room</Button>
+                        <Button id="create-chatroom-button" onClick={this.onClickCreateRoom} block>Create Room</Button>
                     </Col>
                 </Row>
 

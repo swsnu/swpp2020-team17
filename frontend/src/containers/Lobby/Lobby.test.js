@@ -15,12 +15,30 @@ import * as chatroomActionCreators from '../../store/actions/chatroom';
 
 jest.mock('../../components/ChatroomList/ChatroomList', () => {
     return jest.fn(props => {
-        return (
-            <div className="spyChatroomList">
-            </div>
-        )
+        if (props.isShallWe) {
+            return (
+                <div className="spyChatroomList">
+                    <div className="click-sure-button" onClick={props.onClickSure} />
+                    <div className="click-sorry-button" onClick={props.onClickSorry} />
+                </div>
+            )
+        } else {
+            return (
+                <div className="spyChatroomList">
+                    <div className="click-join-button" onClick={props.onClickJoin} />
+                </div>
+            )
+        }
     });
 });
+
+jest.mock('../../components/GameTag/GameTag', () => {
+    return jest.fn(props => {
+        return (
+            <div className="spyGameTag" onClick={props.onClick}/>
+        )
+    })
+})
 
 const stubInitialState = {
     currentUser: {
@@ -31,7 +49,7 @@ const stubInitialState = {
         chatroom: -1, 
         friendList: [2],
         postList: [1, 5],
-        shallWeRoomList: [1, 2], 
+        shallWeRoomList: [1], 
         watchedPostList: [1, 2, 3], 
         tagList: [1]
     },
@@ -64,6 +82,20 @@ const stubInitialState = {
         }
     ],
 }
+
+Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
 
 const mockStore = getMockStore(stubInitialState);
 
@@ -102,6 +134,34 @@ describe('<Lobby />', () => {
     it('should render ChatroomList', () => {
         const component = mount(lobby);
         const wrapper = component.find('.spyChatroomList');
+        expect(wrapper.length).toBe(2);
+    });
+
+    it('should handle onClickSure button', () => {
+        const component = mount(lobby);
+        const wrapper = component.find('.spyChatroomList .click-sure-button');
+        wrapper.simulate('click');
         expect(wrapper.length).toBe(1);
     });
+
+    it('should handle onClickSorry button', () => {
+        const component = mount(lobby);
+        const wrapper = component.find('.spyChatroomList .click-sorry-button');
+        wrapper.simulate('click');
+        expect(wrapper.length).toBe(1);
+    });
+
+    it('should handle onClickJoin button', () => {
+        const component = mount(lobby);
+        const wrapper = component.find('.spyChatroomList .click-join-button');
+        wrapper.simulate('click');
+        expect(wrapper.length).toBe(1);
+    });
+
+    // it('should handle onClickCreateRoom button', () => {
+    //     const component = mount(lobby);
+    //     const wrapper = component.find('#create-chatroom-button');
+    //     wrapper.simulate('click');
+    //     expect(wrapper.length).toBe(1);
+    // });
 });

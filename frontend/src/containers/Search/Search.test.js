@@ -139,9 +139,11 @@ describe('<Search />', () => {
         wrapper.props().onSearch('LOL');
         const searchInstance = component.find(Search.WrappedComponent).instance();
         expect(searchInstance.state.searchInput).toEqual('lol');
-        
-        wrapper = component.find(".click-searched-tag");
+        wrapper.update()
+        wrapper = component.find(".spySearchedTag .click-searched-tag");
+        wrapper.simulate('click');
         expect(wrapper.length).toBe(1);
+
     });
 
     it('should search tag not in tagList', () => {
@@ -151,8 +153,9 @@ describe('<Search />', () => {
         wrapper.props().onSearch('HearthStone');
         const searchInstance = component.find(Search.WrappedComponent).instance();
         expect(searchInstance.state.searchInput).toEqual('hearthstone');
-        
-        wrapper = component.find(".click-searched-tag");
+        wrapper.update();
+        wrapper = component.find(".spySearchedTag .click-searched-tag");
+        wrapper.simulate('click');
         expect(wrapper.length).toBe(1);
     });
 
@@ -172,6 +175,7 @@ describe('<Search />', () => {
         wrapper.props().onSearch('USER2');
         const searchInstance = component.find(Search.WrappedComponent).instance();
         expect(searchInstance.state.searchInput).toEqual('user2');
+        wrapper.update();
         wrapper = component.find(".spySearchedUser .click-searched-user");
         wrapper.simulate('click');
         expect(wrapper.length).toBe(1);
@@ -184,8 +188,27 @@ describe('<Search />', () => {
         wrapper.props().onSearch('USER3');
         const searchInstance = component.find(Search.WrappedComponent).instance();
         expect(searchInstance.state.searchInput).toEqual('user3');
+        wrapper.update();
+
         wrapper = component.find(".spySearchedUser .click-searched-user");
         wrapper.simulate('click');
         expect(wrapper.length).toBe(1);
+    });
+
+    it('should render nothing when there is no current user', () => {
+        const stubInitialState = {
+            currentUser: null
+        }
+        const mockStore = getMockStore(stubInitialState);
+        search = (
+            <Provider store={mockStore}>
+              <ConnectedRouter history={history}>
+              <Switch>
+                <Route path='/' exact component={Search} />
+              </Switch>
+              </ConnectedRouter>
+            </Provider>
+        );
+        const component = mount(search);
     });
 });

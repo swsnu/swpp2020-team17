@@ -1,3 +1,4 @@
+import React from 'react'; 
 import { Tag } from 'antd';
 import { BackwardOutlined } from '@ant-design/icons';
 import IconLOL from '../../static/icon_lol.png';
