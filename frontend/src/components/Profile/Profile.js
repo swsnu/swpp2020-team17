@@ -93,39 +93,41 @@ class Profile extends Component {
         // let tagList = this.props.storedCurrentUser.tagList;
 
         return (
-            <Card
-                //FIXME: 추가예정
-                // extra={
-                //     <Switch
-                //         checkedChildren={<CheckOutlined />}
-                //         unCheckedChildren={<CloseOutlined />}
-                //         {...(this.state.showOnline)?{defaultChecked}:{}}
-                //         onChange={this.onToggleOnlineSwitch}
-                //     />
-                // }
-            >
-                <Card.Meta
-                    title={
-                        <AuthorWrapper>
-                            <Author
-                                name={this.props.name}
-                                avatar={this.props.avatar}
-                                //FIXME: model추가 필요
-                                showOnline={true}
-                            />
-                        </AuthorWrapper>
-                    }
-                    description={
-                        <GameTagWrapper>
-                            {fetchGameTagList(this.props.tagList)}
-                        </GameTagWrapper>
-                    }
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                    }}
-                ></Card.Meta>
-            </Card>
+            <div className="Profile">
+                <Card
+                    //FIXME: 추가예정
+                    // extra={
+                    //     <Switch
+                    //         checkedChildren={<CheckOutlined />}
+                    //         unCheckedChildren={<CloseOutlined />}
+                    //         {...(this.state.showOnline)?{defaultChecked}:{}}
+                    //         onChange={this.onToggleOnlineSwitch}
+                    //     />
+                    // }
+                >
+                    <Card.Meta
+                        title={
+                            <AuthorWrapper>
+                                <Author
+                                    name={this.props.name}
+                                    avatar={this.props.avatar}
+                                    //FIXME: model추가 필요
+                                    showOnline={true}
+                                />
+                            </AuthorWrapper>
+                        }
+                        description={
+                            <GameTagWrapper>
+                                {fetchGameTagList(this.props.tagList)}
+                            </GameTagWrapper>
+                        }
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}
+                    ></Card.Meta>
+                </Card>
+            </div>
         );
     }
 }
