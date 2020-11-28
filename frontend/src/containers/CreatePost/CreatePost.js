@@ -79,45 +79,47 @@ class CreatePost extends React.Component {
         };
 
         return (
-            <Form
-                {...layout}
-                name="nest-messages"
-                onFinish={this.onFinish.bind(this)}
-                validateMessages={validateMessages}>
+            <div className="CreatePost">
+                <Form
+                    {...layout}
+                    name="nest-messages"
+                    onFinish={this.onFinish.bind(this)}
+                    validateMessages={validateMessages}>
 
-                <Form.Item name='tag' label="Tag" rules={[{ required: true}]}>
-                    <select>
-                        <option value="none" selected disabled hidden />
-                        <option value="1" id='1'>LOL</option>
-                        <option value="HearthStone" id='2'>HearthStone</option>
-                        <option value="MapleStory" id='3'>MapleStory</option>
-                    </select>
-                </Form.Item>
+                    <Form.Item name='tag' label="Tag" rules={[{ required: true}]}>
+                        <select>
+                            <option value="none" selected disabled hidden />
+                            <option value="1" id='1'>LOL</option>
+                            <option value="HearthStone" id='2'>HearthStone</option>
+                            <option value="MapleStory" id='3'>MapleStory</option>
+                        </select>
+                    </Form.Item>
 
-                <Form.Item name='image' label='Image' rules={[{required: true}]}>
-                    <Upload
-                        name="avatar"
-                        listType="picture-card"
-                        className="avatar-uploader"
-                        showUploadList={false}
-                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        beforeUpload={beforeUpload}
-                        onChange={this.handleChange}
-                    >
-                        {imageUrl? <img src={imageUrl} alt="avatar" style={{ width:'100%'}} /> : uploadButton}
-                    </Upload>
-                </Form.Item>
+                    <Form.Item name='image' label='Image' rules={[{required: true}]}>
+                        <Upload
+                            name="avatar"
+                            listType="picture-card"
+                            className="avatar-uploader"
+                            showUploadList={false}
+                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                            beforeUpload={beforeUpload}
+                            onChange={this.handleChange}
+                        >
+                            {imageUrl? <img src={imageUrl} alt="avatar" style={{ width:'100%'}} /> : uploadButton}
+                        </Upload>
+                    </Form.Item>
 
-                <Form.Item name='content' label="Content" rules={[{required: true}]}>
-                    <Input.TextArea/>
-                </Form.Item>
+                    <Form.Item name='content' label="Content" rules={[{required: true}]}>
+                        <Input.TextArea/>
+                    </Form.Item>
 
-                <Form.Item wrapperCol={{...layout.wrapperCol}}>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form>
+                    <Form.Item wrapperCol={{...layout.wrapperCol}}>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
         );
     }
 }

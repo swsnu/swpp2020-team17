@@ -57,8 +57,10 @@ describe('<CreateNewPost />', () => {
     })
 
     it('should render Tag select', () => {
-        const wrapper = mount(create);
-        const answer = wrapper.find('CreatePost');
-        expect(answer).toHaveLength(1);
+        const component = mount(create);
+        const wrapper = component.find('Tag');
+        expect(wrapper.length).toBe(1);
     })
+
+
 })
