@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import InfiniteScroll from 'react-infinite-scroller';
-import { List, Divider, message, Avatar, Spin, Space, Button } from 'antd';
+//FIXME: Infinite scroll to be implemented
+// import InfiniteScroll from 'react-infinite-scroller';
+import { List, Divider, Spin, Space, Button } from 'antd';
+//FIXME: Infinite scroll to be implemented
+// import { message } from 'antd';
 import { MessageTwoTone, HeartTwoTone } from '@ant-design/icons';
 import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
@@ -36,8 +39,9 @@ class Post extends Component {
     state = {
         selectedTagList: [],
         activePostList: [], // under selected tag
-        loading: false,
-        hasMore: true,
+        //FIXME: Infinite scroll to be implemented
+        // loading: false,
+        // hasMore: true,
     }
 
     componentDidMount() {
@@ -68,43 +72,45 @@ class Post extends Component {
         this.setState({ selectedTagList: nextSelectedTags });
     }
 
-    handleInfiniteOnLoad = () => {
-        let { activePostList } = this.state;
-        this.setState({
-            loading: true,
-        });
+    //FIXME: Infinite scroll to be implemented
+    // handleInfiniteOnLoad = () => {
+    //     let { activePostList } = this.state;
+    //     this.setState({
+    //         loading: true,
+    //     });
 
-        if (activePostList.length > 3) { // 길이 관련 손봐야함.
-            message.warning('모든 포스트를 다 읽었습니다.');
-            this.setState({
-                hasMore: false,
-                loading: false,
-            });
-            return;
-        }
+    //     if (activePostList.length > 3) { // 길이 관련 손봐야함.
+    //         message.warning('모든 포스트를 다 읽었습니다.');
+    //         this.setState({
+    //             hasMore: false,
+    //             loading: false,
+    //         });
+    //         return;
+    //     }
 
-        this.fetchData(posts => {
-            activePostList = activePostList.concat(posts);
-            this.setState({
-                activePostList,
-                loading: false,
-            });
-        });
-        activePostList
-    };
+    //FIXME: Infinite scroll to be implemented
+    //     this.fetchData(posts => {
+    //         activePostList = activePostList.concat(posts);
+    //         this.setState({
+    //             activePostList,
+    //             loading: false,
+    //         });
+    //     });
+    // };
 
-    fetchData = callback => {
-        reqwest({
-            url: 'http://localhost:3000/api/post',
-            type: 'json',
-            method: 'get',
-            contentType: 'application/json',
-            success: res => {
-                // console.log(res)
-                callback(res);
-            },
-        });
-    };
+    //FIXME: Infinite scroll to be implemented
+    // fetchData = callback => {
+    //     reqwest({
+    //         url: 'http://localhost:3000/api/post',
+    //         type: 'json',
+    //         method: 'get',
+    //         contentType: 'application/json',
+    //         success: res => {
+    //             // console.log(res)
+    //             callback(res);
+    //         },
+    //     });
+    // };
 
     render() {
         let tagList = []
@@ -141,13 +147,16 @@ class Post extends Component {
                 </div>
 
                 <Divider orientation="left" plain> Posts </Divider>
-                {/* <InfiniteScroll
+                {/*
+                //FIXME: Infinite scroll to be implemented
+                <InfiniteScroll
                     initialLoad={false}
                     pageStart={0}
                     loadMore={this.handleInfiniteOnLoad}
                     hasMore={!this.state.loading && this.state.hasMore}
                     useWindow={false}
-                > */}
+                >
+                */}
                     <List
                         dataSource={activePostList}
                         renderItem={item => (
@@ -212,23 +221,26 @@ class Post extends Component {
                                             <div>
                                                 <Space>
                                                     <MessageTwoTone
-                                                        onClick={handleMessageCliked}
+                                                        onClick={handleCommentClicked}
                                                     />
                                                     3
                                                 </Space>
                                             </div>
                                         </IconContainer>
-                                        {/*show comment */}
+                                        {/*
+                                        //FIXME: Infinite scroll to be implemented
+                                        show comment
+                                        */}
                                     </PostFooterContainer>
                                 </PostContainer>
                             </List.Item>
                         )}
                     >
-                        {this.state.loading && this.state.hasMore && (
+                        {/* {this.state.loading && this.state.hasMore && (
                             <LoadingWrapper>
                                 <Spin />
                             </LoadingWrapper>
-                        )}
+                        )} */}
                     </List>
                 {/* </InfiniteScroll> */}
             </PostPageWrapper>
@@ -377,20 +389,22 @@ const handleBodyClicked = () => {
     console.log("Body click!");
 }
 
-const showCommentList = () => {
-    if (showComment) {
-        return (
-            <CommentList />
-        )
-    } else {
-        return ({});
-    }
-}
+//FIXME: backend에서 코멘트 수정된 뒤 추가.
+// const showCommentList = () => {
+//     if (showComment) {
+//         return (
+//             <CommentList />
+//         )
+//     } else {
+//         return ({});
+//     }
+// }
+
 const handleLikeCliked = () => {
     console.log("Like!");
 }
 
-const handleMessageCliked = () => {
+const handleCommentClicked = () => {
     console.log("Comment!");
 }
 
