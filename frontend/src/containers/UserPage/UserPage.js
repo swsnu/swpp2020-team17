@@ -5,10 +5,13 @@ import styled from 'styled-components';
 import Post from '../../containers/Post/Post';
 import { Divider } from 'antd';
 import Profile from '../../components/Profile/Profile';
+import Author from '../../components/Author/Author';
+import { Table, Row, Col, Button, Typography, Tag } from 'antd';
+import GameTag from '../../components/GameTag/GameTag';
 
 const UserPageContainer = styled.div`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     /* flex-wrap: wrap; */
     /* justify-content: space-between; */
     /* border: 1px solid #005691; */
@@ -19,37 +22,37 @@ const UserPageContainer = styled.div`
     justify-content: space-between;
 `;
 
-const UserPageLeftContainer = styled.div`
+const UserPageRowContainer = styled.div`
     display: flex;
-    flex-direction: column;
-    flex-basis: 40%;
+    flex-direction: row;
+    flex-basis: 80%;
     /* align-items: middle; */
     /* justify-content: space-between; */
     /* margin-bottom: 10px; */
 `;
 
 const ProfileCardWrapper = styled.div`
-    flex-basis: 45%;
-    margin-bottom: 20px;
-    box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
-`;
-
-const FriendListWrapper = styled.div`
-    height: 100%;
-    box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
-`;
-
-const UserPageRightContainer = styled.div`
     display: flex;
-    flex-direction: column;
-    flex-basis: 55%;
-    /* justify-content: space-between; */
-    /* cursor: pointer; */
+    flex-wrap: wrap;
+    flex-basis: 100%;
+    margin-bottom: 20px;
+    align-items: middle;
+    box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
+    align-items: center;
+    justify-content: center;
+    height: 20%;
 `;
 
-// const CreateNewPostsWrapper = styled.div`
-//     flex-basis: 20%;
-// `;
+const TagWrapper = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+    margin-bottom: 20px;
+    align-items: middle;
+    box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
+    align-items: center;
+    height: 20%;
+`;
 
 const GridPostsWrapper = styled.div`
     /* flex-basis: 80%; */
@@ -57,16 +60,17 @@ const GridPostsWrapper = styled.div`
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
 `;
 
-// const UserPageFooterContainer = styled.div`
-//     display: flex;
-//     flex-direction: column;
-//     margin-top: 10px;
-// `;
-
 class UserPage extends Component {
     // FIXME: User model 수정되면 currentUser 말고 user를 prop으로 받도록 수정 요함.
+    state = {
+        selectedTagList: [],
+    };
+
     componentDidMount() {
         this.props.onGetUser(this.props.match.params.id);
+        if (this.props.storedSelectedUser) {
+            this.setState({ selectedTagList: this.props.storedSelectedUser.tagList });
+        }
     }
 
     onClickPost() {
@@ -77,36 +81,61 @@ class UserPage extends Component {
         this.props.history.push('/post/create/')
     }
 
-    onClickTag() {
-        this.props.changeTagState()
+    onToggleTag = (tag_id) => {
+        const checked = this.state.selectedTagList.indexOf(tag_id) > -1;
+        const { selectedTagList } = this.state;
+        const nextSelectedTags = checked ? selectedTagList.filter(id => id !== tag_id) : [...selectedTagList, tag_id];
+        console.log('You are interested in: ', nextSelectedTags);
+        this.setState({ selectedTagList: nextSelectedTags });
     }
-
+    
     render() {
-        let user, userProfile;
+        let user, userProfile, tagToggle;
         if (this.props.storedSelectedUser) {
             user = this.props.storedSelectedUser;
             userProfile = (
-            <Profile 
+            <Author
                 name={user.username}
                 avatar={user.avatar}
-                tagList={user.tagList}
             />
-        );
+            );
+            tagToggle = this.props.storedSelectedUser.tagList.map(tag_id => {
+                return (
+                    <GameTag 
+                        key={tag_id}
+                        tagId={tag_id} 
+                        isChecked={this.state.selectedTagList.includes(tag_id)}
+                        onClick={() => this.onToggleTag(tag_id)}
+                    />
+                );
+            });
         }
         
 
         return(
             <UserPageContainer>
-                <ProfileCardWrapper>
-                    {userProfile}
-                </ProfileCardWrapper>
-            </UserPageContainer>
-            <UserPageContainer>
-                <GridPostsWrapper>
-                    <Divider orientation="left" style={{ marginTop: 0 }}>
-                        Gallery
-                    </Divider>
-                </GridPostsWrapper>
+                <UserPageRowContainer>
+                    <ProfileCardWrapper>
+                        {userProfile}
+                        <Button>Add</Button>
+                        <Button>ShallWe</Button>
+                    </ProfileCardWrapper>
+                </UserPageRowContainer>
+                <UserPageRowContainer>
+                    <TagWrapper>
+                        {tagToggle}
+                    </TagWrapper>
+                </UserPageRowContainer>
+                <UserPageRowContainer>
+
+                </UserPageRowContainer>
+                <UserPageRowContainer>
+                    <GridPostsWrapper>
+                        <Divider orientation="left" style={{ marginTop: 0 }}>
+                            Gallery
+                        </Divider>
+                    </GridPostsWrapper>
+            </UserPageRowContainer>
             </UserPageContainer>
         );
         // return(
