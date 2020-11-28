@@ -22,6 +22,7 @@ const TagtextWrapper = styled.text`
 */
 
 // Take game's name by props
+// @param : { key, tagId, isChecked, onClick}
 const GameTag = (props) => {
     // Set certain game tag's icon, name, color_checked
     let icon, name, color_checked, color_unchecked;

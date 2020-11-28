@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import InfiniteScroll from 'react-infinite-scroller';
-import { List, Divider, message, Avatar, Spin, Space, Button } from 'antd';
+//FIXME: Infinite scroll to be implemented
+// import InfiniteScroll from 'react-infinite-scroller';
+import { List, Divider, Space, Button } from 'antd';
+//FIXME: Infinite scroll to be implemented
+// import { Spin, message } from 'antd';
 import { MessageTwoTone, HeartTwoTone } from '@ant-design/icons';
 import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
@@ -15,7 +18,7 @@ const PostPageWrapper = styled.div`
     display: flex;
     flex-direction: column;
     /* overflow: auto; */
-  /* padding: 8px 24px; */
+    /* padding: 8px 24px; */
     height: 100%;
 `;
 
@@ -31,13 +34,17 @@ const LoadingWrapper = styled.div`
     text-align: center;
 `;
 
+const PostListWrapper = styled.div`
+`;
+
 class Post extends Component {
 
     state = {
         selectedTagList: [],
         activePostList: [], // under selected tag
-        loading: false,
-        hasMore: true,
+        //FIXME: Infinite scroll to be implemented
+        // loading: false,
+        // hasMore: true,
     }
 
     componentDidMount() {
@@ -49,6 +56,7 @@ class Post extends Component {
                 selectedTagList: this.props.storedCurrentUser.tagList,
                 activePostList: this.props.storedPostList
             });
+            //FIXME: Infinite scroll to be implemented
             // }
             // this.fetchData(res => {
             //     this.setState({
@@ -68,48 +76,82 @@ class Post extends Component {
         this.setState({ selectedTagList: nextSelectedTags });
     }
 
-    handleInfiniteOnLoad = () => {
-        let { activePostList } = this.state;
-        this.setState({
-            loading: true,
-        });
+    handleAuthorClicked = () => {
+        console.log("Author click!");
+    }
 
-        if (activePostList.length > 3) { // 길이 관련 손봐야함.
-            message.warning('모든 포스트를 다 읽었습니다.');
-            this.setState({
-                hasMore: false,
-                loading: false,
-            });
-            return;
-        }
+    handleShallWeClicked = () => {
+        console.log("ShallWe click!");
+    }
 
-        this.fetchData(posts => {
-            activePostList = activePostList.concat(posts);
-            this.setState({
-                activePostList,
-                loading: false,
-            });
-        });
-        activePostList
-    };
+    handleBodyClicked = () => {
+        console.log("Body click!");
+    }
 
-    fetchData = callback => {
-        reqwest({
-            url: 'http://localhost:3000/api/post',
-            type: 'json',
-            method: 'get',
-            contentType: 'application/json',
-            success: res => {
-                // console.log(res)
-                callback(res);
-            },
-        });
-    };
+    //FIXME: backend에서 코멘트 수정된 뒤 추가.
+    // const showCommentList = () => {
+    //     if (showComment) {
+    //         return (
+    //             <CommentList />
+    //         )
+    //     } else {
+    //         return ({});
+    //     }
+    // }
+
+    handleLikeCliked = () => {
+        console.log("Like!");
+    }
+
+    handleCommentClicked = () => {
+        console.log("Comment!");
+    }
+
+    //FIXME: Infinite scroll to be implemented
+    // handleInfiniteOnLoad = () => {
+    //     let { activePostList } = this.state;
+    //     this.setState({
+    //         loading: true,
+    //     });
+
+    //     if (activePostList.length > 3) { // 길이 관련 손봐야함.
+    //         message.warning('모든 포스트를 다 읽었습니다.');
+    //         this.setState({
+    //             hasMore: false,
+    //             loading: false,
+    //         });
+    //         return;
+    //     }
+
+    //FIXME: Infinite scroll to be implemented
+    //     this.fetchData(posts => {
+    //         activePostList = activePostList.concat(posts);
+    //         this.setState({
+    //             activePostList,
+    //             loading: false,
+    //         });
+    //     });
+    // };
+
+    //FIXME: Infinite scroll to be implemented
+    // fetchData = callback => {
+    //     reqwest({
+    //         url: 'http://localhost:3000/api/post',
+    //         type: 'json',
+    //         method: 'get',
+    //         contentType: 'application/json',
+    //         success: res => {
+    //             // console.log(res)
+    //             callback(res);
+    //         },
+    //     });
+    // };
 
     render() {
         let tagList = []
         let tagToggle = []
-        let postList = []
+        //FIXME: Infinite scroll to be implemented
+        // let postList = []
         let activePostList = []
         let user = null
         
@@ -119,13 +161,15 @@ class Post extends Component {
             tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
                 return (
                     <GameTag 
-                        id={tag_id} 
+                        key={tag_id}
+                        tagId={tag_id} 
                         isChecked={this.state.selectedTagList.includes(tag_id)}
                         onClick={() => this.onToggleTag(tag_id)}
                     />
                 );
             });
-            postList = this.props.storedPostList;
+            //FIXME: Infinite scroll to be implemented
+            // postList = this.props.storedPostList;
             activePostList = this.props.storedPostList.filter(post => {
                 return this.state.selectedTagList.includes(post.tag);
             });
@@ -133,28 +177,29 @@ class Post extends Component {
 
         return (
             <PostPageWrapper>
-                <Divider orientation="left" style={{ marginTop: 0 }} plain> Your games </Divider>
-                <div className="tagToggle">
-                    <GameTagWrapper>
-                        {tagToggle}
-                    </GameTagWrapper> 
-                </div>
+                <GameTagWrapper>
+                    <span style={{ marginRight: 8 }}>Your Games:</span>
+                    {tagToggle}
+                </GameTagWrapper> 
 
-                <Divider orientation="left" plain> Posts </Divider>
-                {/* <InfiniteScroll
+                <PostListWrapper>
+                {/*
+                //FIXME: Infinite scroll to be implemented
+                <InfiniteScroll
                     initialLoad={false}
                     pageStart={0}
                     loadMore={this.handleInfiniteOnLoad}
                     hasMore={!this.state.loading && this.state.hasMore}
                     useWindow={false}
-                > */}
+                >
+                */}
                     <List
                         dataSource={activePostList}
                         renderItem={item => (
                             <List.Item key={item.id}>
                                 <PostContainer>
                                     <PostHeaderContainer>
-                                        <AuthorItem onClick={handleAuthorClicked} style={{ cursor: "pointer" }} >
+                                        <AuthorItem onClick={this.handleAuthorClicked} style={{ cursor: "pointer" }} >
                                             <Author
                                                 //FIXME: user로 넘기도록 수정해야함
                                                 name={item.authorName}
@@ -166,7 +211,7 @@ class Post extends Component {
                                             <Button
                                                 type="primary"
                                                 shape="round"
-                                                onClick={handleShallWeClicked}
+                                                onClick={this.handleShallWeClicked}
                                                 // disabled="true"
                                                 style={{ fontSize: 12, fontWeight: "bolder" }}
                                             >
@@ -175,16 +220,16 @@ class Post extends Component {
                                         </ButtonItem>
                                         <GameTagItem>
                                             <GameTag
-                                                id={item.tag}
-                                                // FIXME: 왜 default가 false지
-                                                isChecked={this.state.selectedTagList.includes(item.tag)}
+                                                key={item.tag}
+                                                tagId={item.tag}
+                                                isChecked={true}
                                             />
                                         </GameTagItem>
                                     </PostHeaderContainer>
 
                                     <Divider style={{ marginTop: 0, marginBottom: 10}}/>
 
-                                    <PostBodyContainer onClick={handleBodyClicked}>
+                                    <PostBodyContainer onClick={this.handleBodyClicked}>
                                         <ContentsContainer style={{ width: "100%" }}>
                                                 {item.content}
                                         </ContentsContainer>
@@ -200,9 +245,9 @@ class Post extends Component {
                                             <div>
                                                 <Space>
                                                     <HeartTwoTone
-                                                        onClick={handleLikeCliked}
+                                                        onClick={this.handleLikeCliked}
                                                     />
-                                                    156
+                                                    {item.likeNum}
                                                 </Space>
                                             </div>
                                             <Divider
@@ -212,25 +257,29 @@ class Post extends Component {
                                             <div>
                                                 <Space>
                                                     <MessageTwoTone
-                                                        onClick={handleMessageCliked}
+                                                        onClick={this.handleCommentClicked}
                                                     />
                                                     3
                                                 </Space>
                                             </div>
                                         </IconContainer>
-                                        {/*show comment */}
+                                        {/*
+                                        //FIXME: Infinite scroll to be implemented
+                                        show comment
+                                        */}
                                     </PostFooterContainer>
                                 </PostContainer>
                             </List.Item>
                         )}
                     >
-                        {this.state.loading && this.state.hasMore && (
+                        {/* {this.state.loading && this.state.hasMore && (
                             <LoadingWrapper>
                                 <Spin />
                             </LoadingWrapper>
-                        )}
+                        )} */}
                     </List>
                 {/* </InfiniteScroll> */}
+                </PostListWrapper>
             </PostPageWrapper>
         )
     }
@@ -364,35 +413,6 @@ const IconContainer = styled.div`
     flex-wrap: wrap;
     margin-left: 5px;
 `;
-
-const handleAuthorClicked = () => {
-    console.log("Author click!");
-}
-
-const handleShallWeClicked = () => {
-    console.log("ShallWe click!");
-}
-
-const handleBodyClicked = () => {
-    console.log("Body click!");
-}
-
-const showCommentList = () => {
-    if (showComment) {
-        return (
-            <CommentList />
-        )
-    } else {
-        return ({});
-    }
-}
-const handleLikeCliked = () => {
-    console.log("Like!");
-}
-
-const handleMessageCliked = () => {
-    console.log("Comment!");
-}
 
 // import Author_test_copy from './Author_test_copy';
 
