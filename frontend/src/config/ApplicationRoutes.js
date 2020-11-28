@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-d
 import Lobby from "../containers/Lobby/Lobby";
 import RoomInfo from "../containers/RoomInfo/RoomInfo";
 import Posts from "../containers/Post/Post";
-import SideNav from "../containers/layouts/sidebar";
+import SideNav from "../components/SideBar/SideBar";
 
 // import File from "../containers/pages/files";
 // import Videos from "../containers/pages/videos";
