@@ -26,7 +26,7 @@ function beforeUpload(file) {
 };
 
 
-class CreateNewPost extends React.Component {
+class CreatePost extends React.Component {
     state = {
         loading: false,
     };
@@ -59,9 +59,8 @@ class CreateNewPost extends React.Component {
 
     render() {
         const { loading, imageUrl } = this.state;
-        const postList = this.props.postList
 
-        console.log(postList)
+        console.log(this.props.selectedPost)
 
         const layout = {
             labelCol: {span: 5},
@@ -77,13 +76,6 @@ class CreateNewPost extends React.Component {
 
         const validateMessages = {
             required: '${label} is required!',
-            types: {
-                email: '${label} is not validate email!',
-                number: '${label} is not a validate number!',
-            },
-            number: {
-                range: '${label} must be between ${min} and ${max}',
-            },
         };
 
         return (
@@ -93,11 +85,16 @@ class CreateNewPost extends React.Component {
                 onFinish={this.onFinish.bind(this)}
                 validateMessages={validateMessages}>
 
-                <Form.Item name='title' label="Title" rules={[{required: true}]}>
-                    <Input/>
+                <Form.Item name='tag' label="Tag" rules={[{ required: true}]}>
+                    <select>
+                        <option value="none" selected disabled hidden />
+                        <option value="1" id='1'>LOL</option>
+                        <option value="HearthStone" id='2'>HearthStone</option>
+                        <option value="MapleStory" id='3'>MapleStory</option>
+                    </select>
                 </Form.Item>
 
-                <Form.Item name='image' label='Image' rules={[{required: false}]}>
+                <Form.Item name='image' label='Image' rules={[{required: true}]}>
                     <Upload
                         name="avatar"
                         listType="picture-card"
@@ -126,14 +123,20 @@ class CreateNewPost extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    postList: state.ps.postList
+    postList: state.ps.postList,
+    currentUser: state.ur.currentUser,
+    selectedPost: state.ps.selectedPost,
 })
 
 const mapDispatchToProps = (dispatch) => {
     return {
         createPost: (post) =>
-            dispatch(actionCreators.createPost(post))
+            dispatch(actionCreators.createPost(post)),
+
+        getCurrentUser: () => {
+            dispatch(actionCreators.getCurrentUser())
+        },
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateNewPost)
+export default connect(mapStateToProps, mapDispatchToProps)(CreatePost)
