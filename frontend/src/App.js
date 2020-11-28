@@ -10,7 +10,9 @@ import ApplicationRoutes from "./config/ApplicationRoutes";
 function App() {
 
   return (
-    <ApplicationRoutes />
+    <div className="App">
+      <ApplicationRoutes />
+    </div>
   );
 }
 
