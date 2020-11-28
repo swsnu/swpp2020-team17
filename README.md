@@ -7,7 +7,8 @@
 # Frontend
 1. If you want to run frontend for the first time after cloning,
 <pre><code>cd frontend   
-sh runFront.sh
+yarn
+yarn start
 </code></pre>
 
 2. After first running,
