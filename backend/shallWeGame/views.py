@@ -40,7 +40,7 @@ def discord_login_redirect(request):
         )
         discord_user.save()
     login(request, discord_user)
-    return redirect("http://localhost:3000/post")
+    return redirect("http://localhost:3000/")
 
 
 def exchange_code(code: str):
