@@ -12,7 +12,7 @@ const SideNav = () => {
     const history = useHistory();
 
     const handlePostClick = () => {
-        history.push('/posts');
+        history.push('/post');
     }
 
     const handleLobbyClick = () => {
@@ -36,25 +36,25 @@ const SideNav = () => {
     // }
 
     return (
-        <div>
+        <div className="SideBar">
             <div style={{ height: "32px", background: "rgba(255, 255, 255, 0.2)", margin: "16px"}}></div>
             <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                <Menu.Item key="1" onClick={handlePostClick}>
+                <Menu.Item id="post-menu" key="1" onClick={handlePostClick}>
                     <FormOutlined />
                     <span> Posts </span>
                 </Menu.Item>
 
-                <Menu.Item key="2" onClick={handleLobbyClick}>
+                <Menu.Item id="lobby-menu" key="2" onClick={handleLobbyClick}>
                     <AliwangwangOutlined />
                     <span> Lobby </span>
                 </Menu.Item>
 
-                <Menu.Item key="3" onClick={handleSearchClick}>
+                <Menu.Item id="search-menu" key="3" onClick={handleSearchClick}>
                     <SearchOutlined />
                     <span> Search</span>
                 </Menu.Item>
 
-                <Menu.Item key="4" onClick={handleMyPageClick}>
+                <Menu.Item id="my-page-menu" key="4" onClick={handleMyPageClick}>
                     <UserOutlined />
                     <span> MyPage</span>
                 </Menu.Item>
