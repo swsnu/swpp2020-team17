@@ -35,6 +35,7 @@ const ApplicationRoutes = () => {
         collapse ? setCollapse(false) : setCollapse(true);
     }
   return (
+    <div className="ApplicationRoutes">
       <Router>
         <Layout>
           <Sider trigger={null} collapsible collapsed={collapse} width="150">
@@ -67,7 +68,8 @@ const ApplicationRoutes = () => {
               </Content>
           </Layout>
         </Layout>
-    </Router>
+      </Router>
+    </div>
   );
 }
 
