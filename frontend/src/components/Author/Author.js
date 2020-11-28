@@ -85,7 +85,8 @@ class Author extends Component {
         //FIXME: line75: "login" 아니고 "online" 추가되어야 함, model에서
         // if (this.props.showOnline === true) {
         return (
-            <AuthorWrapper>
+            <div className="Author">
+                <AuthorWrapper>
                 <Row align="middle">
                     <Col flex="none" style={{ marginRight: 10 }}>
                         {this.setAvatar()}
@@ -97,6 +98,7 @@ class Author extends Component {
                     </Col>
                 </Row>
             </AuthorWrapper>
+            </div>
         );
     }
 }
