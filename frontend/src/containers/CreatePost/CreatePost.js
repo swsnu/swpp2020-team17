@@ -53,14 +53,8 @@ class CreatePost extends React.Component {
         this.props.history.push('/post')
     }
 
-    info() {
-        message.info('Post Created');
-    };
-
     render() {
         const { loading, imageUrl } = this.state;
-
-        console.log(this.props.selectedPost)
 
         const layout = {
             labelCol: {span: 5},
@@ -88,7 +82,7 @@ class CreatePost extends React.Component {
 
                     <Form.Item name='tag' label="Tag" rules={[{ required: true}]}>
                         <select>
-                            <option value="none" selected disabled hidden />
+                            <option value="none" defaultValue disabled hidden />
                             <option value="1" id='1'>LOL</option>
                             <option value="HearthStone" id='2'>HearthStone</option>
                             <option value="MapleStory" id='3'>MapleStory</option>

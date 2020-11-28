@@ -12,7 +12,7 @@ const SideNav = () => {
     const history = useHistory();
 
     const handlePostClick = () => {
-        history.push('/posts');
+        history.push('/post');
     }
 
     const handleLobbyClick = () => {

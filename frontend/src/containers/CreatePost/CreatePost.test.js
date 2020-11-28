@@ -4,15 +4,15 @@ import { Provider } from 'react-redux';
 import { connectRouter, ConnectedRouter } from 'connected-react-router';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import { Button } from 'antd';
+import axios from 'axios';
 
-import CreateNewPost from './CreatePost';
+import CreatePost from './CreatePost';
 import { getMockStore } from '../../test-utils/mocks'
 import { history } from '../../store/store'
 
 import * as userActionCreators from '../../store/actions/user';
 import * as postActionCreators from '../../store/actions/post';
-import { createPost } from '../../store/actions';
-import { CreatePost } from '../../store/actions/actionTypes';
+import { createPost } from '../../store/actions/index';
 
 const stubInitialState = {
     loading: false,
@@ -30,6 +30,27 @@ const stubInitialState = {
         tagList: [1, 2]
     },
 }
+
+const stubPost = {
+    tag: 1,
+    image: '',
+    content: 'content',
+}
+
+Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+
 
 const mockStore = getMockStore(stubInitialState);
 
@@ -58,9 +79,27 @@ describe('<CreateNewPost />', () => {
 
     it('should render Tag select', () => {
         const component = mount(create);
-        const wrapper = component.find('Tag');
+        const wrapper = component.find('select');
         expect(wrapper.length).toBe(1);
     })
 
-
+    // it('should create new post when submit', () => {
+    //     const mockClickDone = jest.spyOn(axios, 'post')
+    //         .mockImplementation(url => {
+    //             return newPromise((resolve, reject) => {
+    //                 const result = {
+    //                     status: 200,
+    //                     data: stubPost
+    //                 };
+    //                 resolve(result);
+    //             })
+    //         })
+    //     const component = mount(create)
+    //     const wrapper = component.find('Button')
+    //     wrapper.simulate('onFinish');
+    //     expect(mockClickDone).toHaveBeenCalledTimes(1);
+    //     mockClickDone();
+    //     const submitButton = getByText('Submit')
+    //     Simulate.click(submitButton)
+    // })
 })
