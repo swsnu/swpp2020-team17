@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 //FIXME: Infinite scroll to be implemented
 // import InfiniteScroll from 'react-infinite-scroller';
-import { List, Divider, Spin, Space, Button } from 'antd';
+import { List, Divider, Space, Button } from 'antd';
 //FIXME: Infinite scroll to be implemented
-// import { message } from 'antd';
+// import { Spin, message } from 'antd';
 import { MessageTwoTone, HeartTwoTone } from '@ant-design/icons';
 import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
@@ -32,6 +32,9 @@ const LoadingWrapper = styled.div`
     bottom: 40px;
     width: 100%;
     text-align: center;
+`;
+
+const PostListWrapper = styled.div`
 `;
 
 class Post extends Component {
@@ -174,13 +177,12 @@ class Post extends Component {
 
         return (
             <PostPageWrapper>
-                <div className="tagToggle">
-                    <GameTagWrapper>
-                        <span style={{ marginRight: 8 }}>Your Games:</span>
-                        {tagToggle}
-                    </GameTagWrapper> 
-                </div>
+                <GameTagWrapper>
+                    <span style={{ marginRight: 8 }}>Your Games:</span>
+                    {tagToggle}
+                </GameTagWrapper> 
 
+                <PostListWrapper>
                 {/*
                 //FIXME: Infinite scroll to be implemented
                 <InfiniteScroll
@@ -277,6 +279,7 @@ class Post extends Component {
                         )} */}
                     </List>
                 {/* </InfiniteScroll> */}
+                </PostListWrapper>
             </PostPageWrapper>
         )
     }
