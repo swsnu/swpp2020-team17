@@ -18,7 +18,7 @@ const PostPageWrapper = styled.div`
     display: flex;
     flex-direction: column;
     /* overflow: auto; */
-  /* padding: 8px 24px; */
+    /* padding: 8px 24px; */
     height: 100%;
 `;
 
@@ -53,6 +53,7 @@ class Post extends Component {
                 selectedTagList: this.props.storedCurrentUser.tagList,
                 activePostList: this.props.storedPostList
             });
+            //FIXME: Infinite scroll to be implemented
             // }
             // this.fetchData(res => {
             //     this.setState({
@@ -70,6 +71,37 @@ class Post extends Component {
             ([...selectedTagList, tag_id]);
         console.log('You are interested in: ', nextSelectedTags);
         this.setState({ selectedTagList: nextSelectedTags });
+    }
+
+    handleAuthorClicked = () => {
+        console.log("Author click!");
+    }
+
+    handleShallWeClicked = () => {
+        console.log("ShallWe click!");
+    }
+
+    handleBodyClicked = () => {
+        console.log("Body click!");
+    }
+
+    //FIXME: backend에서 코멘트 수정된 뒤 추가.
+    // const showCommentList = () => {
+    //     if (showComment) {
+    //         return (
+    //             <CommentList />
+    //         )
+    //     } else {
+    //         return ({});
+    //     }
+    // }
+
+    handleLikeCliked = () => {
+        console.log("Like!");
+    }
+
+    handleCommentClicked = () => {
+        console.log("Comment!");
     }
 
     //FIXME: Infinite scroll to be implemented
@@ -115,7 +147,8 @@ class Post extends Component {
     render() {
         let tagList = []
         let tagToggle = []
-        let postList = []
+        //FIXME: Infinite scroll to be implemented
+        // let postList = []
         let activePostList = []
         let user = null
         
@@ -125,13 +158,15 @@ class Post extends Component {
             tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
                 return (
                     <GameTag 
-                        id={tag_id} 
+                        key={tag_id}
+                        tagId={tag_id} 
                         isChecked={this.state.selectedTagList.includes(tag_id)}
                         onClick={() => this.onToggleTag(tag_id)}
                     />
                 );
             });
-            postList = this.props.storedPostList;
+            //FIXME: Infinite scroll to be implemented
+            // postList = this.props.storedPostList;
             activePostList = this.props.storedPostList.filter(post => {
                 return this.state.selectedTagList.includes(post.tag);
             });
@@ -139,14 +174,13 @@ class Post extends Component {
 
         return (
             <PostPageWrapper>
-                <Divider orientation="left" style={{ marginTop: 0 }} plain> Your games </Divider>
                 <div className="tagToggle">
                     <GameTagWrapper>
+                        <span style={{ marginRight: 8 }}>Your Games:</span>
                         {tagToggle}
                     </GameTagWrapper> 
                 </div>
 
-                <Divider orientation="left" plain> Posts </Divider>
                 {/*
                 //FIXME: Infinite scroll to be implemented
                 <InfiniteScroll
@@ -163,7 +197,7 @@ class Post extends Component {
                             <List.Item key={item.id}>
                                 <PostContainer>
                                     <PostHeaderContainer>
-                                        <AuthorItem onClick={handleAuthorClicked} style={{ cursor: "pointer" }} >
+                                        <AuthorItem onClick={this.handleAuthorClicked} style={{ cursor: "pointer" }} >
                                             <Author
                                                 //FIXME: user로 넘기도록 수정해야함
                                                 name={item.authorName}
@@ -175,7 +209,7 @@ class Post extends Component {
                                             <Button
                                                 type="primary"
                                                 shape="round"
-                                                onClick={handleShallWeClicked}
+                                                onClick={this.handleShallWeClicked}
                                                 // disabled="true"
                                                 style={{ fontSize: 12, fontWeight: "bolder" }}
                                             >
@@ -184,16 +218,16 @@ class Post extends Component {
                                         </ButtonItem>
                                         <GameTagItem>
                                             <GameTag
-                                                id={item.tag}
-                                                // FIXME: 왜 default가 false지
-                                                isChecked={this.state.selectedTagList.includes(item.tag)}
+                                                key={item.tag}
+                                                tagId={item.tag}
+                                                isChecked={true}
                                             />
                                         </GameTagItem>
                                     </PostHeaderContainer>
 
                                     <Divider style={{ marginTop: 0, marginBottom: 10}}/>
 
-                                    <PostBodyContainer onClick={handleBodyClicked}>
+                                    <PostBodyContainer onClick={this.handleBodyClicked}>
                                         <ContentsContainer style={{ width: "100%" }}>
                                                 {item.content}
                                         </ContentsContainer>
@@ -209,9 +243,9 @@ class Post extends Component {
                                             <div>
                                                 <Space>
                                                     <HeartTwoTone
-                                                        onClick={handleLikeCliked}
+                                                        onClick={this.handleLikeCliked}
                                                     />
-                                                    156
+                                                    {item.likeNum}
                                                 </Space>
                                             </div>
                                             <Divider
@@ -221,7 +255,7 @@ class Post extends Component {
                                             <div>
                                                 <Space>
                                                     <MessageTwoTone
-                                                        onClick={handleCommentClicked}
+                                                        onClick={this.handleCommentClicked}
                                                     />
                                                     3
                                                 </Space>
@@ -376,37 +410,6 @@ const IconContainer = styled.div`
     flex-wrap: wrap;
     margin-left: 5px;
 `;
-
-const handleAuthorClicked = () => {
-    console.log("Author click!");
-}
-
-const handleShallWeClicked = () => {
-    console.log("ShallWe click!");
-}
-
-const handleBodyClicked = () => {
-    console.log("Body click!");
-}
-
-//FIXME: backend에서 코멘트 수정된 뒤 추가.
-// const showCommentList = () => {
-//     if (showComment) {
-//         return (
-//             <CommentList />
-//         )
-//     } else {
-//         return ({});
-//     }
-// }
-
-const handleLikeCliked = () => {
-    console.log("Like!");
-}
-
-const handleCommentClicked = () => {
-    console.log("Comment!");
-}
 
 // import Author_test_copy from './Author_test_copy';
 

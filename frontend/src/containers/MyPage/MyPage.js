@@ -65,7 +65,7 @@ const GridPostsWrapper = styled.div`
 
 class MyPage extends Component {
 
-    state= {
+    // state= {
         // ID: '',
         // FriendIDList: [],
         // RoomID: '',
@@ -75,7 +75,7 @@ class MyPage extends Component {
         // ShallWeRoomList: [],
         // watchedPostedIDList: [],
         // isOnline: false
-    }
+    // }
 
     // componentDidMount() {
     //     this.setState({
@@ -126,20 +126,20 @@ class MyPage extends Component {
         // let tagList = this.props.storedCurrentUser.tagList;
         // let friendList = this.props.storedCurrentUser.friendList;
         let user = this.props.storedCurrentUser;
-        let name = user.username;
-        let avatar = user.avatar;
-        let tagList = user.tagList;
-        let friendList = user.friendList;
+        let userProfile = (user !== null)?
+            (<Profile 
+                name={user.username}
+                avatar={user.avatar}
+                tagList={user.tagList}
+            />):
+            (<p>Please login!</p>)
+        ;
 
         return(
             <MyPageContainer>
                 <MyPageLeftContainer>
                     <ProfileCardWrapper>
-                        <Profile
-                            name={name}
-                            avatar={avatar}
-                            tagList={tagList}
-                        />
+                        {userProfile}
                     </ProfileCardWrapper>
                     <FriendListWrapper>
                         <Divider orientation="left" style={{ marginTop: 0 }}>

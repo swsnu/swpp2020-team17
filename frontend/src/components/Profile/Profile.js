@@ -44,7 +44,8 @@ const fetchGameTagList = (tagList) => {
     let tagComponents = tagList.map(tag_id => {
         return (
             <GameTag
-                id={tag_id}
+                key={tag_id}
+                tagId={tag_id} 
                 isChecked={true}
             />
         );
