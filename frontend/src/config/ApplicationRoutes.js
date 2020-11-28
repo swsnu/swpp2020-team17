@@ -9,10 +9,11 @@ import SideNav from "../components/SideBar/SideBar";
 // import File from "../containers/pages/files";
 // import Videos from "../containers/pages/videos";
 
-import Login from "../containers/Login/Login"
-import CreatePost from "../containers/CreatePost/CreatePost"
-import Search from "../containers/Search/Search"
-import MyPage from "../containers/MyPage/MyPage"
+import Login from "../containers/Login/Login";
+import CreatePost from "../containers/CreatePost/CreatePost";
+import Search from "../containers/Search/Search";
+import MyPage from "../containers/MyPage/MyPage";
+import UserPage from "../containers/UserPage/UserPage";
 
 import { Layout } from 'antd';
 import {
@@ -59,7 +60,7 @@ const ApplicationRoutes = () => {
                     <Route path="/search" component={Search} />
                     <Route path="/myPage" component={MyPage} />
                     <Route path="/createpost" component={CreatePost} />
-
+                    <Route path='/page/:id' component={UserPage} />
                     {/* <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} /> */}
 

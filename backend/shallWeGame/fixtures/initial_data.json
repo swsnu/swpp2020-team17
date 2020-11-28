@@ -28,7 +28,8 @@
         "fields": {
             "avatar": "https://icon2.cleanpng.com/20180320/sqe/kisspng-twitch-computer-icons-streaming-media-youtube-live-tv-twitch-icon-5ab19172461392.001176751521586546287.jpg",
             "email": "lol@lol.com",
-            "username": "Song1"
+            "username": "Song1",
+            "tag_list": ["1", "2"]
         }
     },
     {
@@ -37,7 +38,8 @@
         "fields": {
             "avatar": null,
             "email": "lol@lol.com",
-            "username": "Lee1"
+            "username": "Lee1",
+            "tag_list": ["1"]
         }
     },
     {
