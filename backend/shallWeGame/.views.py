@@ -11,10 +11,10 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from .models import DiscordUser, Post, Comment, Tag, Chatroom
 
+AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redi' \
+                   'rect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_typ' \
+                   'e=code&scope=identify'
 
-AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redi' \
-                   'rect_uri=http%3A%2F%2Fec2-54-159-28-15.compute-1.amazonaws.com%3A8000%2Fapi%2' \
-                   'Flogin%2Fredirect&response_type=code&scope=identify'
 
 def discord_login(request):
     '''Redirect to Auth Page'''
@@ -46,8 +46,8 @@ def discord_login_redirect(request):
 def exchange_code(code: str):
     '''Exchange Code with Discord API'''
     data = {
-        "client_id": "773940751608053771",
-        "client_secret": "0eOaEEJQAxUPa2Hr7WGwD0qkbPkDI53z",
+        "client_id": "771395876442734603",
+        "client_secret": "qMMuitFLFVwqBMcpiH62uY0KXXO5PFZF",
         "grant_type": "authorization_code",
         "code": code,
         "redirect_uri": "http://ec2-54-159-28-15.compute-1.amazonaws.com:8000/api/login/redirect",

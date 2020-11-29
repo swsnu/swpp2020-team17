@@ -68,5 +68,5 @@
   "devDependencies": {
     "enzyme-to-json": "^3.6.1"
   },
-  "proxy": "http://localhost:8000"
+  "proxy": "http://ec2-54-159-28-15.compute-1.amazonaws.com:8000"
 }

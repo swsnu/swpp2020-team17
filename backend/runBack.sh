@@ -7,7 +7,7 @@ if [ -f "$DB_FILE" ]; then
     rm -rf ./shallWeGame/__pycache__
 fi
 
-cd $PROJECT_DIR
+pip install -r requirements.txt
 python manage.py migrate --run-syncdb
 python manage.py loaddata initial_data.json
-python manage.py runserver
+python manage.py runserver 0.0.0.0:8000
