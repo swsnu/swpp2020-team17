@@ -11,10 +11,10 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from .models import DiscordUser, Post, Comment, Tag, Chatroom
 
-AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redi' \
-                   'rect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_typ' \
-                   'e=code&scope=identify'
 
+AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redi' \
+                   'rect_uri=http%3A%2F%2F3.239.81.119%3A8000%2Fapi%2' \
+                   'Flogin%2Fredirect&response_type=code&scope=identify'
 
 def discord_login(request):
     '''Redirect to Auth Page'''
@@ -40,17 +40,17 @@ def discord_login_redirect(request):
         )
         discord_user.save()
     login(request, discord_user)
-    return redirect("http://localhost:3000/")
+    return redirect("http://3.239.81.119:3000/")
 
 
 def exchange_code(code: str):
     '''Exchange Code with Discord API'''
     data = {
-        "client_id": "771395876442734603",
-        "client_secret": "qMMuitFLFVwqBMcpiH62uY0KXXO5PFZF",
+        "client_id": "773940751608053771",
+        "client_secret": "0eOaEEJQAxUPa2Hr7WGwD0qkbPkDI53z",
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "http://localhost:8000/api/login/redirect",
+        "redirect_uri": "http://3.239.81.119:8000/api/login/redirect",
         "scope": "identify",
         "auth_url": "https://discordapp.com/api/oauth2/authorize",
     }
@@ -75,7 +75,7 @@ def discord_logout(request):
     user.login = False
     print(user.login)
     logout(request)
-    return redirect('http://localhost:3000/login/')
+    return redirect('http://3.239.81.119:3000/login/')
 
 
 ######################
@@ -206,24 +206,21 @@ def post_list(request):
              "likingUserList": list(post.liking_user_list.all())} for post in Post.objects.all()]
         return JsonResponse(post_response_list, safe=False)
     # request.method == 'POST'
-    if request.method == 'POST':
-        try:
-            req_data = json.loads(request.body.decode())
-            post_image = req_data['image']
-            post_content = req_data['content']
-            post_tag = req_data['tag']
-        except (KeyError, JSONDecodeError):
-            return HttpResponseBadRequest()
-        post_author = request.user
-        tag = Tag.objects.get(name=post_tag)
-        post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
-        post.save()
-        response_dict = {"id": post.id, "image": post.image, "content": post.content,
-                        "author": post_author.id, "authorName": post_author.username,
-                        "authorAvatar": post_author.avatar, "tag": post.tag.id,
+    try:
+        req_data = json.loads(request.body.decode())
+        post_image = req_data['image']
+        post_content = req_data['content']
+        post_tag = req_data['tag_id']
+    except (KeyError, JSONDecodeError):
+        return HttpResponseBadRequest()
+    post_author = request.user
+    tag = Tag.objects.get(id=int(post_tag))
+    post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
+    response_dict = {"id": post.id, "image": post.image, "content": post.content,
+                        "author": post.author_id, "authorName": post.author.username,
+                        "authorAvatar": post.author.avatar, "tag": post.tag.id,
                         "likeNum": post.like_num,
-                        # "likingUserList": [post_author]
-                        }
+                        "likingUserList": list(post.liking_user_list.all())}
     print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
 
