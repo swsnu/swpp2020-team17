@@ -4,7 +4,7 @@ import { UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
 const Nickname = styled.text`
-    font-size: 13px;
+    font-size: 12px;
     font-weight: bold;
 `;
 
@@ -87,17 +87,17 @@ class Author extends Component {
         return (
             <div className="Author">
                 <AuthorWrapper>
-                <Row align="middle">
-                    <Col flex="none" style={{ marginRight: 10 }}>
-                        {this.setAvatar()}
-                    </Col>
-                    <Col flex="none" style={{ marginRight: 20 }}>
-                        <Nickname>
-                            {this.props.name}
-                        </Nickname>
-                    </Col>
-                </Row>
-            </AuthorWrapper>
+                    <Row align="middle">
+                        <Col flex="none" style={{ marginRight: 10 }}>
+                            {this.setAvatar()}
+                        </Col>
+                        <Col flex="none" style={{ marginRight: 20 }}>
+                            <Nickname>
+                                {this.props.name}
+                            </Nickname>
+                        </Col>
+                    </Row>
+                </AuthorWrapper>
             </div>
         );
     }
