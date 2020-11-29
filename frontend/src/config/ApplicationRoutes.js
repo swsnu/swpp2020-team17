@@ -24,7 +24,7 @@ import {
 const { Header, Sider, Content} = Layout;
 
 
-const ApplicationRoutes = () => {
+const ApplicationRoutes = props => {
   const [collapse, setCollapse] = useState(false);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const ApplicationRoutes = () => {
       <Router>
         <Layout>
           <Sider trigger={null} collapsible collapsed={collapse} width="150">
-            <SideNav />
+            <SideNav handleLogout={props.handleLogout} />
           </Sider>
           <Layout>
             <Header className="siteLayoutBackground" style={{padding: 0, background: "#001529"}}>

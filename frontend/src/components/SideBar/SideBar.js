@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 
-const SideNav = () => {
+const SideNav = props => {
     const history = useHistory();
 
     const handlePostClick = () => {
@@ -51,12 +51,16 @@ const SideNav = () => {
 
                 <Menu.Item id="search-menu" key="3" onClick={handleSearchClick}>
                     <SearchOutlined />
-                    <span> Search</span>
+                    <span> Search </span>
                 </Menu.Item>
 
                 <Menu.Item id="my-page-menu" key="4" onClick={handleMyPageClick}>
                     <UserOutlined />
-                    <span> MyPage</span>
+                    <span> MyPage </span>
+                </Menu.Item>
+                <Menu.Item id="logout-menu" key="5" onClick={props.handleLogout}>
+                    <UserOutlined />
+                    <span> Logout </span>
                 </Menu.Item>
             </Menu>
         </div>

@@ -22,6 +22,7 @@ class App extends Component {
       console.log("ERROR2:");
       console.log(this.props.storedCurrentUser);
     }
+    this.props.onGetUserList();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -29,8 +30,15 @@ class App extends Component {
       this.setState({
         userLoggined: true
       });
-      // this.props.history.push('/post');
     }
+  }
+
+  handleLogout = () => {
+    // 일단 current user을 null로만 만들게 구현
+    //this.props.history.push('/');
+    this.setState({
+      userLoggined: false
+    });
   }
 
   fetchLandingPage = () => {
@@ -45,7 +53,7 @@ class App extends Component {
     else if (this.state.userLoggined === true) {
       console.log("Exists user :");
       console.log(this.state.userLoggined);
-      return (<ApplicationRoutes />);
+      return (<ApplicationRoutes handleLogout={this.handleLogout} />);
     }
     else {
       console.log("Real error!");
@@ -69,6 +77,7 @@ class App extends Component {
 const mapStateToProps = (state) => {
     return {
         storedCurrentUser: state.ur.currentUser,
+        storedUserList: state.ur.userList,
     }
 }
 
@@ -76,6 +85,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onGetCurrentUser: () => 
             dispatch(actionCreators.getCurrentUser()),
+        onGetUserList: () =>
+            dispatch(actionCreators.getUserList()),
     }
 }
 

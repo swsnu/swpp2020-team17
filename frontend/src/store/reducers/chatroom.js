@@ -9,6 +9,7 @@ const reducer = (state = {
         case actionTypes.GetChatroomList:
             return {...state, chatroomList: action.chatrooms};
         case actionTypes.CreateChatroom:
+            console.log(action.chatroom);
             return { ...state, chatroomList: state.chatroomList.concat(action.chatroom), selectedChatroom: action.chatroom };
         case actionTypes.GetChatroom:
             return { ...state, selectedChatroom: action.chatroom };
