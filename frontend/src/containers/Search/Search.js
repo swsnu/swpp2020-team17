@@ -22,6 +22,7 @@ class Search extends Component {
     };
 
     onClickUserButton = (user_id, addOrDelete) => {
+        console.log('click');
         let user = this.props.storedCurrentUser;
         if (addOrDelete === 'Add') user.friendList.push(user_id);
         else user.friendList = user.friendList.filter(id => {
@@ -55,7 +56,7 @@ class Search extends Component {
                     if (user.username.toLowerCase().includes(this.state.searchInput)) {
                         let addOrDelete = 'Add';
                         if (this.props.storedCurrentUser.friendList.find(id => id===user.id) !== undefined) addOrDelete = 'Delete'
-                        return <SearchedUser key={user.id} avatar={user.avatar} username={user.username} addOrDelete={addOrDelete} onButtonClick={() => this.onClickUserButton(user.id, addOrDelete)}/>
+                        return <SearchedUser key={user.id} id={user.id} avatar={user.avatar} username={user.username} addOrDelete={addOrDelete} onButtonClick={() => this.onClickUserButton(user.id, addOrDelete)}/>
                     }
                     return;
                 });

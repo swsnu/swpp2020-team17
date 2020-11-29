@@ -134,11 +134,13 @@ def user_info(request, user_id=0):
         return HttpResponseNotFound()
 
     if request.method == 'GET':
+        print(user.username)
+        chatroom = user.chatroom.id if user.chatroom is not None else -1
         friend_list = [friend['id'] for friend in user.friend_list.all().values()]
         post_list = [post['id'] for post in user.post_list.all().values()]
         shallwe_room_list = [room['id'] for room in user.shallwe_room.all().values()]
         watched_post_list = [post['id'] for post in user.watched_post_list.all().values()]
-        tag_list = [tag.id for tag in user.tag_list.all().values()]
+        tag_list = [tag['id'] for tag in user.tag_list.all().values()]
         response_dict = {"id": user.id, "username": user.username, "login": user.login,
                          "avatar": user.avatar, "chatroom": chatroom, "friendList": friend_list,
                          "postList": post_list, "shallWeRoomList": shallwe_room_list,
