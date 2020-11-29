@@ -62,7 +62,7 @@ const ApplicationRoutes = () => {
                     {/* <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} /> */}
 
-                    <redirect to="/post" from="/" />
+                    {/* <redirect to="/post" from="/" /> */}
                 </Switch>
               </Content>
           </Layout>
