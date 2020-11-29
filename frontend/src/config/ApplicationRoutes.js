@@ -51,8 +51,7 @@ const ApplicationRoutes = () => {
             </Header>
               <Content style={{margin: '24px 16px', padding: 24, minHeight: "calc(100vh - 114px)", background: "#fff"}}>
                 <Switch>
-                    <Route path='/login' component={Login} />
-
+                    {/* <Route path='/login' component={Login} /> */}
                     <Route path="/post" component={Posts} />
                     <Route path="/lobby" component={Lobby} />
                     <Route path="/RoomInfo" component={RoomInfo} />
@@ -63,7 +62,7 @@ const ApplicationRoutes = () => {
                     {/* <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} /> */}
 
-                    <Redirect to="/login" from="/" />
+                    {/* <redirect to="/post" from="/" /> */}
                 </Switch>
               </Content>
           </Layout>
