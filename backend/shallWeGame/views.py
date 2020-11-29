@@ -221,7 +221,7 @@ def post_list(request):
                         "authorAvatar": post.author.avatar, "tag": post.tag.id,
                         "likeNum": post.like_num,
                         "likingUserList": list(post.liking_user_list.all())}
-    print(response_dict)
+    print(response_dict)   
     return HttpResponse(content=json.dumps(response_dict), status=201)
 
 
