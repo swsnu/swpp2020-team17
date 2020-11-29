@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as actionCreators from './store/actions/index';
 import ApplicationRoutes from "./config/ApplicationRoutes";
 import LoginPage from "./containers/LoginPage/LoginPage"
+import { ConnectedRouter } from "connected-react-router";
 
 class App extends Component {
   state = {
@@ -55,13 +56,13 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
+      <ConnectedRouter history={this.props.history}>
           <Switch>
             <Route exact path="/" component={this.fetchLandingPage} />
             {/* <Route path="/about" component={About} />
             <Route component={NotFound} /> */}
           </Switch>
-      </Router>
+      </ConnectedRouter>
     )
   }
 }
