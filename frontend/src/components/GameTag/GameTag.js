@@ -55,7 +55,7 @@ const GameTag = (props) => {
                 icon={
                     <img
                         src={icon}
-                        style={{ cursor: 'pointer', width: 20, marginRight: 5 }}
+                        style={{ width: 20, marginRight: 5 }}
                     />
                 }
                 color={props.isChecked ? color_checked : color_unchecked}
