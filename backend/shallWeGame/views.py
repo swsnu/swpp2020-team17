@@ -1,4 +1,6 @@
 # views.py
+####
+###
 import json
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, \
