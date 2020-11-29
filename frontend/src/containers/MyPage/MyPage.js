@@ -6,6 +6,7 @@ import Post from '../../containers/Post/Post';
 import { Divider, List, Button, Space } from 'antd';
 import Profile from '../../components/Profile/Profile';
 import Author from '../../components/Author/Author';
+import { useHistory } from 'react-router';
 
 const MyPageContainer = styled.div`
     display: flex;
@@ -88,6 +89,11 @@ const buttonShake = keyframes`
     }
 `;
 
+const ButtonCreate = styled.div`
+    flex: none;
+    align-items: right;
+`;
+
 const MyPageRightContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -113,7 +119,9 @@ const GridPostsWrapper = styled.div`
 // `;
 
 class MyPage extends Component {
-
+    constructor(props) {
+        super(props);
+    }
     // state= {
         // ID: '',
         // FriendIDList: [],
@@ -162,7 +170,6 @@ class MyPage extends Component {
     }
 
     onClickCreatePost() {
-        this.props.history.push('/post/create/')
     }
 
     onClickTag() {
@@ -177,6 +184,9 @@ class MyPage extends Component {
     //TODO:
     handleShallWeClicked() {
 
+    }
+
+    handleCreatePostClicked() {
     }
 
     render() {
@@ -282,6 +292,14 @@ class MyPage extends Component {
                             Gallery
                         </Divider>
                     </GridPostsWrapper>
+                    <ButtonCreate>
+                        <Button
+                            type="primary"
+                            onClick={() => {this.props.history.push('/createpost')}}
+                        >
+                            create post
+                        </Button>
+                    </ButtonCreate>
                 </MyPageRightContainer>
             </MyPageContainer>
         );

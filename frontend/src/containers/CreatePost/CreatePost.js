@@ -29,6 +29,7 @@ function beforeUpload(file) {
 class CreateNewPost extends React.Component {
     state = {
         loading: false,
+        imageUrl: '',
     };
 
     handleChange = info => {
@@ -40,28 +41,27 @@ class CreateNewPost extends React.Component {
             // Get this url from response in real world.
             getBase64(info.file.originFileObj, imageUrl =>
                 this.setState({
-                    imageUrl,
+                    imageUrl: imageUrl,
                     loading: false,
                 }),
             );
         }
-    };
-
-    onFinish(values) {
-        console.log(values);
-        this.props.createPost(values)
-        this.props.history.push('/post')
     }
 
-    info() {
-        message.info('Post Created');
-    };
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps.selectedPost !== this.props.selectedPost)
+            this.props.history.push('/post');
+    }
+
+    onFinish(values) {
+        values.image = 'temp'
+        console.log(values);
+        this.props.createPost(values)
+
+    }
 
     render() {
         const { loading, imageUrl } = this.state;
-        const postList = this.props.postList
-
-        console.log(postList)
 
         const layout = {
             labelCol: {span: 5},
@@ -77,13 +77,6 @@ class CreateNewPost extends React.Component {
 
         const validateMessages = {
             required: '${label} is required!',
-            types: {
-                email: '${label} is not validate email!',
-                number: '${label} is not a validate number!',
-            },
-            number: {
-                range: '${label} must be between ${min} and ${max}',
-            },
         };
 
         return (
@@ -93,11 +86,16 @@ class CreateNewPost extends React.Component {
                 onFinish={this.onFinish.bind(this)}
                 validateMessages={validateMessages}>
 
-                <Form.Item name='title' label="Title" rules={[{required: true}]}>
-                    <Input/>
+                <Form.Item name='tag' label="Tag" rules={[{ required: true}]}>
+                    <select>
+                        <option value="none"/>
+                        <option value="LOL" id='1'>LOL</option>
+                        <option value="HearthStone" id='2'>HearthStone</option>
+                        <option value="MapleStory" id='3'>MapleStory</option>
+                    </select>
                 </Form.Item>
 
-                <Form.Item name='image' label='Image' rules={[{required: false}]}>
+                <Form.Item name='image' label='Image' rules={[{ required: false }]}>
                     <Upload
                         name="avatar"
                         listType="picture-card"
@@ -107,15 +105,15 @@ class CreateNewPost extends React.Component {
                         beforeUpload={beforeUpload}
                         onChange={this.handleChange}
                     >
-                        {imageUrl? <img src={imageUrl} alt="avatar" style={{ width:'100%'}} /> : uploadButton}
+                        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                     </Upload>
                 </Form.Item>
 
-                <Form.Item name='content' label="Content" rules={[{required: true}]}>
-                    <Input.TextArea/>
+                <Form.Item name='content' label="Content" rules={[{ required: true }]}>
+                    <Input.TextArea />
                 </Form.Item>
 
-                <Form.Item wrapperCol={{...layout.wrapperCol}}>
+                <Form.Item wrapperCol={{ ...layout.wrapperCol }}>
                     <Button type="primary" htmlType="submit">
                         Submit
                     </Button>
@@ -126,13 +124,19 @@ class CreateNewPost extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    postList: state.ps.postList
+    postList: state.ps.postList,
+    currentUser: state.ur.currentUser,
+    selectedPost: state.ps.selectedPost,
 })
 
 const mapDispatchToProps = (dispatch) => {
     return {
         createPost: (post) =>
-            dispatch(actionCreators.createPost(post))
+            dispatch(actionCreators.createPost(post)),
+
+        getCurrentUser: () => {
+            dispatch(actionCreators.getCurrentUser())
+        },
     }
 }
 

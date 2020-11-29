@@ -10,7 +10,7 @@ const reducer = (state = {
         case actionTypes.GetPostList:
             return { ...state, postList: action.posts };
         case actionTypes.CreatePost:
-            return { ...state, postList: state.postList.concat(action.post), selectedPost: action.post };
+            return { ...state, postList: [...state.postList.concat(action.post)], selectedPost: action.post };
         case actionTypes.GetPost:
             return { ...state, selectedPost: action.post };
         case actionTypes.PutPost:
