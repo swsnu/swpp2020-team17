@@ -10,8 +10,7 @@ class Chatroom extends Component {
     render() {
         return (
             <div className="Chatroom">
-                Chatroom Page
-                {this.props.match.params.id}
+                Chatroom Page {this.props.match.params.id}
             </div>
         );
     }

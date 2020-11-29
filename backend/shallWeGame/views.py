@@ -171,7 +171,6 @@ def user_info(request, user_id=0):
         except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
 
-        print(user_friend_list)
         user.username = user_username
         user.login = user_login
         user.avatar = user_avatar
@@ -184,7 +183,6 @@ def user_info(request, user_id=0):
             [Post.objects.get(id=post_id) for post_id in user_watched_post_list])
         user.tag_list.set([Tag.objects.get(id=tag_id) for tag_id in user_tag_list])
         user.save()
-
         return HttpResponse(status=200)
 
 

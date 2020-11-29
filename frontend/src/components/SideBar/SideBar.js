@@ -5,6 +5,7 @@ import {
     AliwangwangOutlined,
     SearchOutlined,
     FormOutlined,
+    LogoutOutlined,
 } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 
@@ -59,7 +60,7 @@ const SideNav = props => {
                     <span> MyPage </span>
                 </Menu.Item>
                 <Menu.Item id="logout-menu" key="5" onClick={props.handleLogout}>
-                    <UserOutlined />
+                    <LogoutOutlined />
                     <span> Logout </span>
                 </Menu.Item>
             </Menu>

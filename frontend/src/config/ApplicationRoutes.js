@@ -61,7 +61,7 @@ const ApplicationRoutes = props => {
                     <Route path="/myPage" component={MyPage} />
                     <Route path="/createpost" component={CreatePost} />
                     <Route path='/page/:id' component={UserPage} />
-                    <Route path='/chatroom/:id' compent={Chatroom} />
+                    <Route path='/chatroom/:id' component={Chatroom} />
                     {/* <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} /> */}
 

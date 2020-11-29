@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import { push } from 'react-router-redux'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
@@ -62,7 +63,7 @@ const getChatroom_ = (chatroom) => {
 }
 export const getChatroom = (id) => {
     return dispatch => {
-        return axios.get('api/chatroom/' + id)
+        return axios.get('/api/chatroom/' + id)
         .then(res => {
             dispatch(getChatroom_(res.data))
         })
@@ -77,7 +78,7 @@ const putChatroom_ = (chatroom) => {
 }
 export const putChatroom = (chatroom) => {
     return dispatch => {
-        return axios.put('api/chatroom/' + chatroom.id, chatroom)
+        return axios.put('/api/chatroom/' + chatroom.id, chatroom)
         .then(res => {
             dispatch(putChatroom_(res.data))
         })
@@ -92,7 +93,7 @@ const deleteChatroom_ = (chatroom) => {
 }
 export const deleteChatroom = (id) => {
     return dispatch => {
-        return axios.delete('api/chatroom/' + id)
+        return axios.delete('/api/chatroom/' + id)
         .then(res => {
             dispatch(deleteChatroom_(res.data))
         })
@@ -106,16 +107,22 @@ export const putUser_ = (user) => {
     }
 }
 
-export const sendShallWe = (newChatroom, receivedUser) => {
+export const sendShallWe = (newChatroom, sendingUser, receivingUser) => {
     return dispatch => {
-        return axios.post('api/chatroom/', newChatroom)
+        return axios.post('/api/chatroom/', newChatroom)
         .then(res1 => {
             dispatch(createChatroom_(res1.data));
-            console.log(receivedUser);
-            receivedUser.shallWeRoomList.push(res1.data.id);
-            axios.put('api/user/' + receivedUser.id, receivedUser)
+            console.log(receivingUser);
+            receivingUser.shallWeRoomList.push(res1.data.id);
+            axios.put('/api/user/' + receivingUser.id, receivingUser)
             .then(res2 => {
                 dispatch(putUser_(res2.data))
+            })
+            sendingUser.chatroom = res1.data.id;
+            axios.put('/api/user/' + sendingUser.id, sendingUser)
+            .then(res2 => {
+                dispatch(putUser_(res2.data));
+                dispatch(push('/chatroom/' + res1.data.id));
             })
         })
     }

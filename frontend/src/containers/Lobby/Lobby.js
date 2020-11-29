@@ -14,7 +14,6 @@ const GameTagWrapper = styled.div`
     flex-wrap: wrap;
 `;
 class Lobby extends Component{
-
     constructor(props) {
         super(props);
     }

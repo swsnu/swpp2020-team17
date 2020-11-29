@@ -176,7 +176,7 @@ class MyPage extends Component {
     }
 
     //TODO:
-    onClickShallWe(receivedUser) {
+    onClickShallWe(receivingUser) {
         let newChatroom = {
             isGlobal: false, 
             title: this.props.storedCurrentUser.username + '\'s shall we?', 
@@ -184,10 +184,11 @@ class MyPage extends Component {
             maxPersonnel: 2, 
             discordLink: null,
         }
-        console.log('click');
-        this.props.onSendShallWe(newChatroom, receivedUser);
+        console.log(receivingUser);
+        let sendingUser = this.props.storedCurrentUser;
+        this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
         // current user의 chatroom 바꾸고 redirect?
-        // receivedUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
+        // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
     }
 
     render() {
@@ -299,8 +300,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getUserList()),
         onPutUser: (user) =>
             dispatch(actionCreators.putUser(user)),
-        onSendShallWe: (newChatroom, receivedUser) => 
-            dispatch(actionCreators.sendShallWe(newChatroom, receivedUser)),
+        onSendShallWe: (newChatroom, sendingUser, receivingUser) => 
+            dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
     }
 }
 
