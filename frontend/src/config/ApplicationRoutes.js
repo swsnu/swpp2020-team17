@@ -14,6 +14,7 @@ import CreatePost from "../containers/CreatePost/CreatePost";
 import Search from "../containers/Search/Search";
 import MyPage from "../containers/MyPage/MyPage";
 import UserPage from "../containers/UserPage/UserPage";
+import Chatroom from "../containers/Chatroom/Chatroom";
 
 import { Layout } from 'antd';
 import {
@@ -60,6 +61,7 @@ const ApplicationRoutes = props => {
                     <Route path="/myPage" component={MyPage} />
                     <Route path="/createpost" component={CreatePost} />
                     <Route path='/page/:id' component={UserPage} />
+                    <Route path='/chatroom/:id' compent={Chatroom} />
                     {/* <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} /> */}
 

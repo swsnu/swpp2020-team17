@@ -150,9 +150,9 @@ def user_info(request, user_id=0):
     if request.method == 'PUT':
         user = DiscordUser.objects.get(id=user_id)
         print('this : ', user)
-        # non-author returns 403
-        if user != request.user:
-            return HttpResponse(status=403)
+        # # non-author returns 403
+        # if user != request.user:
+        #     return HttpResponse(status=403)
         try:
             req_data = json.loads(request.body.decode())
 

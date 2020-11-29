@@ -22,7 +22,6 @@ class App extends Component {
       console.log("ERROR2:");
       console.log(this.props.storedCurrentUser);
     }
-    this.props.onGetUserList();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -77,7 +76,6 @@ class App extends Component {
 const mapStateToProps = (state) => {
     return {
         storedCurrentUser: state.ur.currentUser,
-        storedUserList: state.ur.userList,
     }
 }
 
@@ -85,8 +83,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onGetCurrentUser: () => 
             dispatch(actionCreators.getCurrentUser()),
-        onGetUserList: () =>
-            dispatch(actionCreators.getUserList()),
     }
 }
 

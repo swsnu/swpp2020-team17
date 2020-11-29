@@ -3,7 +3,7 @@ export {
     getUserList,
     getCurrentUser,
     getUser,
-    putUser
+    putUser,
 } from './user';
 
 export {
@@ -21,6 +21,7 @@ export {
     getChatroom,
     putChatroom,
     deleteChatroom,
+    sendShallWe,
 } from './chatroom'
 
 export {

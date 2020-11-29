@@ -57,8 +57,8 @@ const ChatroomList = (props) => {
                 game: props.tagList.find(tag => tag.id == room.tag).name,
                 gamers: room.memberList.length,
                 title: room.title,
-                sorry: <Button type="primary" onClick={props.onClickSorry(room.id)}> Sorry </Button>,
-                sure: <Button type="primary" onClick={props.onClickSure(room.id)}> Sure </Button>,
+                sorry: <Button type="primary" key="1" onClick={props.onClickSorry(room.id)}> Sorry </Button>,
+                sure: <Button type="primary" key="2" onClick={props.onClickSure(room.id)}> Sure </Button>,
             })
             return data;
         });

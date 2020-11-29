@@ -99,4 +99,24 @@ export const deleteChatroom = (id) => {
     }
 }
 
+export const putUser_ = (user) => {
+    return {
+        type: actionTypes.PutUser,
+        user: user,
+    }
+}
 
+export const sendShallWe = (newChatroom, receivedUser) => {
+    return dispatch => {
+        return axios.post('api/chatroom/', newChatroom)
+        .then(res1 => {
+            dispatch(createChatroom_(res1.data));
+            console.log(receivedUser);
+            receivedUser.shallWeRoomList.push(res1.data.id);
+            axios.put('api/user/' + receivedUser.id, receivedUser)
+            .then(res2 => {
+                dispatch(putUser_(res2.data))
+            })
+        })
+    }
+}
