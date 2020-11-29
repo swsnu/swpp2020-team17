@@ -22,6 +22,7 @@ class Search extends Component {
     };
 
     onClickUserButton = (user_id, addOrDelete) => {
+        console.log('click');
         let user = this.props.storedCurrentUser;
         if (addOrDelete === 'Add') user.friendList.push(user_id);
         else user.friendList = user.friendList.filter(id => {
