@@ -29,7 +29,7 @@ class App extends Component {
       this.setState({
         userLoggined: true
       });
-      this.props.history.push('/post');
+      // this.props.history.push('/post');
     }
   }
 
