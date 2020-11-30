@@ -127,6 +127,7 @@ class UserPage extends Component {
         let receivingUser = this.props.storedSelectedUser;
         let sendingUser = this.props.storedCurrentUser;
         this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
+        this.props.history.push('/chatroom/' + sendingUser.chatroom);
         // current user의 chatroom 바꾸고 redirect?
         // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
     }
