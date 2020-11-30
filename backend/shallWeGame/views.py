@@ -12,10 +12,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from .models import DiscordUser, Post, Comment, Tag, Chatroom
 
-
-AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redi' \
-                   'rect_uri=http%3A%2F%2F3.239.81.119%3A8000%2Fapi%2' \
-                   'Flogin%2Fredirect&response_type=code&scope=identify'
+AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=782980326459965490&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
 
 def discord_login(request):
     '''Redirect to Auth Page'''
@@ -47,8 +44,8 @@ def discord_login_redirect(request):
 def exchange_code(code: str):
     '''Exchange Code with Discord API'''
     data = {
-        "client_id": "773940751608053771",
-        "client_secret": "0eOaEEJQAxUPa2Hr7WGwD0qkbPkDI53z",
+        "client_id": "782980326459965490",
+        "client_secret": "wmTVf-X76Zsk_9uNuTiBHrSYtY6Xbe11",
         "grant_type": "authorization_code",
         "code": code,
         "redirect_uri": "http://localhost:8000/api/login/redirect",
@@ -276,45 +273,6 @@ def post_info(request, post_id=0):
     post.delete()
     return HttpResponse(status=200)
 
-
-# @login_required(login_url='/api/login/')
-# def post_like_toggle(request, id=0):
-#     # non-allowed requests returns 405
-#     if request.method != 'POST':
-#         return HttpResponseNotAllowed(['POST'])
-#     # non-existing post returns 404
-#     try:
-#         post = Post.objects.get(id=id)
-#     except Post.DoesNotExist:
-#         return HttpResponseNotFound()
-#     # request.method == 'POST'
-#     user = request.user
-#     filtered_post = user.likingPosts.filter(post=post)
-#     if filtered_post.exist():
-#         user.likingPosts.remove(post)
-#     else:
-#         user.likingPosts.add(post)
-#     return HttpResponse(status=200)
-
-# @login_required(login_url='/api/login/')
-# def post_comment(request, id=0):
-#     # non-allowed requests returns 405
-#     if request.method != 'GET':
-#         return HttpResponseNotAllowed(['GET'])
-#     # non-existing post returns 404
-#     try:
-#         post = Post.objects.get(id=id)
-#     except Post.DoesNotExist:
-#         return HttpResponseNotFound()
-#     #request.method == 'GET'
-#     comment_object_list = [comment for comment in Comment.objects.filter(post=post)]
-#     comment_response_list = []
-#     for comment in comment_object_list:
-#         comment_response_list.append({"post": comment.post.id, \
-    # "content": comment.content, "author": comment.author.id, "author_name": comment.author.username})
-#     return JsonResponse(comment_response_list, safe=False)
-
-
 ######################
 # comment
 ######################
@@ -505,45 +463,6 @@ def chatroom_info(request, chatroom_id=0):
     chatroom = Chatroom.objects.get(id=chatroom_id)
     chatroom.delete()
     return HttpResponse(status=200)
-
-# @login_required(login_url='/api/login/')
-# def chatroom_global_toggle(request, id=0):
-#     # non-allowed requests returns 405
-#     if request.method != 'PUT':
-#         return HttpResponseNotAllowed(['PUT'])
-#     # non-existing chatroom returns 404
-#     try:
-#         chatroom = Chatroom.objects.get(id=id)
-#     except Chatroom.DoesNotExist:
-#         return HttpResponseNotFound()
-#     # request.method == 'PUT'
-#     if chatroom.isGlobal is True:
-#         chatroom.isGlobal = False
-#     else:
-#         chatroom.isGlobal = True
-#     return HttpResponse(status=200)
-
-# @login_required(login_url='/api/login/')
-# def chatroom_message(request, id=0):
-#     # non-allowed requests returns 405
-#     if request.method != 'POST':
-#         return HttpResponseNotAllowed(['POST'])
-#     # non-existing chatroom returns 404
-#     try:
-#         chatroom = Chatroom.objects.get(id=id)
-#     except Chatroom.DoesNotExist:
-#         return HttpResponseNotFound()
-#     # request.method == 'POST'
-#     try:
-#         req_data = json.loads(request.body.decode())
-#         message_content = req_data['content']
-#     except (KeyError, JSONDecodeError) as e:
-#         return HttpResponseBadRequest()
-#     message = Message(author=request.user, chatroom=chatroom, content=message_content)
-#     message.save()
-#     response_dict = {"id": message.id, "author": message.author.id,
-#                       "chatroom": message.chatroom.id, "content": message.content}
-#     return HttpResponse(content=json.dumps(response_dict), status=200)
 
 @ensure_csrf_cookie
 def token(request):
