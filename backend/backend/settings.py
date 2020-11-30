@@ -25,7 +25,7 @@ SECRET_KEY = 'e*90s1khk_s)stmhzl9sz(!27pssafv(kyg@h&%h*&w9l2(we#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.239.81.119']
+ALLOWED_HOSTS = []
 
 AUTHENTICATION_BACKENDS = [
     'shallWeGame.auth.DiscordAuthenticationBackend'

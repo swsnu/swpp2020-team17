@@ -41,7 +41,7 @@ def discord_login_redirect(request):
         )
         discord_user.save()
     login(request, discord_user)
-    return redirect("http://3.239.81.119:3000/")
+    return redirect("http://localhost:3000/")
 
 
 def exchange_code(code: str):
@@ -51,7 +51,7 @@ def exchange_code(code: str):
         "client_secret": "0eOaEEJQAxUPa2Hr7WGwD0qkbPkDI53z",
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "http://3.239.81.119:8000/api/login/redirect",
+        "redirect_uri": "http://localhost:8000/api/login/redirect",
         "scope": "identify",
         "auth_url": "https://discordapp.com/api/oauth2/authorize",
     }
@@ -76,7 +76,7 @@ def discord_logout(request):
     user.login = False
     print(user.login)
     logout(request)
-    return redirect('http://3.239.81.119:3000/login/')
+    return redirect('http://localhost:3000/login/')
 
 
 ######################
