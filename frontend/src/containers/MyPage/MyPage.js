@@ -155,6 +155,7 @@ class MyPage extends Component {
         //     })
         // }
         this.props.onGetCurrentUser();
+        this.props.onGetUserList();
     }
 
     onClickPost() {
@@ -166,7 +167,7 @@ class MyPage extends Component {
     }
 
     onClickTag() {
-        this.props.changeTagState()
+        this.props.changeTagState();
     }
 
     //TODO:
@@ -175,11 +176,23 @@ class MyPage extends Component {
     }
 
     //TODO:
-    handleShallWeClicked() {
-
+    onClickShallWe(receivingUser) {
+        let newChatroom = {
+            isGlobal: false, 
+            title: this.props.storedCurrentUser.username + '\'s shall we?', 
+            tag: 1,     //tag가 없는디 어떡하지 
+            maxPersonnel: 2, 
+            discordLink: null,
+        }
+        console.log(receivingUser);
+        let sendingUser = this.props.storedCurrentUser;
+        this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
+        // current user의 chatroom 바꾸고 redirect?
+        // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
     }
 
     render() {
+        let test = this.props.storedSelectedChatroom;
         // let name = this.props.storedCurrentUser.username;
         // let avatar = this.props.storedCurrentUser.avatar;
         // let tagList = this.props.storedCurrentUser.tagList;
@@ -195,43 +208,14 @@ class MyPage extends Component {
         ;
         //FIXME: 더미로 테스트하다가 friend 추가 잘 되면, 바꿔놓기.
         // let friendList = this.props.storedCurrentUser.friendList;
+        let userList = this.props.storedUserList;
         let friendList = [];
-        friendList.push({
-            "id": 4,
-            "username": "Song1",
-            "login": true,
-            "avatar": "https://icon2.cleanpng.com/20180320/sqe/kisspng-twitch-computer-icons-streaming-media-youtube-live-tv-twitch-icon-5ab19172461392.001176751521586546287.jpg",
-            "chatroom": -1,
-            "friendList": [],
-            "postList": [6, 8],
-            "shallWeRoomList": [],
-            "watchedPostList": [],
-            "tagList": []
-        })
-        friendList.push({
-            "id": 5,
-            "username": "Lee1",
-            "login": true,
-            "avatar": null,
-            "chatroom": -1,
-            "friendList": [],
-            "postList": [7, 9, 10],
-            "shallWeRoomList": [],
-            "watchedPostList": [],
-            "tagList": []
-        })
-        friendList.push({
-            "id": 6,
-            "username": "\uc774\ub3d9\uc8fc",
-            "login": true,
-            "avatar": null,
-            "chatroom": -1,
-            "friendList": [],
-            "postList": [],
-            "shallWeRoomList": [],
-            "watchedPostList": [],
-            "tagList": []
-        })
+        console.log(this.props.storedUserList);
+        friendList = user.friendList.map(friend_id => {
+            return userList.find(user => user.id === friend_id);
+        });
+    
+        
 
         return(
             <MyPageContainer>
@@ -261,11 +245,9 @@ class MyPage extends Component {
                                                 <Button
                                                     type="primary"
                                                     shape="round"
-                                                    onClick={this.handleShallWeClicked}
-                                                    disabled="true"
-                                                    // type="primary"
+                                                    onClick={() => this.onClickShallWe(item)}
                                                     size="small"
-                                                    style={{ fontSize: 10, fontWeight: "bolder" }}
+                                                    style={{ fontSize: 8, fontWeight: "bolder" }}
                                                 >
                                                     Shall We
                                                 </Button>
@@ -305,6 +287,8 @@ class MyPage extends Component {
 const mapStateToProps = (state) => {
     return {
         storedCurrentUser: state.ur.currentUser,
+        storedUserList: state.ur.userList,
+        storedSelectedChatroom: state.chat.selectedChatroom,
     }
 }
 
@@ -312,6 +296,12 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onGetCurrentUser: () => 
             dispatch(actionCreators.getCurrentUser()),
+        onGetUserList: () =>
+            dispatch(actionCreators.getUserList()),
+        onPutUser: (user) =>
+            dispatch(actionCreators.putUser(user)),
+        onSendShallWe: (newChatroom, sendingUser, receivingUser) => 
+            dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
     }
 }
 

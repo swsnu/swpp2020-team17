@@ -5,6 +5,10 @@ import IconLOL from '../../static/icon_lol.png';
 import IconHearth from '../../static/icon_hearth.png';
 import IconMaple from '../../static/icon_maple.png';
 import "antd/dist/antd.css";
+import {
+    PlusOutlined,
+    MinusOutlined,
+} from '@ant-design/icons';
 
 const SearchedTag = props => {
     let icon, color;
@@ -31,6 +35,7 @@ const SearchedTag = props => {
             </div>
             <div className="right">
                 <Button onClick={props.onButtonClick}>
+                    {props.addOrDelete==='Add'? <PlusOutlined /> : <MinusOutlined />}
                     {props.addOrDelete}
                 </Button>
             </div>

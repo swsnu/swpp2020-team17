@@ -84,7 +84,7 @@ const deletePost_ = (post) => {
 
 export const deletePost = (id) => {
     return dispatch => {
-        return axios.delete('api/post/' + id)
+        return axios.delete('/api/post/' + id)
         .then(res => dispatch(deletePost_(res.data)))
     }
 }
@@ -98,7 +98,7 @@ const getCommentList_ = (commentList) => {
 
 export const getCommentList = () => {
     return dispatch => {
-        return axios.get('api/comment/')
+        return axios.get('/api/comment/')
         .then(res => dispatch(getCommentList_(res.data)))
     }
 }

@@ -8,6 +8,10 @@ import Profile from '../../components/Profile/Profile';
 import Author from '../../components/Author/Author';
 import { Table, Row, Col, Button, Typography, Tag } from 'antd';
 import GameTag from '../../components/GameTag/GameTag';
+import {
+    UserAddOutlined,
+    UserDeleteOutlined,
+} from '@ant-design/icons';
 
 const UserPageContainer = styled.div`
     display: flex;
@@ -64,12 +68,19 @@ class UserPage extends Component {
     // FIXME: User model 수정되면 currentUser 말고 user를 prop으로 받도록 수정 요함.
     state = {
         selectedTagList: [],
+        addOrDelete: null,
     };
 
     componentDidMount() {
+        this.props.onGetCurrentUser();
         this.props.onGetUser(this.props.match.params.id);
-        if (this.props.storedSelectedUser) {
-            this.setState({ selectedTagList: this.props.storedSelectedUser.tagList });
+        if (this.props.storedCurrentUser && this.props.storedSelectedUser) {
+            this.setState({ 
+                selectedTagList: this.props.storedSelectedUser.tagList,
+                addOrDelete: (this.props.storedCurrentUser.friendList.find(id => 
+                    id===this.props.storedSelectedUser.id) == undefined)? 'Add' : 'Delete',
+            });
+            console.log('done');
         }
     }
 
@@ -88,16 +99,49 @@ class UserPage extends Component {
         console.log('You are interested in: ', nextSelectedTags);
         this.setState({ selectedTagList: nextSelectedTags });
     }
+
+    onToggleFriend = () => {
+        let currentUser = this.props.storedCurrentUser;
+        let selectedUserId = this.props.storedSelectedUser.id;
+        if (this.state.addOrDelete === 'Add') {
+            currentUser.friendList.push(selectedUserId);
+            this.setState({ addOrDelete: 'Delete' });
+        } else {
+            currentUser.friendList = currentUser.friendList.filter(id => {
+                return id !== selectedUserId
+            });
+            this.setState({ addOrDelete: 'Add' });
+        }
+        this.props.onPutUser(currentUser);
+        
+    }
+
+    onClickShallWe() {
+        let newChatroom = {
+            isGlobal: false, 
+            title: this.props.storedCurrentUser.username + '\'s shall we?', 
+            tag: 1,     //tag가 없는디 어떡하지 
+            maxPersonnel: 2, 
+            discordLink: null,
+        }
+        let receivingUser = this.props.storedSelectedUser;
+        let sendingUser = this.props.storedCurrentUser;
+        this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
+        // current user의 chatroom 바꾸고 redirect?
+        // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
+    }
     
     render() {
-        let user, userProfile, tagToggle;
-        if (this.props.storedSelectedUser) {
-            user = this.props.storedSelectedUser;
+        let currentUser, selectedUser, userProfile, tagToggle;
+        console.log(this.props.storedCurrentUser);
+        if (this.props.storedSelectedUser && this.props.storedCurrentUser) {
+            currentUser = this.props.storedCurrentUser;
+            selectedUser = this.props.storedSelectedUser;
             userProfile = (
-            <Author
-                name={user.username}
-                avatar={user.avatar}
-            />
+                <Author
+                    name={selectedUser.username}
+                    avatar={selectedUser.avatar}
+                />
             );
             tagToggle = this.props.storedSelectedUser.tagList.map(tag_id => {
                 return (
@@ -110,15 +154,17 @@ class UserPage extends Component {
                 );
             });
         }
-        
 
         return(
             <UserPageContainer>
                 <UserPageRowContainer>
                     <ProfileCardWrapper>
                         {userProfile}
-                        <Button>Add</Button>
-                        <Button>ShallWe</Button>
+                        <Button onClick={() => this.onToggleFriend()}>
+                            {this.state.addOrDelete === 'Add'? <UserAddOutlined /> : <UserDeleteOutlined />}
+                            {this.state.addOrDelete}
+                        </Button>
+                        <Button onClick={() => this.onClickShallWe()}>ShallWe</Button>
                     </ProfileCardWrapper>
                 </UserPageRowContainer>
                 <UserPageRowContainer>
@@ -168,6 +214,10 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getCurrentUser()),
         onGetUser: (user_id) =>
             dispatch(actionCreators.getUser(user_id)),
+        onPutUser: (user) =>
+            dispatch(actionCreators.putUser(user)),
+        onSendShallWe: (newChatroom, sendingUser, receivingUser) =>
+            dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
     }
 }
 

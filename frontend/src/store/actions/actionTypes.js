@@ -17,3 +17,5 @@ export const GetPost = 'GetPost'
 export const PutPost = 'PutPost'
 export const DeletePost = 'DeletePost'
 export const GetCommentList = 'GetCommentList'
+
+export const SendShallWe = 'SendShallWe'

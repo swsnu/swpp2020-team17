@@ -14,7 +14,9 @@ const GameTagWrapper = styled.div`
     flex-wrap: wrap;
 `;
 class Lobby extends Component{
-
+    constructor(props) {
+        super(props);
+    }
     state = {
         selectedTagList: [],
     };
@@ -25,6 +27,9 @@ class Lobby extends Component{
         this.props.onGetTagList();
         if (this.props.storedCurrentUser) {
             this.setState({ selectedTagList: this.props.storedCurrentUser.tagList });
+            if(this.props.storedCurrentUser.chatroom != -1) {
+                this.props.history.push('/chatroom/' + this.props.storedCurrentUser.chatroom);
+            }
         }
     }
     
@@ -44,7 +49,6 @@ class Lobby extends Component{
         let user = this.props.storedCurrentUser;
         user.chatroom = id;
         this.props.onPutUser(user);
-        // this.props.history.push('')
     }
 
     onClickSure = (id) => {
@@ -68,7 +72,7 @@ class Lobby extends Component{
         let tagList = []
         let tagToggle = []
         let user = null
-        
+
         if (this.props.storedCurrentUser && this.props.storedChatroomList && this.props.storedTagList) {
             tagList = this.props.storedTagList;
             user = this.props.storedCurrentUser;
@@ -89,6 +93,7 @@ class Lobby extends Component{
                 return !user.shallWeRoomList.includes(room.id) && room.isGlobal && this.state.selectedTagList.includes(room.tag);
             });
         }
+
         return (
             <div className="Lobby">
                 <div className="tagToggle">
@@ -120,8 +125,8 @@ class Lobby extends Component{
                         list={shallWeList}
                         tagList={tagList}
                         isShallWe={true}
-                        onClickSure={() => this.onClickSure()}
-                        onClickSorry={() => this.onClickSorry()}
+                        onClickSure={this.onClickSure}
+                        onClickSorry={this.onClickSorry}
                     />
                 </div>
 
@@ -140,7 +145,7 @@ class Lobby extends Component{
                         list = {chatroomList}
                         tagList={tagList}
                         isShallWe={false}
-                        onClickJoin={() => this.onClickJoin()}
+                        onClickJoin={this.onClickJoin}
                     /> 
                 </div>
             </div>
