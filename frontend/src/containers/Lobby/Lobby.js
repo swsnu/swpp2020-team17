@@ -58,7 +58,7 @@ class Lobby extends Component{
         });
         user.chatroom = id;
         this.props.onPutUser(user);
-        // this.props.history.push('')
+        this.props.history.push('/chatroom/' + id);
     }
     
     onClickSorry = (id) => {

@@ -6,13 +6,13 @@ import { StreamChat } from 'stream-chat';
 import 'stream-chat-react/dist/css/index.css';
 
 const chatClient = new StreamChat('uj4pbgxc8kna');
-const userToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoibGl2ZWx5LWNlbGwtMSJ9.-lZUoa-cib44t6W2aq7vmrOO-n5TlHSZWbbhe1-JwTA';
+const userToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiY29sZC1jbG91ZC04In0.MQ5M9y4P_dRLszZ94UNyNOmEM73DBawRQuRrSqriMV4';
 
 chatClient.setUser(
   {
-       id: 'lively-cell-1',
-       name: 'Lively cell',
-       image: 'https://getstream.io/random_png/?id=lively-cell-1&name=Lively+cell'
+       id: 'cold-cloud-8',
+       name: 'Cold cloud',
+       image: 'https://getstream.io/random_png/?id=cold-cloud-8&name=Cold+cloud'
   },
   userToken,
 );
@@ -23,17 +23,21 @@ const channel = chatClient.channel('messaging', 'godevs', {
   name: 'Talk about Go',
 });
 
-const Chatting = () => (
-  <Chat client={chatClient} theme={'messaging light'}>
-    <Channel channel={channel}>
-      <Window>
-        <ChannelHeader />
-        <MessageList />
-        <MessageInput />
-      </Window>
-      <Thread />
-    </Channel>
-  </Chat>
-);
+const Chatting = (props) => {
+  return (
+    <Chat client={chatClient} theme={'messaging light'}>
+      <Channel channel={channel}>
+        <Window>
+          <ChannelHeader />
+          <MessageList />
+          <MessageInput />
+        </Window>
+        <Thread />
+      </Channel>
+    </Chat>
+  )
+};
+  
+
 
 export default Chatting;
