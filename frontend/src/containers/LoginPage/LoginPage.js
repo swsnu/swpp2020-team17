@@ -14,7 +14,7 @@ const Positioner = styled.div`
 
 class LoginPage extends Component {
     onClickLogin = () => {
-        window.location = ('https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redirect_uri=http%3A%2F%2F3.239.81.119%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify')
+        window.location = ('https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redirect_uri=http%3A%2F%2F54.236.84.205%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify')
         this.props.onLogin();
     }
 
