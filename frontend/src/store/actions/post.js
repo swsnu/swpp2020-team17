@@ -96,9 +96,10 @@ const getCommentList_ = (commentList) => {
     }
 }
 
-export const getCommentList = () => {
+// enter the post id 
+export const getCommentList = (id) => {
     return dispatch => {
-        return axios.get('api/comment/')
+        return axios.get('post/' + id + '/comment/')
         .then(res => dispatch(getCommentList_(res.data)))
     }
 }

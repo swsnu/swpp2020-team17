@@ -7,6 +7,7 @@ import { Divider, List, Button, Space } from 'antd';
 import Profile from '../../components/Profile/Profile';
 import Author from '../../components/Author/Author';
 import { useHistory } from 'react-router';
+import GridPost from './GridPost'
 
 const MyPageContainer = styled.div`
     display: flex;
@@ -163,6 +164,7 @@ class MyPage extends Component {
         //     })
         // }
         this.props.onGetCurrentUser();
+        this.props.onGetPostList();
     }
 
     onClickPost() {
@@ -291,6 +293,7 @@ class MyPage extends Component {
                         <Divider orientation="center" style={{ marginTop: 0 }}>
                             Gallery
                         </Divider>
+                        <GridPost />
                     </GridPostsWrapper>
                     <ButtonCreate>
                         <Button
@@ -323,13 +326,16 @@ class MyPage extends Component {
 const mapStateToProps = (state) => {
     return {
         storedCurrentUser: state.ur.currentUser,
+        storedPostList: state.ps.postList,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         onGetCurrentUser: () => 
-            dispatch(actionCreators.getCurrentUser()),
+            dispatch(actionCreators.getCurrentUser()),    
+        onGetPostList: () =>
+            dispatch(actionCreators.getPostList()),
     }
 }
 
