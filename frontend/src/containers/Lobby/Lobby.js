@@ -49,6 +49,7 @@ class Lobby extends Component{
         let user = this.props.storedCurrentUser;
         user.chatroom = id;
         this.props.onPutUser(user);
+        this.props.history.push('/chatroom/' + id);
     }
 
     onClickSure = (id) => {
@@ -125,11 +126,10 @@ class Lobby extends Component{
                         list={shallWeList}
                         tagList={tagList}
                         isShallWe={true}
-                        onClickSure={this.onClickSure}
-                        onClickSorry={this.onClickSorry}
+                        onClickSure={() => this.onClickSure}
+                        onClickSorry={() => this.onClickSorry}
                     />
                 </div>
-
 
                 <Row gutter={[40, 0]}>
                     <Col span={18}>
@@ -145,7 +145,7 @@ class Lobby extends Component{
                         list = {chatroomList}
                         tagList={tagList}
                         isShallWe={false}
-                        onClickJoin={this.onClickJoin}
+                        onClickJoin={() => this.onClickJoin}
                     /> 
                 </div>
             </div>

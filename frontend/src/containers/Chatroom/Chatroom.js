@@ -4,10 +4,16 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import CSRFToken from '../../csrftoken'
 import { Redirect } from 'react-router-dom';
-import Chat from '../../components/Chatting/Chatting';
+import Chatting from '../../components/Chatting/Chatting';
 import Author from '../../components/Author/Author';
 import styled, { keyframes } from 'styled-components';
 import { Divider, List, Button, Space } from 'antd';
+
+import { Chat, Channel, ChannelHeader, Thread, Window } from 'stream-chat-react';
+import { MessageList, MessageInput } from 'stream-chat-react';
+import { StreamChat } from 'stream-chat';
+
+import 'stream-chat-react/dist/css/index.css';
 
 const MyPageContainer = styled.div`
     display: flex;
@@ -104,11 +110,33 @@ const GridPostsWrapper = styled.div`
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
 `;
 
+const chatClient = new StreamChat('dc8cfsjehcsx');
+chatClient.setUser(
+    {
+        id: 'aa',
+        name: 'aa',
+        image: 'https://getstream.io/random_png/?id=cold-cloud-8&name=Cold+cloud'
+    },
+    chatClient.devToken('aa'),
+);
+
+const channel = chatClient.channel('messaging', 'new', {
+    // add as many custom fields as you'd like
+    image: 'https://cdn.chrisshort.net/testing-certificate-chains-in-go/GOPHER_MIC_DROP.png',
+    name: 'Talk about Go',
+});
 class Chatroom extends Component {
-    componentDidMount() {
+    componentDidMount() {    
         this.props.onGetCurrentUser();
         this.props.onGetUserList();
         this.props.onGetChatroom(this.props.match.params.id);
+    }
+
+    onClickBacktoLobby = () => {
+        let user = this.props.storedCurrentUser;
+        user.chatroom = -1;
+        this.props.onPutUser(user);
+        this.props.history.push('/lobby');
     }
 
     render() {
@@ -128,6 +156,9 @@ class Chatroom extends Component {
             <div className="Chatroom">
                 <MyPageContainer>
                     <MyPageLeftContainer >
+                        <ProfileCardWrapper>
+                            <Button onClick={() => {this.onClickBacktoLobby()}}> Back to Lobby </Button>
+                        </ProfileCardWrapper>
                         <FriendListWrapper>
                             <Divider orientation="center" style={{ marginTop: 0 }}>
                                 Members in chatroom {this.props.match.params.id}
@@ -158,7 +189,10 @@ class Chatroom extends Component {
                         </FriendListWrapper>
                     </MyPageLeftContainer>
                     <MyPageRightContainer>
-                        <Chat username={this.props.storedCurrentUser.username}/>
+                        <Chatting 
+                            chatClient={chatClient}
+                            channel={channel}
+                        />
                     </MyPageRightContainer>
                 </MyPageContainer>
             </div>
@@ -180,6 +214,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getCurrentUser()),
         onGetUserList: () =>
             dispatch(actionCreators.getUserList()),
+        onPutUser: (user) => 
+            dispatch(actionCreators.putUser(user)),
         onGetChatroom: (id) =>
             dispatch(actionCreators.getChatroom(id)),
     }
