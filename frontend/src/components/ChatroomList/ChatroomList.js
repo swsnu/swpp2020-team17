@@ -21,7 +21,7 @@ const ChatroomList = (props) => {
         },
         {
             title: 'Sure',
-            dataIndex: 'join'
+            dataIndex: 'sure'
         },
     ];
     const chatroomColumns = [

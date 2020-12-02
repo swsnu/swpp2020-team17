@@ -49,6 +49,7 @@ class Lobby extends Component{
         let user = this.props.storedCurrentUser;
         user.chatroom = id;
         this.props.onPutUser(user);
+        this.props.onCreateChatting(id, user);
         this.props.history.push('/chatroom/' + id);
     }
 
@@ -113,7 +114,7 @@ class Lobby extends Component{
                     <Col span={6}>
                         <Button 
                             id="create-chatroom-button" 
-                            onClick={this.onClickCreateRoom} 
+                            onClick={() => this.onClickCreateRoom} 
                             block
                         >
                             Create Room
@@ -175,6 +176,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.deleteChatroom(id)),
         onGetTagList: () => 
             dispatch(actionCreators.getTagList()),
+        onCreateChatting: (chatroomId, user) =>
+            dispatch(actionCreators.createChatting(chatroomId, user)),
     }
 }
 

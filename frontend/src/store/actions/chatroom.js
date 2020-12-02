@@ -114,6 +114,9 @@ export const sendShallWe = (newChatroom, sendingUser, receivingUser) => {
             dispatch(createChatroom_(res1.data));
             console.log(receivingUser);
             receivingUser.shallWeRoomList.push(res1.data.id);
+
+            dispatch(createChatting_(res1.data, sendingUser));
+
             axios.put('/api/user/' + receivingUser.id, receivingUser)
             .then(res2 => {
                 dispatch(putUser_(res2.data))
@@ -125,5 +128,23 @@ export const sendShallWe = (newChatroom, sendingUser, receivingUser) => {
                 dispatch(push('/chatroom/' + res1.data.id));
             })
         })
+    }
+}
+
+export const createChatting_ = (chatroom, user) => {
+    return {
+        type: actionTypes.CreateChatting,
+        chatroomId: chatroom.id,
+        chatroomTitle: chatroom.title,
+        username: user.username,
+    }
+}
+
+export const createChatting = (chatroomId, user) => {
+    return dispatch => {
+        return axios.get('api/chatroom/', chatroomId)
+        .then(res1 => {
+            dispatch(createChatting_(res1.data, user));
+        });
     }
 }

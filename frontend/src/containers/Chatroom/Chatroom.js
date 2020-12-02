@@ -9,12 +9,6 @@ import Author from '../../components/Author/Author';
 import styled, { keyframes } from 'styled-components';
 import { Divider, List, Button, Space } from 'antd';
 
-import { Chat, Channel, ChannelHeader, Thread, Window } from 'stream-chat-react';
-import { MessageList, MessageInput } from 'stream-chat-react';
-import { StreamChat } from 'stream-chat';
-
-import 'stream-chat-react/dist/css/index.css';
-
 const MyPageContainer = styled.div`
     display: flex;
     flex-direction: row;
@@ -110,21 +104,7 @@ const GridPostsWrapper = styled.div`
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
 `;
 
-const chatClient = new StreamChat('dc8cfsjehcsx');
-chatClient.setUser(
-    {
-        id: 'aa',
-        name: 'aa',
-        image: 'https://getstream.io/random_png/?id=cold-cloud-8&name=Cold+cloud'
-    },
-    chatClient.devToken('aa'),
-);
 
-const channel = chatClient.channel('messaging', 'new', {
-    // add as many custom fields as you'd like
-    image: 'https://cdn.chrisshort.net/testing-certificate-chains-in-go/GOPHER_MIC_DROP.png',
-    name: 'Talk about Go',
-});
 class Chatroom extends Component {
     componentDidMount() {    
         this.props.onGetCurrentUser();
@@ -151,7 +131,57 @@ class Chatroom extends Component {
         //         else return userList.find(user => user.id === member_id);
         //     });
         // }
-
+        console.log(this.props.storedSelectedChatUser);
+        console.log(this.props.storedSelectedChatChannel);
+        if (this.props.storedSelectedChatUser && this.props.storedSelectedChatChannel) {
+            return (
+                <div className="Chatroom">
+                    <MyPageContainer>
+                        <MyPageLeftContainer >
+                            <ProfileCardWrapper>
+                                <Button onClick={() => {this.onClickBacktoLobby()}}> Back to Lobby </Button>
+                            </ProfileCardWrapper>
+                            <FriendListWrapper>
+                                <Divider orientation="center" style={{ marginTop: 0 }}>
+                                    Members in chatroom {this.props.match.params.id}
+                                </Divider>
+                                <List
+                                    dataSource={memberList}
+                                    renderItem={item => (
+                                        <List.Item key={item.id}>
+                                                <FriendItemWrapper>
+                                                    <AuthorItem >
+                                                        <Author
+                                                            //FIXME: user로 넘기도록 수정해야함
+                                                            name={item.username}
+                                                            avatar={item.avatar}
+                                                            showOnline={true}
+                                                        />
+                                                    </AuthorItem>
+                                                    <SpaceBetweenItem />
+                                                    <ButtonItem>
+                                                        <Button>
+                                                            AddorDelete
+                                                        </Button>
+                                                    </ButtonItem>
+                                                </FriendItemWrapper>
+                                        </List.Item>
+                                    )}
+                                />
+                            </FriendListWrapper>
+                        </MyPageLeftContainer>
+                        <MyPageRightContainer>
+                            <ProfileCardWrapper>
+                                <Chatting 
+                                    chatClient={this.props.storedSelectedChatUser}
+                                    channel={this.props.storedSelectedChatChannel}
+                                />
+                            </ProfileCardWrapper>
+                        </MyPageRightContainer>
+                    </MyPageContainer>
+                </div>
+            )
+        }
         return (
             <div className="Chatroom">
                 <MyPageContainer>
@@ -189,10 +219,9 @@ class Chatroom extends Component {
                         </FriendListWrapper>
                     </MyPageLeftContainer>
                     <MyPageRightContainer>
-                        <Chatting 
-                            chatClient={chatClient}
-                            channel={channel}
-                        />
+                        <ProfileCardWrapper>
+                            Chatting Empty
+                        </ProfileCardWrapper>
                     </MyPageRightContainer>
                 </MyPageContainer>
             </div>
@@ -205,6 +234,8 @@ const mapStateToProps = (state) => {
         storedCurrentUser: state.ur.currentUser,
         storedUserList: state.ur.userList,
         storedSelectedChatroom: state.chat.selectedChatroom,
+        storedSelectedChatUser: state.chat.selectedChatUser,
+        storedSelectedChatChannel: state.chat.selectedChatChannel,
     }
 }
 

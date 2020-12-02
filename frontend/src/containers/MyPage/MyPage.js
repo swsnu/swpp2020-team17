@@ -179,7 +179,7 @@ class MyPage extends Component {
     onClickShallWe(receivingUser) {
         let newChatroom = {
             isGlobal: false, 
-            title: this.props.storedCurrentUser.username + '\'s shall we?', 
+            title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
             tag: 1,     //tag가 없는디 어떡하지 
             maxPersonnel: 2, 
             discordLink: null,
