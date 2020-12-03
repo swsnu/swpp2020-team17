@@ -266,6 +266,19 @@ class Post extends Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.commenttingPostId != this.state.commenttingPostId) {
+            console.log("state(commenttingPostId) changed from:", prevState.commenttingPostId, " to:", this.state.commenttingPostId);
+            console.log("Try to get commentList by postId: ", this.state.commenttingPostId);
+            this.props.onGetCommentList(this.state.commenttingPostId);
+            this.setState({
+                commentList: this.props.storedCommentList
+            })
+            console.log("storedCommentList updated to : ", this.props.storedCommentList);
+            console.log("currentState(commentList) updated to : ", this.state.commentList);
+        }
+    }
+
     onToggleTag = (tag_id) => {
         const checked = this.state.selectedTagList.indexOf(tag_id) > -1;
         const { selectedTagList } = this.state;
@@ -312,25 +325,24 @@ class Post extends Component {
                 // commentList: this.props.onGetCommentList(postId)
                 // commentList: this.props.storedCommentList
             })
-            this.props.onGetCommentList(postId);
-            console.log("commenttingPostId state updated: ", this.state.commenttingPostId);
-            console.log("commentList state updated: ", this.state.commentList);
+            // // comment 토글됐을 때 해당하는 postId에 해당하는 commentList를 스토어에 저장
+            // this.props.onGetCommentList(postId);
+
         } else if (this.state.commenttingPostId === postId){
             this.setState({
                 commenttingPostId: null,
-                // commentList: []
             })
-            console.log("commenttingPostId state updated: ", this.state.commenttingPostId);
-            console.log("commentList state updated: ", this.state.commentList);
+
+        // A 포스트의 코멘트가 토글 중일 때 B(current postId)를 토글
         } else {
+            // // comment 토글됐을 때 해당하는 postId에 해당하는 commentList를 스토어에 저장
+            // this.props.onGetCommentList(postId);
             this.setState({
                 commenttingPostId: postId,
                 // commentList: this.props.onGetCommentList(postId)
                 // commentList: this.props.onGetPost(postId)
                 // commentList: this.props.storedCommentList
             })
-            console.log("commenttingPostId state updated: ", this.state.commenttingPostId);
-            console.log("commentList state updated: ", this.state.commentList);
         }
     }
 
@@ -417,11 +429,11 @@ class Post extends Component {
     returnCommentView = (post, isToggleComment, commentList) => {
         if (isToggleComment) {
             console.log("Toggle!");
-            console.log(commentList);
+            // console.log(commentList);
             // Show Form, commentList
             return (
-                <>
-                    <CommentWrapper>
+                <div>
+                    {/* <CommentWrapper>
                         <CommentFormContainer>
                         </CommentFormContainer>
                         <CommentListContainer style={{ width: "100%" }}>
@@ -439,8 +451,8 @@ class Post extends Component {
                                 )}
                             />
                         </CommentListContainer>
-                    </CommentWrapper>
-                </>
+                    </CommentWrapper> */}
+                </div>
             );
         } else {
             // Show nothing
@@ -487,10 +499,14 @@ class Post extends Component {
             clickedPostId = this.state.clickedPostId;
         }
 
-        // Toggle comment view
+        // Toggled comment view in previous render
         if (this.state.commenttingPostId !== null) {
+            // this.onGetCommentList(this.state.commenttingPostId);
             commenttingPostId = this.state.commenttingPostId;
-            commentList = this.props.storedCommentList;
+            console.log("var(commenttingPostId) updated by its state: ", commenttingPostId);
+            // commentList = this.props.storedCommentList;
+            commentList = this.state.storedCommentList;
+            console.log("var(commentList) updated by its state: ", commentList);
             // commentList = this.props.onGetCommentList(commenttingPostId);
             // commentList = this.state.commentList;
         }
