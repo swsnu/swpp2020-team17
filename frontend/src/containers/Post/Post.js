@@ -264,7 +264,6 @@ class Post extends Component {
             //     });
             // });
         }
-        this.props.onGetCommentList();
     }
 
     onToggleTag = (tag_id) => {
@@ -311,14 +310,15 @@ class Post extends Component {
                 commenttingPostId: postId,
                 // commentList: this.props.onGetPost(postId)
                 // commentList: this.props.onGetCommentList(postId)
-                commentList: this.props.storedCommentList
+                // commentList: this.props.storedCommentList
             })
+            this.props.onGetCommentList(postId);
             console.log("commenttingPostId state updated: ", this.state.commenttingPostId);
             console.log("commentList state updated: ", this.state.commentList);
         } else if (this.state.commenttingPostId === postId){
             this.setState({
                 commenttingPostId: null,
-                commentList: []
+                // commentList: []
             })
             console.log("commenttingPostId state updated: ", this.state.commenttingPostId);
             console.log("commentList state updated: ", this.state.commentList);
@@ -327,7 +327,7 @@ class Post extends Component {
                 commenttingPostId: postId,
                 // commentList: this.props.onGetCommentList(postId)
                 // commentList: this.props.onGetPost(postId)
-                commentList: this.props.storedCommentList
+                // commentList: this.props.storedCommentList
             })
             console.log("commenttingPostId state updated: ", this.state.commenttingPostId);
             console.log("commentList state updated: ", this.state.commentList);
@@ -490,9 +490,9 @@ class Post extends Component {
         // Toggle comment view
         if (this.state.commenttingPostId !== null) {
             commenttingPostId = this.state.commenttingPostId;
+            commentList = this.props.storedCommentList;
             // commentList = this.props.onGetCommentList(commenttingPostId);
             // commentList = this.state.commentList;
-            commentList = this.props.storedCommentList;
         }
 
         return (
