@@ -248,6 +248,7 @@ class Post extends Component {
 
     componentDidMount() {
         this.props.onGetCurrentUser();
+        this.props.onGetUserList();
         this.props.onGetPostList();
         this.props.onGetTagList();
         // this.props.onGetCommentList();
@@ -275,7 +276,7 @@ class Post extends Component {
                     commentList: null
                 })
             } else {
-                this.props.onGetCommentList(this.state.commenttingPostId);
+                //this.props.onGetCommentList(this.state.commenttingPostId);
                 this.setState({
                     commentList: this.props.storedCommentList
                 })
@@ -324,6 +325,7 @@ class Post extends Component {
     }
 
     handleCommentClicked = (postId) => {
+        if (postId) this.props.onGetCommentList(postId);
         if (this.state.commenttingPostId === null) {
             this.setState({
                 commenttingPostId: postId,
@@ -348,7 +350,8 @@ class Post extends Component {
                 // commentList: this.props.onGetCommentList(postId)
                 // commentList: this.props.onGetPost(postId)
                 // commentList: this.props.storedCommentList
-            })
+            });
+            // this.props.onGetCommentList(postId);
         }
     }
 
@@ -432,14 +435,15 @@ class Post extends Component {
         }
     }
 
-    returnCommentView = (post, isToggleComment, commentList) => {
+    returnCommentView = (isToggleComment, commentList, currPost, userList) => {
+        // currpost.author ; id
         if (isToggleComment) {
-            console.log("Toggle!");
             // console.log(commentList);
-            // Show Form, commentList
+            // TODO: Show Form, commentList
+            console.log("isToggleComment start");
             return (
                 <div>
-                    <CommentWrapper>
+                    {/* <CommentWrapper>
                         <CommentFormContainer>
                         </CommentFormContainer>
                         <CommentListContainer style={{ width: "100%" }}>
@@ -450,36 +454,39 @@ class Post extends Component {
                                 renderItem={item => (
                                     <li>
                                         <Comment
-                                            author={item.authorName}
+                                            avatar={userList.find(user => (user.id === item.author)).avatar}
+                                            author={userList.find(user => (user.id === item.author)).username}
                                             content={item.content}
                                         />
                                     </li>
                                 )}
                             />
                         </CommentListContainer>
-                    </CommentWrapper>
+                    </CommentWrapper> */}
+                    {console.log(commentList)}
                 </div>
             );
         } else {
             // Show nothing
             console.log("Show nothing");
             return (
-                <div></div>
+                <div>
+                </div>
             );
         }
     }
 
     render() {
+        let user = null;
         let tagList = [];
         let tagToggle = [];
-        //FIXME: Infinite scroll to be implemented
+        // FIXME: Infinite scroll to be implemented
         // let postList = []
         let activePostList = [];
-        let user = null;
         let clickedPostId = null;
         let commenttingPostId = null;
         let commentList = [];
-
+        let userList = [];
         
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
@@ -494,11 +501,15 @@ class Post extends Component {
                     />
                 );
             });
-            //FIXME: Infinite scroll to be implemented
+
+            // FIXME: Infinite scroll to be implemented
             // postList = this.props.storedPostList;
             activePostList = this.props.storedPostList.filter(post => {
                 return this.state.selectedTagList.includes(post.tag);
             });
+
+            // To chase users when toggle comment view
+            userList = this.props.storedUserList;
         }
 
         // Zoom in/out the clicked post's view
@@ -512,7 +523,7 @@ class Post extends Component {
             commenttingPostId = this.state.commenttingPostId;
             console.log("var(commenttingPostId) updated by its state: ", commenttingPostId);
             // commentList = this.props.storedCommentList;
-            commentList = this.state.storedCommentList;
+            commentList = this.state.commentList;
             console.log("var(commentList) updated by its state: ", commentList);
             // commentList = this.props.onGetCommentList(commenttingPostId);
             // commentList = this.state.commentList;
@@ -597,11 +608,17 @@ class Post extends Component {
                                                     <MessageTwoTone
                                                         onClick={() => this.handleCommentClicked(item.id)}
                                                     />
-                                                    ??
                                                 </Space>
                                             </div>
                                         </IconContainer>
-                                        {this.returnCommentView(item, item.id === commenttingPostId, commentList)}
+                                        {
+                                            this.returnCommentView(
+                                                (item.id === commenttingPostId),
+                                                commentList,
+                                                item,
+                                                userList
+                                            )
+                                        }
                                     </PostFooterContainer>
                                 </PostContainer>
                             </List.Item>
@@ -626,6 +643,7 @@ const mapStateToProps = (state) => {
         storedTagList: state.tg.tagList,
         storedPostList: state.ps.postList,
         storedCommentList: state.cm.selectedCommentList,
+        storedUserList: state.ur.userList,
     }
 }
 
@@ -643,6 +661,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getCommentList(id)),
         onGetPost: (id) => 
             dispatch(actionCreators.getPost(id)),
+        onGetUserList: () =>
+            dispatch(actionCreators.getUserList),
     }
 }
 
