@@ -20,3 +20,4 @@ export const DeletePost = 'DeletePost'
 export const GetCommentList = 'GetCommentList'
 
 export const SendShallWe = 'SendShallWe'
+export const CreateChatting = 'CreateChatting'

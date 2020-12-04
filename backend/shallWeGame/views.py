@@ -436,10 +436,11 @@ def chatroom_info(request, chatroom_id=0):
 
     if request.method == 'GET':
         chatroom = Chatroom.objects.get(id=chatroom_id)
-        return JsonResponse({"isGlobal": chatroom.is_global, "title": chatroom.title,
-                             "memberList": chatroom.member_list, "tag": chatroom.tag,
-                             "maxPersonnel": chatroom.max_personnel,
-                             "discordLink": chatroom.discord_link})
+        member_list = [member['id'] for member in chatroom.member_list.all().values()]
+        return JsonResponse(
+                {"id": chatroom.id, "isGlobal": chatroom.is_global, "title": chatroom.title,
+                 "memberList": member_list, "tag": chatroom.tag.id,
+                 "maxPersonnel": chatroom.max_personnel, "discordLink": chatroom.discord_link})
     if request.method == 'PUT':
         chatroom = Chatroom.objects.get(id=chatroom_id)
         ## to be added. non-host returns 403

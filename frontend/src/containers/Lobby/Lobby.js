@@ -45,27 +45,6 @@ class Lobby extends Component{
         this.props.history.push('/RoomInfo')
     }
 
-    onClickJoin = (id) => {
-        let user = this.props.storedCurrentUser;
-        user.chatroom = id;
-        this.props.onPutUser(user);
-    }
-
-    onClickSure = (id) => {
-        let user = this.props.storedCurrentUser;
-        user.shallWeRoomList.filter(room => {
-            return room.id != id;
-        });
-        user.chatroom = id;
-        this.props.onPutUser(user);
-        // this.props.history.push('')
-    }
-    
-    onClickSorry = (id) => {
-        this.props.onDeleteChatroom(id);
-    }
-    
-
     render() {
         let shallWeList = []
         let chatroomList = []
@@ -112,7 +91,7 @@ class Lobby extends Component{
                     <Col span={6}>
                         <Button 
                             id="create-chatroom-button" 
-                            onClick={this.onClickCreateRoom} 
+                            onClick={() => this.onClickCreateRoom()} 
                             block
                         >
                             Create Room
@@ -123,13 +102,9 @@ class Lobby extends Component{
                 <div className="shallWeList">
                     <ChatroomList
                         list={shallWeList}
-                        tagList={tagList}
                         isShallWe={true}
-                        onClickSure={this.onClickSure}
-                        onClickSorry={this.onClickSorry}
                     />
                 </div>
-
 
                 <Row gutter={[40, 0]}>
                     <Col span={18}>
@@ -143,9 +118,7 @@ class Lobby extends Component{
                 <div className="chatroomList">
                     <ChatroomList
                         list = {chatroomList}
-                        tagList={tagList}
                         isShallWe={false}
-                        onClickJoin={this.onClickJoin}
                     /> 
                 </div>
             </div>
@@ -171,8 +144,6 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.putUser(user)),
         onGetChatroomList: () => 
             dispatch(actionCreators.getChatroomList()),
-        onDeleteChatroom: (id) => 
-            dispatch(actionCreators.deleteChatroom(id)),
         onGetTagList: () => 
             dispatch(actionCreators.getTagList()),
     }

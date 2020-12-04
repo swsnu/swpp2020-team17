@@ -1,8 +1,12 @@
 import * as actionTypes from '../actions/actionTypes';
+import { StreamChat } from 'stream-chat';
+const chatClient = new StreamChat('dc8cfsjehcsx');
 
 const reducer = (state = {
     chatroomList: [],
     selectedChatroom: null,
+    selectedChatUser: null,
+    selectedChatChannel: null,
 
 }, action) => {
     switch (action.type) {
@@ -26,6 +30,21 @@ const reducer = (state = {
                 return chatroom.id !== action.chatroom.id;
             });
             return { ...state, chatroomList: deletedChatrooms};
+        case actionTypes.CreateChatting:
+            chatClient.setUser(
+                {
+                    id: action.username,
+                    name: action.username,
+                    image: 'https://getstream.io/random_png/?id=cold-cloud-8&name=Cold+cloud'
+                },
+                chatClient.devToken(action.username),
+            );
+
+            const channel = chatClient.channel('messaging', action.chatroomId, {
+                //image: 'https://cdn.chrisshort.net/testing-certificate-chains-in-go/GOPHER_MIC_DROP.png',
+                name: action.chatroomTitle,
+            });
+            return { ...state, selectedChatUser: chatClient, selectedChatChannel: channel}
         default:
             break;
     }

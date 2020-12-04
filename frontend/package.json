@@ -32,6 +32,8 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reqwest": "^2.0.5",
+    "stream-chat": "^2.8.4",
+    "stream-chat-react": "^3.2.4",
     "styled-components": "^5.2.1",
     "testing-library": "^0.0.2",
     "web-vitals": "^0.2.4"

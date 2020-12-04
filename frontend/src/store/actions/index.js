@@ -25,6 +25,7 @@ export {
     putChatroom,
     deleteChatroom,
     sendShallWe,
+    createChatting,
 } from './chatroom'
 
 export {
