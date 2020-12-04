@@ -270,10 +270,16 @@ class Post extends Component {
         if (prevState.commenttingPostId != this.state.commenttingPostId) {
             console.log("state(commenttingPostId) changed from:", prevState.commenttingPostId, " to:", this.state.commenttingPostId);
             console.log("Try to get commentList by postId: ", this.state.commenttingPostId);
-            this.props.onGetCommentList(this.state.commenttingPostId);
-            this.setState({
-                commentList: this.props.storedCommentList
-            })
+            if (this.state.commenttingPostId == null) {
+                this.setState({
+                    commentList: null
+                })
+            } else {
+                this.props.onGetCommentList(this.state.commenttingPostId);
+                this.setState({
+                    commentList: this.props.storedCommentList
+                })
+            }
             console.log("storedCommentList updated to : ", this.props.storedCommentList);
             console.log("currentState(commentList) updated to : ", this.state.commentList);
         }
@@ -433,7 +439,7 @@ class Post extends Component {
             // Show Form, commentList
             return (
                 <div>
-                    {/* <CommentWrapper>
+                    <CommentWrapper>
                         <CommentFormContainer>
                         </CommentFormContainer>
                         <CommentListContainer style={{ width: "100%" }}>
@@ -451,7 +457,7 @@ class Post extends Component {
                                 )}
                             />
                         </CommentListContainer>
-                    </CommentWrapper> */}
+                    </CommentWrapper>
                 </div>
             );
         } else {
@@ -473,6 +479,7 @@ class Post extends Component {
         let clickedPostId = null;
         let commenttingPostId = null;
         let commentList = [];
+
         
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
@@ -618,7 +625,7 @@ const mapStateToProps = (state) => {
         storedCurrentUser: state.ur.currentUser,
         storedTagList: state.tg.tagList,
         storedPostList: state.ps.postList,
-        storedCommentList: state.ps.commentList
+        storedCommentList: state.cm.selectedCommentList,
     }
 }
 

@@ -23,6 +23,7 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 const getCommentList_ = (commentList) => {
+    console.log(commentList);
     return {
         type: actionTypes.GetCommentList,
         commentList: commentList
@@ -32,7 +33,7 @@ const getCommentList_ = (commentList) => {
 // Get Comment by id
 export const getCommentList = (postId) => {
     return dispatch => {
-        return axios.get('/post/' + postId + '/comment/')
+        return axios.get('/api/post/' + postId + '/comment/')
             .then(res => dispatch(getCommentList_(res.data)))
     }
 }

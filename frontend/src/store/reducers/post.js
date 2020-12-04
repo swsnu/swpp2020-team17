@@ -4,7 +4,6 @@ import * as actionTypes from '../actions/actionTypes';
 const reducer = (state = {
     selectedPost: null,
     postList: [],
-    commentList: [],
 }, action) => {
     switch (action.type) {
         case actionTypes.GetPostList:
@@ -25,8 +24,6 @@ const reducer = (state = {
                 return post.id !== action.post.id;
             });
             return { ...state, postList: deletedPosts };
-        case actionTypes.GetCommentList:
-            return { ...state, commentList: action.commentList }
         default:
             break;
     }

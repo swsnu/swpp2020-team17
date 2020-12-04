@@ -7,7 +7,7 @@ const reducer = (state = {
 }, action) => {
     switch (action.type) {
         case actionTypes.GetCommentList:
-            return { ...state, SelectedCommentList: action.commentList }
+            return { ...state, selectedCommentList: action.commentList }
         default:
             break;
     }
