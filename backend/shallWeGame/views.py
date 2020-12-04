@@ -285,12 +285,11 @@ def comment_list(request, post_id=0):
         return HttpResponseNotAllowed(['GET', 'POST'])
 
     if request.method == 'GET':
-        comment_object_list = [comment for comment in Comment.objects.all()]
+        comment_object_list = [comment for comment in Comment.objects.all() if comment.post.id==post_id]
         comment_response_list = []
         for comment in comment_object_list:
             comment_response_list.append(
-                {"post": comment.post.id, "content": comment.content, "author": comment.author.id,
-                 "authorName": comment.author.username})
+                {"post": comment.post.id, "content": comment.content, "author": comment.author.id})
         return JsonResponse(comment_response_list, safe=False)
     # request.method == 'POST'
     try:
@@ -303,7 +302,7 @@ def comment_list(request, post_id=0):
     comment = Comment(post=comment_post, content=comment_content, author=comment_author)
     comment.save()
     response_dict = {"id": comment.id, "post": comment.post.id, "content": comment.content,
-                        "author": comment.author.id, "authorName": comment.author.username}
+                        "author": comment.author.id}
     return HttpResponse(content=json.dumps(response_dict), status=200)
 
 
@@ -323,8 +322,7 @@ def comment_info(request, comment_id=0):
     if request.method == 'GET':
         comment = Comment.objects.get(id=comment_id)
         return JsonResponse(
-            {"post": comment.post.id, "content": comment.content, "author": comment.author.id,
-             "authorName": comment.author.username})
+            {"post": comment.post.id, "content": comment.content, "author": comment.author.id})
     elif request.method == 'PUT':
         comment = Comment.objects.get(id=comment_id)
         # non-author returns 403
@@ -337,7 +335,7 @@ def comment_info(request, comment_id=0):
             return HttpResponseBadRequest()
         comment.content = comment_content
         response_dict = {"id": comment.id, "post": comment.post.id, "content": comment.content,
-                         "author": comment.author.id, "authorName": comment.author.username}
+                         "author": comment.author.id}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     # request.method == 'DELETE'
     comment = Comment.objects.get(id=comment_id)
