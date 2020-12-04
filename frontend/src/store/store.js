@@ -7,6 +7,7 @@ import userReducer from './reducers/user';
 import tagReducer from './reducers/tag';
 import chatroomReducer from './reducers/chatroom';
 import postReducer from './reducers/post';
+import commentReducer from './reducers/comment';
 
 export const history = createBrowserHistory();
 const rootReducer = combineReducers({
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   tg: tagReducer,
   chat: chatroomReducer,
   ps: postReducer,
+  cm: commentReducer,
   router: connectRouter(history),
 });
 export const middlewares = [thunk, routerMiddleware(history)]
