@@ -449,14 +449,18 @@ def chatroom_info(request, chatroom_id=0):
             chatroom_is_global = req_data['isGlobal']
             chatroom_title = req_data['title']
             chatroom_max_personnel = req_data['maxPersonnel']
+            chatroom_member_list = req_data['memberList']
         except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
         chatroom.is_global = chatroom_is_global
         chatroom.title = chatroom_title
         chatroom.max_personnel = chatroom_max_personnel
+        chatroom.member_list.set([DiscordUser.objects.get(id=member_id) \
+            for member_id in chatroom_member_list])
+        member_list = [member['id'] for member in chatroom.member_list.all().values()]
         response_dict = {"id": chatroom.id, "isGlobal": chatroom.is_global, "title": chatroom.title,
-                         "tag": chatroom.tag, "maxPersonnel": chatroom.max_personnel,
-                         "discordLink": chatroom.discord_link}
+                         "memberList": member_list, "tag": chatroom.tag, 
+                         "maxPersonnel": chatroom.max_personnel, "discordLink": chatroom.discord_link}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     # request.method == 'DELETE'
     chatroom = Chatroom.objects.get(id=chatroom_id)

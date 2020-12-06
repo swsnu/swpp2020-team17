@@ -115,6 +115,7 @@ class Chatroom extends Component {
     onClickBacktoLobby = () => {
         let user = this.props.storedCurrentUser;
         let chatroom = this.props.storedSelectedChatroom;
+        console.log(chatroom.memberList);
         if (chatroom.memberList.length <= 1) {
             this.props.onDeleteChatroom(chatroom.id);
             this.props.onDeleteChatting();
@@ -130,12 +131,12 @@ class Chatroom extends Component {
         let memberList = [];
         console.log(chatroom);
         console.log(userList);
-        // if (chatroom && userList) {
-        //     memberList = chatroom.memberList.map(member_id => {
-        //         if (member_id === this.props.storedCurrentUser.id) return;
-        //         else return userList.find(user => user.id === member_id);
-        //     });
-        // }
+        if (chatroom) console.log(chatroom.memberList);
+        if (chatroom && chatroom.memberList && userList) {
+            memberList = chatroom.memberList.map(member_id => {
+                return userList.find(user => user.id === member_id);
+            });
+        }
         console.log(this.props.storedSelectedChatUser);
         console.log(this.props.storedSelectedChatChannel);
         if (this.props.storedSelectedChatUser && this.props.storedSelectedChatChannel) {
@@ -165,9 +166,7 @@ class Chatroom extends Component {
                                                     </AuthorItem>
                                                     <SpaceBetweenItem />
                                                     <ButtonItem>
-                                                        <Button>
-                                                            AddorDelete
-                                                        </Button>
+                                                        {item.id !== this.props.storedCurrentUser.id ? <Button>AddorDelete</Button> : null}
                                                     </ButtonItem>
                                                 </FriendItemWrapper>
                                         </List.Item>
@@ -192,7 +191,7 @@ class Chatroom extends Component {
                 <MyPageContainer>
                     <MyPageLeftContainer >
                         <ProfileCardWrapper>
-                            <Button onClick={() => {this.onClickBacktoLobby()}}> Back to Lobby </Button>
+                            <Button onClick={() => this.onClickBacktoLobby()}> Back to Lobby </Button>
                         </ProfileCardWrapper>
                         <FriendListWrapper>
                             <Divider orientation="center" style={{ marginTop: 0 }}>
@@ -213,9 +212,7 @@ class Chatroom extends Component {
                                                 </AuthorItem>
                                                 <SpaceBetweenItem />
                                                 <ButtonItem>
-                                                    <Button>
-                                                        AddorDelete
-                                                    </Button>
+                                                    {item.id !== this.props.storedCurrentUser.id ? <Button>AddorDelete</Button> : null}
                                                 </ButtonItem>
                                             </FriendItemWrapper>
                                     </List.Item>
