@@ -114,6 +114,11 @@ class Chatroom extends Component {
 
     onClickBacktoLobby = () => {
         let user = this.props.storedCurrentUser;
+        let chatroom = this.props.storedSelectedChatroom;
+        if (chatroom.memberList.length <= 1) {
+            this.props.onDeleteChatroom(chatroom.id);
+            this.props.onDeleteChatting();
+        }
         user.chatroom = -1;
         this.props.onPutUser(user);
         this.props.history.push('/lobby');
@@ -139,7 +144,7 @@ class Chatroom extends Component {
                     <MyPageContainer>
                         <MyPageLeftContainer >
                             <ProfileCardWrapper>
-                                <Button onClick={() => {this.onClickBacktoLobby()}}> Back to Lobby </Button>
+                                <Button onClick={() => this.onClickBacktoLobby()}> Back to Lobby </Button>
                             </ProfileCardWrapper>
                             <FriendListWrapper>
                                 <Divider orientation="center" style={{ marginTop: 0 }}>
@@ -249,6 +254,10 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.putUser(user)),
         onGetChatroom: (id) =>
             dispatch(actionCreators.getChatroom(id)),
+        onDeleteChatroom: (id) =>
+            dispatch(actionCreators.deleteChatroom(id)),
+        onDeleteChatting: () =>
+            dispatch(actionCreators.deleteChatting()),
     }
 }
 
