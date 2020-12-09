@@ -6,6 +6,8 @@ import Post from '../../containers/Post/Post';
 import { Divider, List, Button, Space } from 'antd';
 import Profile from '../../components/Profile/Profile';
 import Author from '../../components/Author/Author';
+import { useHistory } from 'react-router';
+import GridPost from './GridPost'
 
 const MyPageContainer = styled.div`
     display: flex;
@@ -88,6 +90,11 @@ const buttonShake = keyframes`
     }
 `;
 
+const ButtonCreate = styled.div`
+    flex: none;
+    align-items: right;
+`;
+
 const MyPageRightContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -113,7 +120,9 @@ const GridPostsWrapper = styled.div`
 // `;
 
 class MyPage extends Component {
-
+    constructor(props) {
+        super(props);
+    }
     // state= {
         // ID: '',
         // FriendIDList: [],
@@ -155,7 +164,9 @@ class MyPage extends Component {
         //     })
         // }
         this.props.onGetCurrentUser();
+        this.props.onGetPostList();
         this.props.onGetUserList();
+
     }
 
     onClickPost() {
@@ -163,7 +174,6 @@ class MyPage extends Component {
     }
 
     onClickCreatePost() {
-        this.props.history.push('/post/create/')
     }
 
     onClickTag() {
@@ -192,6 +202,9 @@ class MyPage extends Component {
         }
         // current user의 chatroom 바꾸고 redirect?
         // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
+    }
+
+    handleCreatePostClicked() {
     }
 
     render() {
@@ -267,7 +280,16 @@ class MyPage extends Component {
                         <Divider orientation="center" style={{ marginTop: 0 }}>
                             Gallery
                         </Divider>
+                        <GridPost />
                     </GridPostsWrapper>
+                    <ButtonCreate>
+                        <Button
+                            type="primary"
+                            onClick={() => {this.props.history.push('/createpost')}}
+                        >
+                            create post
+                        </Button>
+                    </ButtonCreate>
                 </MyPageRightContainer>
             </MyPageContainer>
         );
@@ -291,6 +313,7 @@ class MyPage extends Component {
 const mapStateToProps = (state) => {
     return {
         storedCurrentUser: state.ur.currentUser,
+        storedPostList: state.ps.postList,
         storedUserList: state.ur.userList,
         storedSelectedChatroom: state.chat.selectedChatroom,
     }
@@ -299,7 +322,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onGetCurrentUser: () => 
-            dispatch(actionCreators.getCurrentUser()),
+            dispatch(actionCreators.getCurrentUser()),    
+        onGetPostList: () =>
+            dispatch(actionCreators.getPostList()),
         onGetUserList: () =>
             dispatch(actionCreators.getUserList()),
         onPutUser: (user) =>

@@ -202,21 +202,24 @@ def post_list(request):
              "likingUserList": list(post.liking_user_list.all())} for post in Post.objects.all()]
         return JsonResponse(post_response_list, safe=False)
     # request.method == 'POST'
-    try:
-        req_data = json.loads(request.body.decode())
-        post_image = req_data['image']
-        post_content = req_data['content']
-        post_tag = req_data['tag_id']
-    except (KeyError, JSONDecodeError):
-        return HttpResponseBadRequest()
-    post_author = request.user
-    tag = Tag.objects.get(id=int(post_tag))
-    post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
-    response_dict = {"id": post.id, "image": post.image, "content": post.content,
-                        "author": post.author_id, "authorName": post.author.username,
-                        "authorAvatar": post.author.avatar, "tag": post.tag.id,
+    if request.method == 'POST':
+        try:
+            req_data = json.loads(request.body.decode())
+            post_image = req_data['image']
+            post_content = req_data['content']
+            post_tag = req_data['tag']
+        except (KeyError, JSONDecodeError):
+            return HttpResponseBadRequest()
+        post_author = request.user
+        tag = Tag.objects.get(name=post_tag)
+        post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
+        post.save()
+        response_dict = {"id": post.id, "image": post.image, "content": post.content,
+                        "author": post_author.id, "authorName": post_author.username,
+                        "authorAvatar": post_author.avatar, "tag": post.tag.id,
                         "likeNum": post.like_num,
-                        "likingUserList": list(post.liking_user_list.all())}
+                        # "likingUserList": [post_author]
+                        }
     print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
 

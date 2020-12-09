@@ -231,38 +231,48 @@ const IconContainer = styled.div`
 
 
 class Post extends Component {
-
-    state = {
-        selectedTagList: [],
-        activePostList: [], // under selected tag
-        clickedPostId: null,
-
-        commentingPostId: null,
-        likingPostId: null,
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedTagList: [],
+            activePostList: [],
+            clickedPostId: null,
+            commentingPostId: null,
+            likingPostId: null,
         //FIXME: Infinite scroll to be implemented
         // loading: false,
         // hasMore: true,
-    }
-
-    componentDidMount() {
+        }
         this.props.onGetCurrentUser();
         this.props.onGetUserList();
         this.props.onGetPostList();
         this.props.onGetTagList();
+    }
+
+    // state = {
+    //     selectedTagList: [],
+    //     activePostList: [], // under selected tag
+    //     //FIXME: Infinite scroll to be implemented
+    //     // loading: false,
+    //     // hasMore: true,
+    // }
+
+    componentDidMount() {
+        //FIXME: Infinite scroll to be implemented
+        // }
+        // this.fetchData(res => {
+        //     this.setState({
+        //         postList: res.results,
+        //     });
+        // });
         if (this.props.storedCurrentUser) {
             this.setState({
                 selectedTagList: this.props.storedCurrentUser.tagList,
                 activePostList: this.props.storedPostList
             });
-            //FIXME: Infinite scroll to be implemented
-            // }
-            // this.fetchData(res => {
-            //     this.setState({
-            //         postList: res.results,
-            //     });
-            // });
         }
     }
+
 
     onToggleTag = (tag_id) => {
         const checked = this.state.selectedTagList.indexOf(tag_id) > -1;
@@ -428,15 +438,15 @@ class Post extends Component {
         let activePostList = [];
         // FIXME: Infinite scroll to be implemented
         // let postList = []
-    
+      
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
             tagList = this.props.storedTagList;
             tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
                 return (
-                    <GameTag 
+                    <GameTag
                         key={tag_id}
-                        tagId={tag_id} 
+                        tagId={tag_id}
                         isChecked={this.state.selectedTagList.includes(tag_id)}
                         onClick={() => this.onToggleTag(tag_id)}
                     />
@@ -455,10 +465,10 @@ class Post extends Component {
                 <GameTagWrapper>
                     <span style={{ marginRight: 8 }}>Your Games:</span>
                     {tagToggle}
-                </GameTagWrapper> 
+                </GameTagWrapper>
 
                 <PostListWrapper>
-                {/*
+                    {/*
                 //FIXME: Infinite scroll to be implemented
                 <InfiniteScroll
                     initialLoad={false}
@@ -504,8 +514,14 @@ class Post extends Component {
 
                                     <Divider style={{ marginTop: 0, marginBottom: 10 }} />
 
-                                    <PostBodyContainer onClick={() => this.handleBodyClicked(item.id)}>
-                                        {this.returnBodyFormat(item, item.id===this.state.clickedPostId)}
+                                    <PostBodyContainer onClick={this.handleBodyClicked}>
+                                        <ContentsContainer style={{ width: "100%" }}>
+                                            {item.content}
+                                        </ContentsContainer>
+                                        <ImageContainer>
+                                            <img src={item.image} style={{ width: "100%" }} />
+                                        </ImageContainer>
+
                                     </PostBodyContainer>
 
                                     <Divider style={{ marginTop: 0, marginBottom: 10 }} />
@@ -552,7 +568,7 @@ class Post extends Component {
                             </LoadingWrapper>
                         )} */}
                     </List>
-                {/* </InfiniteScroll> */}
+                    {/* </InfiniteScroll> */}
                 </PostListWrapper>
             </PostPageWrapper>
         )
@@ -571,13 +587,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onGetCurrentUser: () => 
+        onGetCurrentUser: () =>
             dispatch(actionCreators.getCurrentUser()),
-        onPutUser: (user) => 
+        onPutUser: (user) =>
             dispatch(actionCreators.putUser(user)),
-        onGetPostList: () => 
+        onGetPostList: () =>
             dispatch(actionCreators.getPostList()),
-        onGetTagList: () => 
+        onGetTagList: () =>
             dispatch(actionCreators.getTagList()),
         onGetCommentList: (id) =>
             dispatch(actionCreators.getCommentList(id)),
