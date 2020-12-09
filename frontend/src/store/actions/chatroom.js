@@ -125,7 +125,6 @@ export const sendShallWe = (newChatroom, sendingUser, receivingUser) => {
             axios.put('/api/user/' + sendingUser.id, sendingUser)
             .then(res2 => {
                 dispatch(putUser_(res2.data));
-                dispatch(push('/chatroom/' + res1.data.id));
             })
         })
     }

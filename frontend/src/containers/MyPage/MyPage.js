@@ -176,7 +176,7 @@ class MyPage extends Component {
     }
 
     //TODO:
-    onClickShallWe(receivingUser) {
+    async onClickShallWe(receivingUser) {
         let newChatroom = {
             isGlobal: false, 
             title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
@@ -186,8 +186,10 @@ class MyPage extends Component {
         }
         console.log(receivingUser);
         let sendingUser = this.props.storedCurrentUser;
-        this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
-        this.props.history.push('/chatroom/' + sendingUser.chatroom);
+        await this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
+        if(sendingUser.chatroom != -1) {
+            this.props.history.push('/chatroom/' + sendingUser.chatroom);
+        }
         // current user의 chatroom 바꾸고 redirect?
         // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
     }
@@ -246,6 +248,7 @@ class MyPage extends Component {
                                                 <Button
                                                     type="primary"
                                                     shape="round"
+                                                    disabled={this.props.storedCurrentUser.chatroom != -1}
                                                     onClick={() => this.onClickShallWe(item)}
                                                     size="small"
                                                     style={{ fontSize: 8, fontWeight: "bolder" }}
