@@ -5,10 +5,11 @@ import { connect } from 'react-redux';
 import { List, Divider, Space, Button, Comment } from 'antd';
 //FIXME: Infinite scroll to be implemented
 // import { Spin, message } from 'antd';
-import { MessageTwoTone, HeartTwoTone } from '@ant-design/icons';
+import { MessageTwoTone, HeartTwoTone, DeleteOutlined } from '@ant-design/icons';
 import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
 import Author from '../../components/Author/Author'
+import CommentView from '../../components/Comment/Comment';
 
 /* Components */
 import GameTag from '../../components/GameTag/GameTag'
@@ -227,9 +228,7 @@ const IconContainer = styled.div`
     margin-left: 5px;
 `;
 
-const CommentWrapper = styled.div``;
-const CommentFormContainer = styled.div``;
-const CommentListContainer = styled.div``;
+
 
 class Post extends Component {
 
@@ -238,9 +237,8 @@ class Post extends Component {
         activePostList: [], // under selected tag
         clickedPostId: null,
 
-        commenttingPostId: null,
+        commentingPostId: null,
         likingPostId: null,
-        commentList: [],
         //FIXME: Infinite scroll to be implemented
         // loading: false,
         // hasMore: true,
@@ -251,7 +249,6 @@ class Post extends Component {
         this.props.onGetUserList();
         this.props.onGetPostList();
         this.props.onGetTagList();
-        // this.props.onGetCommentList();
         if (this.props.storedCurrentUser) {
             this.setState({
                 selectedTagList: this.props.storedCurrentUser.tagList,
@@ -264,25 +261,6 @@ class Post extends Component {
             //         postList: res.results,
             //     });
             // });
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.commenttingPostId != this.state.commenttingPostId) {
-            console.log("state(commenttingPostId) changed from:", prevState.commenttingPostId, " to:", this.state.commenttingPostId);
-            console.log("Try to get commentList by postId: ", this.state.commenttingPostId);
-            if (this.state.commenttingPostId == null) {
-                this.setState({
-                    commentList: null
-                })
-            } else {
-                //this.props.onGetCommentList(this.state.commenttingPostId);
-                this.setState({
-                    commentList: this.props.storedCommentList
-                })
-            }
-            console.log("storedCommentList updated to : ", this.props.storedCommentList);
-            console.log("currentState(commentList) updated to : ", this.state.commentList);
         }
     }
 
@@ -326,33 +304,23 @@ class Post extends Component {
 
     handleCommentClicked = (postId) => {
         if (postId) this.props.onGetCommentList(postId);
-        if (this.state.commenttingPostId === null) {
+        if (this.state.commentingPostId === null) {
             this.setState({
-                commenttingPostId: postId,
-                // commentList: this.props.onGetPost(postId)
-                // commentList: this.props.onGetCommentList(postId)
-                // commentList: this.props.storedCommentList
+                commentingPostId: postId,
             })
-            // // comment 토글됐을 때 해당하는 postId에 해당하는 commentList를 스토어에 저장
-            // this.props.onGetCommentList(postId);
 
-        } else if (this.state.commenttingPostId === postId){
+        } else if (this.state.commentingPostId === postId){
             this.setState({
-                commenttingPostId: null,
+                commentingPostId: null,
             })
 
         // A 포스트의 코멘트가 토글 중일 때 B(current postId)를 토글
         } else {
-            // // comment 토글됐을 때 해당하는 postId에 해당하는 commentList를 스토어에 저장
-            // this.props.onGetCommentList(postId);
             this.setState({
-                commenttingPostId: postId,
-                // commentList: this.props.onGetCommentList(postId)
-                // commentList: this.props.onGetPost(postId)
-                // commentList: this.props.storedCommentList
+                commentingPostId: postId,
             });
-            // this.props.onGetCommentList(postId);
         }
+        // this.setState({ commentList: this.props.storedCommentList });
     }
 
     //FIXME: backend에서 코멘트 수정된 뒤 추가.
@@ -407,6 +375,11 @@ class Post extends Component {
     //     });
     // };
 
+    onEnterComment = (value) => {
+        console.log("New comment: ", value);
+        this.props.onCreateComment(this.state.commentingPostId, { content: value });
+    }
+
     returnBodyFormat = (post, isWideFormat) => {
         if (isWideFormat) {
             // console.log("Wide post")
@@ -435,44 +408,16 @@ class Post extends Component {
         }
     }
 
-    returnCommentView = (isToggleComment, commentList, currPost, userList) => {
-        // currpost.author ; id
-        if (isToggleComment) {
-            // console.log(commentList);
-            // TODO: Show Form, commentList
-            console.log("isToggleComment start");
+    clickDeleteComment = (comment) => {
+        this.props.onDeleteComment(comment);
+    }
+    returnDeleteButton = (comment) => {
+        if (this.props.storedCurrentUser.id === comment.author) {
             return (
-                <div>
-                    {/* <CommentWrapper>
-                        <CommentFormContainer>
-                        </CommentFormContainer>
-                        <CommentListContainer style={{ width: "100%" }}>
-                            <List
-                                className="comment-list"
-                                itemLayout="horizontal"
-                                dataSource={commentList}
-                                renderItem={item => (
-                                    <li>
-                                        <Comment
-                                            avatar={userList.find(user => (user.id === item.author)).avatar}
-                                            author={userList.find(user => (user.id === item.author)).username}
-                                            content={item.content}
-                                        />
-                                    </li>
-                                )}
-                            />
-                        </CommentListContainer>
-                    </CommentWrapper> */}
-                    {console.log(commentList)}
-                </div>
+                <DeleteOutlined onClick={() => this.clickDeleteComment(comment)} style={{ cursor: "pointer" }} />
             );
         } else {
-            // Show nothing
-            console.log("Show nothing");
-            return (
-                <div>
-                </div>
-            );
+            return null;
         }
     }
 
@@ -480,14 +425,10 @@ class Post extends Component {
         let user = null;
         let tagList = [];
         let tagToggle = [];
+        let activePostList = [];
         // FIXME: Infinite scroll to be implemented
         // let postList = []
-        let activePostList = [];
-        let clickedPostId = null;
-        let commenttingPostId = null;
-        let commentList = [];
-        let userList = [];
-        
+    
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
             tagList = this.props.storedTagList;
@@ -507,26 +448,6 @@ class Post extends Component {
             activePostList = this.props.storedPostList.filter(post => {
                 return this.state.selectedTagList.includes(post.tag);
             });
-
-            // To chase users when toggle comment view
-            userList = this.props.storedUserList;
-        }
-
-        // Zoom in/out the clicked post's view
-        if (this.state.clickedPostId !== null) {
-            clickedPostId = this.state.clickedPostId;
-        }
-
-        // Toggled comment view in previous render
-        if (this.state.commenttingPostId !== null) {
-            // this.onGetCommentList(this.state.commenttingPostId);
-            commenttingPostId = this.state.commenttingPostId;
-            console.log("var(commenttingPostId) updated by its state: ", commenttingPostId);
-            // commentList = this.props.storedCommentList;
-            commentList = this.state.commentList;
-            console.log("var(commentList) updated by its state: ", commentList);
-            // commentList = this.props.onGetCommentList(commenttingPostId);
-            // commentList = this.state.commentList;
         }
 
         return (
@@ -584,7 +505,7 @@ class Post extends Component {
                                     <Divider style={{ marginTop: 0, marginBottom: 10 }} />
 
                                     <PostBodyContainer onClick={() => this.handleBodyClicked(item.id)}>
-                                        {this.returnBodyFormat(item, item.id===clickedPostId)}
+                                        {this.returnBodyFormat(item, item.id===this.state.clickedPostId)}
                                     </PostBodyContainer>
 
                                     <Divider style={{ marginTop: 0, marginBottom: 10 }} />
@@ -611,14 +532,15 @@ class Post extends Component {
                                                 </Space>
                                             </div>
                                         </IconContainer>
-                                        {
-                                            this.returnCommentView(
-                                                (item.id === commenttingPostId),
-                                                commentList,
-                                                item,
-                                                userList
-                                            )
-                                        }
+                                        <CommentView 
+                                            commentingPostId={this.state.commentingPostId}
+                                            currPost={item}
+                                            userList={this.props.storedUserList}
+                                            commentList={this.props.storedCommentList}
+                                            currentUser={this.props.storedCurrentUser}
+                                            onEnterComment={this.onEnterComment}
+                                            returnDeleteButton={this.returnDeleteButton}
+                                        />
                                     </PostFooterContainer>
                                 </PostContainer>
                             </List.Item>
@@ -662,7 +584,11 @@ const mapDispatchToProps = (dispatch) => {
         onGetPost: (id) => 
             dispatch(actionCreators.getPost(id)),
         onGetUserList: () =>
-            dispatch(actionCreators.getUserList),
+            dispatch(actionCreators.getUserList()),
+        onCreateComment: (postId, comment) => 
+            dispatch(actionCreators.createComment(postId, comment)),
+        onDeleteComment: (comment) => 
+            dispatch(actionCreators.deleteComment(comment)),
     }
 }
 

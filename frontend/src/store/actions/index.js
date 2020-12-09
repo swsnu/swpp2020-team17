@@ -16,6 +16,8 @@ export {
 
 export {
     getCommentList,
+    createComment,
+    deleteComment,
 } from './comment'
 
 export {
@@ -26,6 +28,7 @@ export {
     deleteChatroom,
     sendShallWe,
     createChatting,
+    deleteChatting
 } from './chatroom'
 
 export {

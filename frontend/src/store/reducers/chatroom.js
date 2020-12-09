@@ -31,20 +31,27 @@ const reducer = (state = {
             });
             return { ...state, chatroomList: deletedChatrooms};
         case actionTypes.CreateChatting:
-            chatClient.setUser(
-                {
-                    id: action.username,
-                    name: action.username,
-                    image: 'https://getstream.io/random_png/?id=cold-cloud-8&name=Cold+cloud'
-                },
-                chatClient.devToken(action.username),
-            );
+            if (state.selectedChatUser === null) {
+                chatClient.setUser(
+                    {
+                        id: action.user.id.toString(),
+                        name: action.user.username,
+                        image: action.user.avatar,
+                    },
+                    chatClient.devToken(action.user.id.toString()),
+                );
+            }
 
-            const channel = chatClient.channel('messaging', action.chatroomId, {
+            const channel = chatClient.channel('messaging', action.chatroom.id, {
                 //image: 'https://cdn.chrisshort.net/testing-certificate-chains-in-go/GOPHER_MIC_DROP.png',
-                name: action.chatroomTitle,
+                name: action.chatroom.title,
             });
             return { ...state, selectedChatUser: chatClient, selectedChatChannel: channel}
+        case actionTypes.DeleteChatting:
+            if (state.selectedChatChannel != null) {
+                state.selectedChatChannel.delete();
+            }
+            return { ...state, selectedChatChannel: null }
         default:
             break;
     }

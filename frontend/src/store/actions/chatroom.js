@@ -134,9 +134,8 @@ export const sendShallWe = (newChatroom, sendingUser, receivingUser) => {
 export const createChatting_ = (chatroom, user) => {
     return {
         type: actionTypes.CreateChatting,
-        chatroomId: chatroom.id,
-        chatroomTitle: chatroom.title,
-        username: user.username,
+        chatroom: chatroom,
+        user: user,
     }
 }
 
@@ -146,5 +145,17 @@ export const createChatting = (chatroomId, user) => {
         .then(res1 => {
             dispatch(createChatting_(res1.data, user));
         });
+    }
+}
+
+export const deleteChatting_ = () => {
+    return {
+        type: actionTypes.DeleteChatting,
+    }
+}
+
+export const deleteChatting = () => {
+    return dispatch => {
+        return dispatch(deleteChatting_());
     }
 }
