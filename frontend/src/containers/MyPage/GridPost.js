@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
 import Gallery from "react-photo-gallery";
 import { Row, Col, Image } from 'antd';
-import { photos } from "./photos";
 
 class GridPost extends Component {
     constructor(props){
