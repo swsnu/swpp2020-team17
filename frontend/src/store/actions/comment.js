@@ -22,11 +22,12 @@ const csrftoken = getCookie('csrftoken');
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
-const getCommentList_ = (commentList) => {
+const getCommentList_ = (commentList, postId) => {
     console.log(commentList);
     return {
         type: actionTypes.GetCommentList,
-        commentList: commentList
+        commentList: commentList,
+        postId: postId
     }
 }
 
@@ -34,6 +35,34 @@ const getCommentList_ = (commentList) => {
 export const getCommentList = (postId) => {
     return dispatch => {
         return axios.get('/api/post/' + postId + '/comment/')
-            .then(res => dispatch(getCommentList_(res.data)))
+            .then(res => dispatch(getCommentList_(res.data, postId)))
+    }
+}
+
+export const createComment_ = (comment) => {
+    return {
+        type: actionTypes.CreateComment,
+        comment: comment
+    }
+}
+
+export const createComment = (postId, comment) => {
+    return dispatch => {
+        return axios.post('/api/post/' + postId + '/comment/', comment)
+            .then(res => dispatch(createComment_(res.data)))
+    }
+}
+
+export const deleteComment_ = (comment) => {
+    return {
+        type: actionTypes.DeleteComment,
+        comment: comment,
+    }
+}
+
+export const deleteComment = (comment) => {
+    return dispatch => {
+        return axios.delete('/api/comment/' + comment.post)
+            .then(res => dispatch(deleteComment_(comment)))
     }
 }

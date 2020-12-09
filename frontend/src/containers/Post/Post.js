@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { List, Divider, Space, Button, Comment } from 'antd';
 //FIXME: Infinite scroll to be implemented
 // import { Spin, message } from 'antd';
-import { MessageTwoTone, HeartTwoTone } from '@ant-design/icons';
+import { MessageTwoTone, HeartTwoTone, DeleteOutlined } from '@ant-design/icons';
 import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
 import Author from '../../components/Author/Author'
@@ -375,6 +375,11 @@ class Post extends Component {
     //     });
     // };
 
+    onEnterComment = (value) => {
+        console.log("New comment: ", value);
+        this.props.onCreateComment(this.state.commentingPostId, { content: value });
+    }
+
     returnBodyFormat = (post, isWideFormat) => {
         if (isWideFormat) {
             // console.log("Wide post")
@@ -400,6 +405,19 @@ class Post extends Component {
                     </NarrowImageContainer>
                 </NarrowPostWrapper>
             );
+        }
+    }
+
+    clickDeleteComment = (comment) => {
+        this.props.onDeleteComment(comment);
+    }
+    returnDeleteButton = (comment) => {
+        if (this.props.storedCurrentUser.id === comment.author) {
+            return (
+                <DeleteOutlined onClick={() => this.clickDeleteComment(comment)} style={{ cursor: "pointer" }} />
+            );
+        } else {
+            return null;
         }
     }
 
@@ -520,6 +538,8 @@ class Post extends Component {
                                             userList={this.props.storedUserList}
                                             commentList={this.props.storedCommentList}
                                             currentUser={this.props.storedCurrentUser}
+                                            onEnterComment={this.onEnterComment}
+                                            returnDeleteButton={this.returnDeleteButton}
                                         />
                                     </PostFooterContainer>
                                 </PostContainer>
@@ -565,6 +585,10 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getPost(id)),
         onGetUserList: () =>
             dispatch(actionCreators.getUserList()),
+        onCreateComment: (postId, comment) => 
+            dispatch(actionCreators.createComment(postId, comment)),
+        onDeleteComment: (comment) => 
+            dispatch(actionCreators.deleteComment(comment)),
     }
 }
 

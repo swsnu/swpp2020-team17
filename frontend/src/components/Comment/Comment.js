@@ -1,8 +1,9 @@
 import React from 'react';
-import { List, Comment, Input, Spin } from 'antd';
+import { List, Comment, Input, Button } from 'antd';
 import styled, { keyframes } from 'styled-components';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, DeleteOutlined } from '@ant-design/icons';
 import Avatar from 'antd/lib/avatar/avatar';
+import { useHistory } from 'react-router';
 
 const CommentWrapper = styled.div``;
 const CommentFormContainer = styled.div`
@@ -11,13 +12,11 @@ const CommentFormContainer = styled.div`
 `;
 const CommentListContainer = styled.div``;
 
-const onEnterComment = (value) => {
-    console.log("New comment: ", value);
 
-}
 
 const CommentView = (props) => {
     const [onLoading] = React.useState(true);
+    const history = useHistory();
 
     if (props.currPost && props.commentingPostId === props.currPost.id && props.commentList) {
         // console.log(commentList);
@@ -33,7 +32,7 @@ const CommentView = (props) => {
                         allowClear
                         enterButton="Enter"
                         size="middle"
-                        onSearch={onEnterComment}
+                        onSearch={props.onEnterComment}
                     />
                 </CommentFormContainer>
                 <CommentListContainer style={{ width: "100%" }}>
@@ -45,11 +44,23 @@ const CommentView = (props) => {
                             <li>
                                 <Comment
                                     avatar={props.userList.find(user => (user.id === item.author)).avatar?
-                                        props.userList.find(user => (user.id === item.author)).avatar
-                                        : <UserOutlined />}
+                                        <Avatar 
+                                            onClick={() => {
+                                                if (item.author === props.currentUser.id) history.push("/myPage/");
+                                                else history.push("/page/" + item.author);
+                                            }}
+                                            style={{ backgroundColor: '#1A516E' }} 
+                                            src={props.userList.find(user => (user.id === item.author)).avatar} />
+                                        : <Avatar 
+                                            onClick={() => {
+                                                if (item.author === props.currentUser.id) history.push("/myPage/");
+                                                else history.push("/page/" + item.author);
+                                            }}
+                                            icon={<UserOutlined />} />}
                                     author={props.userList.find(user => (user.id === item.author)).username}
                                     content={item.content}
                                 />
+                                {props.returnDeleteButton(item)}
                             </li>
                         )}
                     />

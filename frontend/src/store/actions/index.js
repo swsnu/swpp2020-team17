@@ -16,6 +16,8 @@ export {
 
 export {
     getCommentList,
+    createComment,
+    deleteComment,
 } from './comment'
 
 export {

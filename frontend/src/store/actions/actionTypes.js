@@ -19,6 +19,8 @@ export const PutPost = 'PutPost'
 export const DeletePost = 'DeletePost'
 
 export const GetCommentList = 'GetCommentList'
+export const CreateComment = 'CreateComment'
+export const DeleteComment = 'DeleteComment'
 
 export const SendShallWe = 'SendShallWe'
 export const CreateChatting = 'CreateChatting'
