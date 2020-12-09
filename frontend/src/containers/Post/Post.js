@@ -519,6 +519,7 @@ class Post extends Component {
                                             currPost={item}
                                             userList={this.props.storedUserList}
                                             commentList={this.props.storedCommentList}
+                                            currentUser={this.props.storedCurrentUser}
                                         />
                                     </PostFooterContainer>
                                 </PostContainer>
