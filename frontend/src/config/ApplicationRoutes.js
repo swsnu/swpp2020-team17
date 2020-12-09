@@ -62,6 +62,7 @@ const ApplicationRoutes = props => {
                     <Route path="/createpost" component={CreatePost} />
                     <Route path='/page/:id' component={UserPage} />
                     <Route path='/chatroom/:id' component={Chatroom} />
+                    <Redirect exact from='/' to='/post' />
                     {/* <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} /> */}
 
