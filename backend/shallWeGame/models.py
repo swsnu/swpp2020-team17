@@ -107,6 +107,8 @@ class Chatroom(models.Model):
     title = models.CharField(max_length=100)
     tag = models.ForeignKey(
         Tag,
+        blank=True,
+        null=True,
         on_delete=models.CASCADE,
     )
     max_personnel = models.IntegerField()
