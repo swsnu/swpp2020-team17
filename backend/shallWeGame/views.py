@@ -1,7 +1,5 @@
 # views.py
-####
-###
-import json
+import json, os
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, \
     HttpResponseBadRequest, HttpResponseNotFound
@@ -12,7 +10,10 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from .models import DiscordUser, Post, Comment, Tag, Chatroom
 
-AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=782980326459965490&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
+# Custom S3 storages for post files
+from shallWeGame.storages import MediaStorage, ContentStorage
+
+AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redirect_uri=https%3A%2F%2Fshallwega.me%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
 
 def discord_login(request):
     '''Redirect to Auth Page'''
@@ -22,6 +23,7 @@ def discord_login(request):
 def discord_login_redirect(request):
     '''Redirect when Logged In'''
     code = request.GET.get('code')
+    print(code)
     user = exchange_code(code)
     try:
         discord_user = DiscordUser.objects.get(username=user['username'])
@@ -38,8 +40,7 @@ def discord_login_redirect(request):
         )
         discord_user.save()
     login(request, discord_user)
-    return redirect("http://localhost:3000/")
-
+    return redirect("https://shallwega.me/")
 
 def exchange_code(code: str):
     '''Exchange Code with Discord API'''
@@ -48,7 +49,7 @@ def exchange_code(code: str):
         "client_secret": "wmTVf-X76Zsk_9uNuTiBHrSYtY6Xbe11",
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "http://localhost:8000/api/login/redirect",
+        "redirect_uri": "https://shallwega.me/api/login/redirect",
         "scope": "identify",
         "auth_url": "https://discordapp.com/api/oauth2/authorize",
     }
@@ -58,7 +59,7 @@ def exchange_code(code: str):
     response = requests.post('https://discord.com/api/v6/oauth2/token', data=data, headers=headers)
     credentials = response.json()
     access_token = credentials['access_token']
-    response = requests.get("http://discord.com/api/v6/users/@me", headers={
+    response = requests.get("https://discord.com/api/v6/users/@me", headers={
         'Authorization': 'Bearer %s' % access_token,
         "Content-Type": 'application/json'
     })
@@ -73,7 +74,7 @@ def discord_logout(request):
     user.login = False
     print(user.login)
     logout(request)
-    return redirect('http://localhost:3000/login/')
+    return redirect('https://shallwega.me/login/')
 
 
 ######################
@@ -201,25 +202,72 @@ def post_list(request):
              "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": len(post.liking_user_list.all()),
              "likingUserList": [user.id for user in post.liking_user_list.all()]} for post in Post.objects.all()]
         return JsonResponse(post_response_list, safe=False)
+
     # request.method == 'POST'
-    if request.method == 'POST':
-        try:
-            req_data = json.loads(request.body.decode())
-            post_image = req_data['image']
-            post_content = req_data['content']
-            post_tag = req_data['tag']
-        except (KeyError, JSONDecodeError):
-            return HttpResponseBadRequest()
-        post_author = request.user
-        tag = Tag.objects.get(name=post_tag)
-        post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
+    try:
+        req_data = json.loads(request.body.decode())
+        # post_image = req_data['image']
+        post_content = req_data['content']
+        post_tag = req_data['tag_id']
+    except (KeyError, JSONDecodeError):
+        return HttpResponseBadRequest()
+    post_author = request.user
+    tag = Tag.objects.get(id=int(post_tag))
+
+    #TODO: 아래 post가 저장할 내용물. content
+    # post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
+    post = Post(image='', content=post_content, author=post_author, tag=tag)
+    post.save()
+
+    #TODO: file obj, path 정하기
+    #FIXME: 업로더에서 FILES 필드 이용해서 upload 하도록!
+    file_obj = request.FILES.get('file', '')
+    # content_obj = req_data['content'] 
+    # organize a path for the file in bucket, 상위폴더 필요하게 되면 아래 join에서 같이 합쳐주기.
+    # file_directory_within_bucket = '{userid}'.format(userid=request.user.id)
+
+    # synthesize a full file path; note that we included the filename
+    # file_path_within_bucket = os.path.join(
+    # )
+    file_path_within_bucket = post.id
+
+    #FIXME: 아래 response_dict 위치 수정
+    # response_dict = {"id": post.id, "image": post.image, "content": post.content,
+    #                     "author": post.author_id, "authorName": post.author.username,
+    #                     "authorAvatar": post.author.avatar, "tag": post.tag.id,
+    #                     "likeNum": post.like_num,
+    #                     "likingUserList": list(post.liking_user_list.all())}
+
+    media_storage = MediaStorage()
+    # content_storage = ContentStorage()
+    
+    if not media_storage.exists(file_path_within_bucket):
+        media_storage.save(file_path_within_bucket, file_obj)
+        #TODO: 되려나?
+        # content_storage.save(file_path_within_bucket, content_obj)
+        file_url = media_storage.url(file_path_within_bucket)
+        post.image = file_url
+        # post.content = content_storage.
         post.save()
-        response_dict = {"id": post.id, "image": post.image, "content": post.content,
-                        "author": post_author.id, "authorName": post_author.username,
-                        "authorAvatar": post_author.avatar, "tag": post.tag.id,
-                        "likeNum": len(post.liking_user_list.all()),
-                        # "likingUserList": [post_author]
-                        }
+
+    else:
+        return JsonResponse({
+            'message': 'Error: file {filename} already exists at {file_directory} in bucket {bucket_name}'.format(
+                filename = file_obj.name,
+                file_directory = file_directory_within_bucket,
+                bucket_name = media_storage.bucket_name
+            ),
+        }, status = 400)
+
+    response_dict = {
+        "id": post.id, "image": post.image, "content": post.content,
+        "author": post.author_id, "authorName": post.author.username,
+        "authorAvatar": post.author.avatar, "tag": post.tag.id,
+        "likeNum": post.like_num,
+        "likingUserList": list(post.liking_user_list.all()),
+        'message': 'File upload OK',
+        'fileUrl': file_url,
+    }
     print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
 
