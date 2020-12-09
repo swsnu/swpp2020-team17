@@ -514,13 +514,8 @@ class Post extends Component {
 
                                     <Divider style={{ marginTop: 0, marginBottom: 10 }} />
 
-                                    <PostBodyContainer onClick={this.handleBodyClicked}>
-                                        <ContentsContainer style={{ width: "100%" }}>
-                                            {item.content}
-                                        </ContentsContainer>
-                                        <ImageContainer>
-                                            <img src={item.image} style={{ width: "100%" }} />
-                                        </ImageContainer>
+                                    <PostBodyContainer onClick={() => this.handleBodyClicked(item.id)}>
+                                        {this.returnBodyFormat(item, item.id===this.state.clickedPostId)}
 
                                     </PostBodyContainer>
 
