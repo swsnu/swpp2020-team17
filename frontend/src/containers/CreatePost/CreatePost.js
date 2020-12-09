@@ -50,7 +50,7 @@ class CreateNewPost extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if(prevProps.selectedPost !== this.props.selectedPost)
-            this.props.history.push('/post');
+            this.props.history.push('/mypage');
     }
 
     onFinish(values) {

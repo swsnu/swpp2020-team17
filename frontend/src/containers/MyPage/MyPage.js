@@ -89,6 +89,17 @@ const buttonShake = keyframes`
         transform: translate(0);
     }
 `;
+const TagWrapper = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+    margin-bottom: 20px;
+    align-items: middle;
+    align-contents: center;
+    box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
+    align-items: center;
+    height: 100%;
+`;
 
 const ButtonCreate = styled.div`
     flex: none;
@@ -111,6 +122,15 @@ const GridPostsWrapper = styled.div`
     /* flex-basis: 80%; */
     flex-basis: 100%;
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
+`;
+
+const SelectContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-basis: 10%;
+    /* align-items: middle; */
+    /* justify-content: space-between; */
+    /* margin-bottom: 10px; */
 `;
 
 // const MyPageFooterContainer = styled.div`
@@ -276,20 +296,26 @@ class MyPage extends Component {
                     </FriendListWrapper>
                 </MyPageLeftContainer>
                 <MyPageRightContainer>
+                    <SelectContainer>
+                        <TagWrapper>
+                            {"hi"}
+                        </TagWrapper>
+                        <ButtonCreate>
+                            <Button
+                                type="primary"
+                                onClick={() => {this.props.history.push('/createpost')}}
+                            >
+                                create post
+                            </Button>
+                        </ButtonCreate>
+                    </SelectContainer>
                     <GridPostsWrapper>
                         <Divider orientation="center" style={{ marginTop: 0 }}>
                             Gallery
                         </Divider>
                         <GridPost />
                     </GridPostsWrapper>
-                    <ButtonCreate>
-                        <Button
-                            type="primary"
-                            onClick={() => {this.props.history.push('/createpost')}}
-                        >
-                            create post
-                        </Button>
-                    </ButtonCreate>
+                    
                 </MyPageRightContainer>
             </MyPageContainer>
         );
