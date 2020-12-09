@@ -18,7 +18,7 @@ const reducer = (state = {
         case actionTypes.DeleteComment:
             let deletedCommentList = null;
             if (state.selectedPostId === action.comment.post) {
-                deletedCommentList = state.selectedCommentList.filter(id => id !== action.comment.id);
+                deletedCommentList = state.selectedCommentList.filter(comment => comment.id !== action.comment.id);
             }
             return { ...state, selectedCommentList: deletedCommentList }
         default:

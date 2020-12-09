@@ -62,7 +62,7 @@ export const deleteComment_ = (comment) => {
 
 export const deleteComment = (comment) => {
     return dispatch => {
-        return axios.delete('/api/comment/' + comment.post)
+        return axios.delete('/api/comment/' + comment.id)
             .then(res => dispatch(deleteComment_(comment)))
     }
 }

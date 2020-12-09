@@ -289,7 +289,7 @@ def comment_list(request, post_id=0):
         comment_response_list = []
         for comment in comment_object_list:
             comment_response_list.append(
-                {"post": comment.post.id, "content": comment.content, "author": comment.author.id})
+                {"id": comment.id, "post": comment.post.id, "content": comment.content, "author": comment.author.id})
         return JsonResponse(comment_response_list, safe=False)
     # request.method == 'POST'
     try:
