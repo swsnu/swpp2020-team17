@@ -9,7 +9,7 @@ import { ConnectedRouter } from "connected-react-router";
 
 class App extends Component {
   state = {
-    userLoggined: null
+    userLogined: null
   }
 
   componentDidMount() {
@@ -17,7 +17,7 @@ class App extends Component {
     if (this.props.storedCurrentUser === null) {
       console.log("ERROR1:");
       console.log(this.props.storedCurrentUser);
-      this.setState({userLoggined: false});
+      this.setState({userLogined: false});
     }
     else {
       console.log("ERROR2:");
@@ -28,7 +28,7 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.storedCurrentUser !== prevProps.storedCurrentUser) {
       this.setState({
-        userLoggined: true
+        userLogined: true
       });
     }
   }
@@ -37,40 +37,47 @@ class App extends Component {
     // 일단 current user을 null로만 만들게 구현
     //this.props.history.push('/');
     this.setState({
-      userLoggined: false
+      userLogined: false
     });
   }
 
-  fetchLandingPage = () => {
-    if(this.state.userLoggined === null) {
-      console.log("userLoggined is still null")
-      return (<LoginPage />);
-    }
-    else if (this.state.userLoggined === false) {
-      console.log("No user yet!")
-      return (<LoginPage />);
-    }
-    else if (this.state.userLoggined === true) {
-      console.log("Exists user :");
-      console.log(this.state.userLoggined);
-      return (<ApplicationRoutes handleLogout={this.handleLogout} />);
-    }
-    else {
-      console.log("Real error!");
-      return (<LoginPage />);
-    }
-  }
+  // fetchLandingPage = () => {
+  //   if(this.state.userLogined === null) {
+  //     console.log("userLogined is still null")
+  //     return (<LoginPage />);
+  //   }
+  //   else if (this.state.userLogined === false) {
+  //     console.log("No user yet!")
+  //     return (<LoginPage />);
+  //   }
+  //   else if (this.state.userLogined === true) {
+  //     console.log("Exists user :");
+  //     console.log(this.state.userLogined);
+  //     return (<ApplicationRoutes handleLogout={this.handleLogout} />);
+  //   }
+  //   else {
+  //     console.log("Real error!");
+  //     return (<LoginPage />);
+  //   }
+  // }
 
   render() {
+    if (this.state.userLogined) {
+      return (
+        <Router>
+            <Switch>
+              <ApplicationRoutes handleLogout={this.handleLogout} />
+            </Switch>
+          </Router>
+      );
+    }
     return (
-      <ConnectedRouter history={this.props.history}>
-          <Switch>
-            <Route exact path="/" component={this.fetchLandingPage} />
-            {/* <Route path="/about" component={About} />
-            <Route component={NotFound} /> */}
-          </Switch>
-      </ConnectedRouter>
-    )
+      <Router>
+        <Switch>
+          <LoginPage />
+        </Switch>
+      </Router>
+    );
   }
 }
 
