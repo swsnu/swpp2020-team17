@@ -89,16 +89,6 @@ export const deletePost = (id) => {
     }
 }
 
-
-
-// enter the post id 
-export const getCommentList = (id) => {
-    return dispatch => {
-        return axios.get('post/' + id + '/comment/')
-        .then(res => dispatch(getCommentList_(res.data)))
-    }
-}
-
 // import * as actionTypes from './actionTypes';
 // import axios from 'axios';
 
