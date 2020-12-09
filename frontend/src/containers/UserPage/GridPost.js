@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import * as actionCreators from '../../store/actions/index';
 import Gallery from "react-photo-gallery";
 import { Row, Col, Image } from 'antd';
@@ -14,27 +15,15 @@ class GridPost extends Component {
             selectedTagList: [],
         }
     }
-    
-    // state = {
-    //     myPostList: [],
-    //     height: 0,
-    //     myGrids: [],
-    // }
-
-    // componentDidUpdate(prevState) {
-    //     if (prevState.myPostList.length != this.state.myPostList.length) {
-    //     this.setState({
-    //         myPostList: this.props.storedPostList.filter(post => post.author == this.props.storedCurrentUser.id),
-    //     })
-    // }
-    // }
-
+    componentDidMount() {
+        this.props.onGetPostList();
+    }
 
     render() {
-        let { myPostList, myGrids, selectedTagList } = this.state;
+        let { myPostList, myGrids, selectedTagList } = this.state; 
         selectedTagList = this.props.selectedTagList;
         myPostList = this.props.storedPostList.filter(post => 
-            (post.author == this.props.storedCurrentUser.id) && (selectedTagList.includes(post.tag)))
+            (post.author == this.props.match.params.id) && selectedTagList.includes(post.tag));
         myGrids = [];
         if (myPostList.length != myGrids.length) {
             for (let i = 0; i < myPostList.length; i++) {
@@ -46,6 +35,9 @@ class GridPost extends Component {
                 })
             }
         }
+        console.log("gridPost");
+        console.log(selectedTagList);
+        console.log(myPostList);
         return (
             <div>
                 {myGrids.length != 0 ? <Gallery photos={myGrids} direction={"column"} /> : ''}
@@ -57,19 +49,16 @@ class GridPost extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        storedCurrentUser: state.ur.currentUser,
         storedPostList: state.ps.postList,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onGetCurrentUser: () =>
-            dispatch(actionCreators.getCurrentUser()),
         onGetPostList: () =>
             dispatch(actionCreators.getPostList()),
     }
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(GridPost)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(GridPost))

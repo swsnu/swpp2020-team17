@@ -198,8 +198,8 @@ def post_list(request):
         post_response_list = [
             {"id": post.id, "image": post.image, "content": post.content, "author": post.author_id,
              "authorName": post.author.username,
-             "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": post.like_num,
-             "likingUserList": list(post.liking_user_list.all())} for post in Post.objects.all()]
+             "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": len(post.liking_user_list.all()),
+             "likingUserList": [user.id for user in post.liking_user_list.all()]} for post in Post.objects.all()]
         return JsonResponse(post_response_list, safe=False)
     # request.method == 'POST'
     if request.method == 'POST':
@@ -217,7 +217,7 @@ def post_list(request):
         response_dict = {"id": post.id, "image": post.image, "content": post.content,
                         "author": post_author.id, "authorName": post_author.username,
                         "authorAvatar": post_author.avatar, "tag": post.tag.id,
-                        "likeNum": post.like_num,
+                        "likeNum": len(post.liking_user_list.all()),
                         # "likingUserList": [post_author]
                         }
     print(response_dict)
@@ -246,27 +246,25 @@ def post_info(request, post_id=0):
         return JsonResponse(
             {"id": post.id, "image": post.image, "content": post.content, "author": post.author_id,
              "authorName": post.author.username,
-             "authorAvatar": post.author.avatar, "tag": post.tag.id, "likeNum": post.like_num,
-             "likingUserList": list(post.liking_user_list.all())})
+             "authorAvatar": post.author.avatar, "tag": post.tag.id, "likeNum": len(post.liking_user_list.all()),
+             "likingUserList": [user.id for user in post.liking_user_list.all()]})
     if request.method == 'PUT':
         post = Post.objects.get(id=post_id)
-        # non-author returns 403
-        if post.author != request.user:
-            return HttpResponse(status=403)
         try:
             req_data = json.loads(request.body.decode())
             post_content = req_data['content']
+            post_liking_user_list = req_data['likingUserList']
         except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
         post = Post.objects.get(id=post_id)
-        liking_user_response_list = []
-        for liking_user in liking_user_object_list:
-            liking_user_response_list.append(liking_user.id)
+        print(post_liking_user_list)
+        post.liking_user_list.set([DiscordUser.objects.get(id=user_id) for user_id in post_liking_user_list])
+        post.save()
         response_dict = {"id": post.id, "image": post.image, "content": post_content,
                          "author": post.author_id, "authorName": post.author.username,
                          "authorAvatar": post.author.avatar, "tag": post.tag.id,
-                         "likeNum": post.like_num,
-                         "likingUserList": list(post.liking_user_list.all())}
+                         "likeNum": len(post_liking_user_list),
+                         "likingUserList": post_liking_user_list}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     # request.method == 'DELETE'
     post = Post.objects.get(id=post_id)

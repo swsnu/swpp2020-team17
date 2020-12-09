@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
 import styled from 'styled-components';
-import Post from '../../containers/Post/Post';
 import { Divider } from 'antd';
-import Profile from '../../components/Profile/Profile';
 import Author from '../../components/Author/Author';
+import GridPost from './GridPost';
+
 import { Table, Row, Col, Button, Typography, Tag } from 'antd';
 import GameTag from '../../components/GameTag/GameTag';
 import {
     UserAddOutlined,
     UserDeleteOutlined,
 } from '@ant-design/icons';
+
 
 const UserPageContainer = styled.div`
     display: flex;
@@ -26,14 +27,33 @@ const UserPageContainer = styled.div`
     justify-content: space-between;
 `;
 
-const UserPageRowContainer = styled.div`
+const FirstRowContainer = styled.div`
     display: flex;
     flex-direction: row;
-    flex-basis: 80%;
+    flex-basis: 10%;
     /* align-items: middle; */
     /* justify-content: space-between; */
     /* margin-bottom: 10px; */
 `;
+
+const SecondRowContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-basis: 10%;
+    /* align-items: middle; */
+    /* justify-content: space-between; */
+    /* margin-bottom: 10px; */
+`;
+
+const ThirdRowContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-basis: 70%;
+    /* align-items: middle; */
+    /* justify-content: space-between; */
+    /* margin-bottom: 10px; */
+`;
+
 
 const ProfileCardWrapper = styled.div`
     display: flex;
@@ -44,7 +64,7 @@ const ProfileCardWrapper = styled.div`
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
     align-items: center;
     justify-content: center;
-    height: 20%;
+    height: 100%;
 `;
 
 const TagWrapper = styled.div`
@@ -53,9 +73,10 @@ const TagWrapper = styled.div`
     flex-basis: 100%;
     margin-bottom: 20px;
     align-items: middle;
+    align-contents: center;
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
     align-items: center;
-    height: 20%;
+    height: 100%;
 `;
 
 const GridPostsWrapper = styled.div`
@@ -65,6 +86,10 @@ const GridPostsWrapper = styled.div`
 `;
 
 class UserPage extends Component {
+    constructor(props) {
+        super(props);
+    }
+
     // FIXME: User model 수정되면 currentUser 말고 user를 prop으로 받도록 수정 요함.
     state = {
         selectedTagList: [],
@@ -158,7 +183,7 @@ class UserPage extends Component {
 
         return(
             <UserPageContainer>
-                <UserPageRowContainer>
+                <FirstRowContainer>
                     <ProfileCardWrapper>
                         {userProfile}
                         <Button onClick={() => this.onToggleFriend()}>
@@ -167,22 +192,24 @@ class UserPage extends Component {
                         </Button>
                         <Button onClick={() => this.onClickShallWe()}>ShallWe</Button>
                     </ProfileCardWrapper>
-                </UserPageRowContainer>
-                <UserPageRowContainer>
-                    <TagWrapper>
-                        {tagToggle}
-                    </TagWrapper>
-                </UserPageRowContainer>
-                <UserPageRowContainer>
+                </FirstRowContainer>
 
-                </UserPageRowContainer>
-                <UserPageRowContainer>
+                <SecondRowContainer>
+                    <TagWrapper>
+                        {tagToggle && tagToggle.length > 0 ? tagToggle: "User has no tag"}
+                    </TagWrapper>
+                </SecondRowContainer>
+
+                
+                
+                <ThirdRowContainer>
                     <GridPostsWrapper>
-                        <Divider orientation="left" style={{ marginTop: 0 }}>
+                        <Divider orientation="center" style={{ marginTop: 0 }}>
                             Gallery
                         </Divider>
+                        <GridPost selectedTagList={this.state.selectedTagList}/>
                     </GridPostsWrapper>
-            </UserPageRowContainer>
+                </ThirdRowContainer>
             </UserPageContainer>
         );
         // return(

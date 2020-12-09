@@ -234,6 +234,7 @@ class Post extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            postList: [],
             selectedTagList: [],
             activePostList: [],
             clickedPostId: null,
@@ -284,10 +285,6 @@ class Post extends Component {
         this.setState({ selectedTagList: nextSelectedTags });
     }
 
-    handleAuthorClicked = () => {
-        console.log("Author click!");
-    }
-
     handleShallWeClicked = () => {
         console.log("ShallWe click!");
     }
@@ -308,8 +305,20 @@ class Post extends Component {
         }
     }
 
-    handleLikeCliked = () => {
-        console.log("Like!");
+    handleLikeClicked = (post) => {
+        let currentUser = this.props.storedCurrentUser;
+        if (post.likingUserList.includes(currentUser.id)) {
+            post.likingUserList = post.likingUserList.filter(id => id !== currentUser.id);
+            this.props.onPutPost(post);
+        } else {
+            post.likingUserList.push(currentUser.id);
+            this.props.onPutPost(post);
+        }
+    }
+
+    returnLike = (post) => {
+        if (post.likingUserList.includes(this.props.storedCurrentUser.id)) return "#eb2f96";
+        else return "#808080";
     }
 
     handleCommentClicked = (postId) => {
@@ -432,16 +441,17 @@ class Post extends Component {
     }
 
     render() {
+        let { postList } = this.state;
         let user = null;
         let tagList = [];
         let tagToggle = [];
         let activePostList = [];
         // FIXME: Infinite scroll to be implemented
-        // let postList = []
-      
+        console.log(this.props.storedPostList);
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
             tagList = this.props.storedTagList;
+            postList = this.props.storedPostList;
             tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
                 return (
                     <GameTag
@@ -464,7 +474,7 @@ class Post extends Component {
             <PostPageWrapper>
                 <GameTagWrapper>
                     <span style={{ marginRight: 8 }}>Your Games:</span>
-                    {tagToggle}
+                    {tagToggle.length > 0 ? tagToggle: "Add your Tag!"}
                 </GameTagWrapper>
 
                 <PostListWrapper>
@@ -484,7 +494,7 @@ class Post extends Component {
                             <List.Item key={item.id}>
                                 <PostContainer>
                                     <PostHeaderContainer>
-                                        <AuthorItem onClick={() => this.handleAuthorClicked()} style={{ cursor: "pointer" }} >
+                                        <AuthorItem onClick={() => this.props.history.push("/page/" + item.author)} style={{ cursor: "pointer" }} >
                                             <Author
                                                 //FIXME: user로 넘기도록 수정해야함
                                                 name={item.authorName}
@@ -526,7 +536,8 @@ class Post extends Component {
                                             <div>
                                                 <Space>
                                                     <HeartTwoTone
-                                                        onClick={() => this.handleLikeCliked()}
+                                                        onClick={() => this.handleLikeClicked(item)}
+                                                        twoToneColor={this.returnLike(item)}
                                                     />
                                                     {item.likeNum}
                                                 </Space>
@@ -588,6 +599,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.putUser(user)),
         onGetPostList: () =>
             dispatch(actionCreators.getPostList()),
+        onPutPost: (post) =>
+            dispatch(actionCreators.putPost(post)),
         onGetTagList: () =>
             dispatch(actionCreators.getTagList()),
         onGetCommentList: (id) =>
