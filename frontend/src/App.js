@@ -36,6 +36,9 @@ class App extends Component {
   handleLogout = () => {
     // 일단 current user을 null로만 만들게 구현
     //this.props.history.push('/');
+    let user = this.props.storedCurrentUser;
+    user.login = false;
+    this.props.onPutUser(user);
     this.setState({
       userLogined: false
     });
@@ -91,6 +94,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onGetCurrentUser: () => 
             dispatch(actionCreators.getCurrentUser()),
+        onPutUser: (user) => 
+            dispatch(actionCreators.putUser(user)),
     }
 }
 
