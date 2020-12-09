@@ -15,7 +15,7 @@ import os
 import json
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-# ROOT_DIR = os.path.dirname(BASE_DIR)
+# ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ROOT_DIR = BASE_DIR
 
 
@@ -36,9 +36,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # S3 Storage
-DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
-STATICFILES_STORAGE = 'config.storages.StaticStorage'
+DEFAULT_FILE_STORAGE = 'shallWeGame.storages.MediaStorage'
+STATICFILES_STORAGE = 'shallWeGame.storages.StaticStorage'
 MEDIAFILES_LOCATION = 'media'
+CONTENTFILES_LOCATION = 'content'
 STATICFILES_LOCATION = 'static'
 
 # AWS Access : LeeDJ

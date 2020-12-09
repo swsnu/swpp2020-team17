@@ -1,6 +1,6 @@
 # views.py
 
-import json
+import json, os
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, \
     HttpResponseBadRequest, HttpResponseNotFound
@@ -10,6 +10,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from .models import DiscordUser, Post, Comment, Tag, Chatroom
+
+# Custom S3 storages for post files
+from shallWeGame.storages import MediaStorage, ContentStorage
 
 
 AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redirect_uri=https%3A%2F%2Fshallwega.me%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
@@ -203,22 +206,72 @@ def post_list(request):
              "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": post.like_num,
              "likingUserList": list(post.liking_user_list.all())} for post in Post.objects.all()]
         return JsonResponse(post_response_list, safe=False)
+
     # request.method == 'POST'
     try:
         req_data = json.loads(request.body.decode())
-        post_image = req_data['image']
+        # post_image = req_data['image']
         post_content = req_data['content']
         post_tag = req_data['tag_id']
     except (KeyError, JSONDecodeError):
         return HttpResponseBadRequest()
     post_author = request.user
     tag = Tag.objects.get(id=int(post_tag))
-    post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
-    response_dict = {"id": post.id, "image": post.image, "content": post.content,
-                        "author": post.author_id, "authorName": post.author.username,
-                        "authorAvatar": post.author.avatar, "tag": post.tag.id,
-                        "likeNum": post.like_num,
-                        "likingUserList": list(post.liking_user_list.all())}
+
+    #TODO: 아래 post가 저장할 내용물. content
+    # post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
+    post = Post(image='', content=post_content, author=post_author, tag=tag)
+    post.save()
+
+    #TODO: file obj, path 정하기
+    #FIXME: 업로더에서 FILES 필드 이용해서 upload 하도록!
+    file_obj = request.FILES.get('file', '')
+    # content_obj = req_data['content'] 
+    # organize a path for the file in bucket, 상위폴더 필요하게 되면 아래 join에서 같이 합쳐주기.
+    # file_directory_within_bucket = '{userid}'.format(userid=request.user.id)
+
+    # synthesize a full file path; note that we included the filename
+    # file_path_within_bucket = os.path.join(
+    # )
+    file_path_within_bucket = post.id
+
+    #FIXME: 아래 response_dict 위치 수정
+    # response_dict = {"id": post.id, "image": post.image, "content": post.content,
+    #                     "author": post.author_id, "authorName": post.author.username,
+    #                     "authorAvatar": post.author.avatar, "tag": post.tag.id,
+    #                     "likeNum": post.like_num,
+    #                     "likingUserList": list(post.liking_user_list.all())}
+
+    media_storage = MediaStorage()
+    # content_storage = ContentStorage()
+    
+    if not media_storage.exists(file_path_within_bucket):
+        media_storage.save(file_path_within_bucket, file_obj)
+        #TODO: 되려나?
+        # content_storage.save(file_path_within_bucket, content_obj)
+        file_url = media_storage.url(file_path_within_bucket)
+        post.image = file_url
+        # post.content = content_storage.
+        post.save()
+
+    else:
+        return JsonResponse({
+            'message': 'Error: file {filename} already exists at {file_directory} in bucket {bucket_name}'.format(
+                filename = file_obj.name,
+                file_directory = file_directory_within_bucket,
+                bucket_name = media_storage.bucket_name
+            ),
+        }, status = 400)
+
+    response_dict = {
+        "id": post.id, "image": post.image, "content": post.content,
+        "author": post.author_id, "authorName": post.author.username,
+        "authorAvatar": post.author.avatar, "tag": post.tag.id,
+        "likeNum": post.like_num,
+        "likingUserList": list(post.liking_user_list.all()),
+        'message': 'File upload OK',
+        'fileUrl': file_url,
+    }
     print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
 
