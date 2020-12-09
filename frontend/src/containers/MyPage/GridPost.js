@@ -11,7 +11,7 @@ class GridPost extends Component {
             myPostList: [],
             height: 0,
             myGrids: [],
-
+            selectedTagList: [],
         }
     }
     
@@ -31,8 +31,11 @@ class GridPost extends Component {
 
 
     render() {
-        let { myPostList, myGrids } = this.state
-        myPostList = this.props.storedPostList.filter(post => post.author == this.props.storedCurrentUser.id)
+        let { myPostList, myGrids, selectedTagList } = this.state;
+        selectedTagList = this.props.selectedTagList;
+        myPostList = this.props.storedPostList.filter(post => 
+            (post.author == this.props.storedCurrentUser.id) && (selectedTagList.includes(post.tag)))
+        myGrids = [];
         if (myPostList.length != myGrids.length) {
             for (let i = 0; i < myPostList.length; i++) {
                 myGrids.push({

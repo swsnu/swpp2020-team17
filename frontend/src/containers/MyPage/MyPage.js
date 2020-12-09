@@ -8,6 +8,7 @@ import Profile from '../../components/Profile/Profile';
 import Author from '../../components/Author/Author';
 import { useHistory } from 'react-router';
 import GridPost from './GridPost'
+import GameTag from '../../components/GameTag/GameTag';
 
 const MyPageContainer = styled.div`
     display: flex;
@@ -92,7 +93,7 @@ const buttonShake = keyframes`
 const TagWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
-    flex-basis: 100%;
+    flex-basis: 10%;
     margin-bottom: 20px;
     align-items: middle;
     align-contents: center;
@@ -102,8 +103,14 @@ const TagWrapper = styled.div`
 `;
 
 const ButtonCreate = styled.div`
-    flex: none;
-    align-items: right;
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 10%;
+    margin-bottom: 20px;
+    align-items: center;
+    box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
+    align-items: middle;
+    height: 100%;
 `;
 
 const MyPageRightContainer = styled.div`
@@ -120,17 +127,8 @@ const MyPageRightContainer = styled.div`
 
 const GridPostsWrapper = styled.div`
     /* flex-basis: 80%; */
-    flex-basis: 100%;
+    flex-basis: 70%;
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
-`;
-
-const SelectContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    flex-basis: 10%;
-    /* align-items: middle; */
-    /* justify-content: space-between; */
-    /* margin-bottom: 10px; */
 `;
 
 // const MyPageFooterContainer = styled.div`
@@ -143,6 +141,11 @@ class MyPage extends Component {
     constructor(props) {
         super(props);
     }
+
+    state = {
+        selectedTagList: [],
+    };
+
     // state= {
         // ID: '',
         // FriendIDList: [],
@@ -186,6 +189,12 @@ class MyPage extends Component {
         this.props.onGetCurrentUser();
         this.props.onGetPostList();
         this.props.onGetUserList();
+        if (this.props.storedCurrentUser) {
+            this.setState({ 
+                selectedTagList: this.props.storedCurrentUser.tagList,
+            });
+            console.log('done');
+        }
 
     }
 
@@ -227,6 +236,20 @@ class MyPage extends Component {
     handleCreatePostClicked() {
     }
 
+    onToggleTag = (tag_id) => {
+        const checked = this.state.selectedTagList.indexOf(tag_id) > -1;
+        const { selectedTagList } = this.state;
+        const nextSelectedTags = checked ? selectedTagList.filter(id => id !== tag_id) : [...selectedTagList, tag_id];
+        console.log('You are interested in: ', nextSelectedTags);
+        this.setState({ selectedTagList: nextSelectedTags });
+    }
+
+    onClickCreatePost = () => {
+        if (this.props.storedCurrentUser.tagList.length === 0) {
+            window.alert("Add Your Game Tag! Go to Search");
+        } else this.props.history.push('/createpost')
+    }
+
     render() {
         let test = this.props.storedSelectedChatroom;
         // let name = this.props.storedCurrentUser.username;
@@ -249,6 +272,17 @@ class MyPage extends Component {
         console.log(this.props.storedUserList);
         friendList = user.friendList.map(friend_id => {
             return userList.find(user => user.id === friend_id);
+        });
+
+        let tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
+            return (
+                <GameTag 
+                    key={tag_id}
+                    tagId={tag_id} 
+                    isChecked={this.state.selectedTagList.includes(tag_id)}
+                    onClick={() => this.onToggleTag(tag_id)}
+                />
+            );
         });
     
         
@@ -296,24 +330,22 @@ class MyPage extends Component {
                     </FriendListWrapper>
                 </MyPageLeftContainer>
                 <MyPageRightContainer>
-                    <SelectContainer>
                         <TagWrapper>
-                            {"hi"}
+                            {tagToggle}
                         </TagWrapper>
                         <ButtonCreate>
                             <Button
                                 type="primary"
-                                onClick={() => {this.props.history.push('/createpost')}}
+                                onClick={() => this.onClickCreatePost()}
                             >
                                 create post
                             </Button>
-                        </ButtonCreate>
-                    </SelectContainer>
+                        </ButtonCreate>            
                     <GridPostsWrapper>
                         <Divider orientation="center" style={{ marginTop: 0 }}>
                             Gallery
                         </Divider>
-                        <GridPost />
+                        <GridPost selectedTagList={this.state.selectedTagList} />
                     </GridPostsWrapper>
                     
                 </MyPageRightContainer>

@@ -89,9 +89,9 @@ class CreateNewPost extends React.Component {
                 <Form.Item name='tag' label="Tag" rules={[{ required: true}]}>
                     <select>
                         <option value="none"/>
-                        <option value="LOL" id='1'>LOL</option>
-                        <option value="HearthStone" id='2'>HearthStone</option>
-                        <option value="MapleStory" id='3'>MapleStory</option>
+                        {this.props.currentUser.tagList.includes(1) ? <option value="LOL" id='1'>LOL</option> : null}
+                        {this.props.currentUser.tagList.includes(2) ? <option value="HearthStone" id='2'>HearthStone</option> : null}
+                        {this.props.currentUser.tagList.includes(3) ? <option value="MapleStory" id='3'>MapleStory</option> : null}
                     </select>
                 </Form.Item>
 
@@ -127,6 +127,7 @@ const mapStateToProps = (state) => ({
     postList: state.ps.postList,
     currentUser: state.ur.currentUser,
     selectedPost: state.ps.selectedPost,
+    tagList: state.tg.tagList,
 })
 
 const mapDispatchToProps = (dispatch) => {
