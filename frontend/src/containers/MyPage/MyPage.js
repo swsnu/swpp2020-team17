@@ -331,7 +331,7 @@ class MyPage extends Component {
                 </MyPageLeftContainer>
                 <MyPageRightContainer>
                         <TagWrapper>
-                            {tagToggle}
+                            Your Games: {tagToggle.length > 0 ? tagToggle: "Add your tag!"}
                         </TagWrapper>
                         <ButtonCreate>
                             <Button

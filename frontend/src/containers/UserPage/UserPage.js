@@ -196,7 +196,7 @@ class UserPage extends Component {
 
                 <SecondRowContainer>
                     <TagWrapper>
-                        {tagToggle}
+                        {tagToggle && tagToggle.length > 0 ? tagToggle: "User has no tag"}
                     </TagWrapper>
                 </SecondRowContainer>
 

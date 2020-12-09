@@ -15,8 +15,8 @@ const SearchedUser = props => {
     if (props.avatar === null) {
         return (
             <div className='SearchedUser'>
-                <div className="left">
-                    <Avatar onClick={() => history.push("/page/" + props.id)} size="large" icon={<UserOutlined />} />
+                <div className="left" >
+                    <Avatar onClick={() => history.push("/page/" + props.id)} size="large" icon={<UserOutlined /> } />
                 </div>
                 <div className="middle">
                     {props.username}
