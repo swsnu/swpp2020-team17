@@ -16,11 +16,12 @@ const layout = {
 
 class RoomInfo extends Component {
 
-    componentDidMount() {
+    constructor(props){
+        super(props)
         this.props.onGetCurrentUser();
     }
 
-    handleSubmit = (value) => {
+    async handleSubmit(value) {
         let newChatroom = {
             isGlobal: (value.isGlobal==undefined)? false : true,
             title: value.title,
@@ -28,29 +29,19 @@ class RoomInfo extends Component {
             maxPersonnel: value.maxPersonnel,
         }
         console.log(newChatroom);
-        this.props.onCreateChatroom(newChatroom);
-        
-        // history.push
-
-        // setLoading(true);
-        // axios.post(`http://localhost:8000/rooms`,
-        //     values
-        // )
-        //     .then(res => {
-        //         setLoading(false);
-        //         message.success('Room created Successfully!');
-        //         /** history.push('/chatroom/:id') 이런식으로 바꿔줘야함 */
-        //         history.push('/lobby');
-        //     })
-        //     .catch(error => {
-        //         setLoading(false);
-        //         message.error(error);
-        //     })
+        let user = this.props.storedCurrentUser;
+        await this.props.onCreateChatroom(this.props.storedCurrentUser, newChatroom);
+        // await this.props.onCreateChatroom(user, newChatroom);
+        if(user.chatroom != -1) {
+            this.props.history.push('/chatroom/' + user.chatroom);
+        }
     }
 
     render() {
         // const [loading, setLoading] = useState(false);
         // const history = useHistory();
+        // let user = this.props.storedCurrentUser;
+
         return (
             <div>
                 <Row gutter={[40, 0]}>
@@ -62,7 +53,7 @@ class RoomInfo extends Component {
                 </Row>
                 <Row gutter={[40, 0]}>
                     <Col span={18}>
-                        <Form id="submit-form" {...layout} onFinish={this.handleSubmit}>
+                        <Form id="submit-form" {...layout} onFinish={(value) => this.handleSubmit(value)}>
                             <Form.Item id="title-input" name="title" label="Title"
                                 rules={[
                                     {
@@ -129,7 +120,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onGetCurrentUser: () => dispatch(actionCreators.getCurrentUser()),
-        onCreateChatroom: (room) => dispatch(actionCreators.createChatroom(room)),
+        onCreateChatroom: (user, room) => dispatch(actionCreators.createChatroom(user, room)),
     }
 }
 

@@ -5,7 +5,6 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import { connect } from 'react-redux'
 import * as actionCreators from '../../store/actions/index';
 import CSRFToken from '../../csrftoken'
-
 class Search extends Component {
     
     componentDidMount() {
@@ -22,7 +21,6 @@ class Search extends Component {
     };
 
     onClickUserButton = (user_id, addOrDelete) => {
-        console.log('click');
         let user = this.props.storedCurrentUser;
         if (addOrDelete === 'Add') user.friendList.push(user_id);
         else user.friendList = user.friendList.filter(id => {

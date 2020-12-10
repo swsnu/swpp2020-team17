@@ -15,8 +15,8 @@ import os
 import json
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-# ROOT_DIR = os.path.dirname(BASE_DIR)
-ROOT_DIR = BASE_DIR
+ROOT_DIR = os.path.dirname(BASE_DIR)
+# ROOT_DIR = BASE_DIR
 
 
 # Quick-start development settings - unsuitable for production
@@ -36,18 +36,18 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # S3 Storage
-DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
-STATICFILES_STORAGE = 'config.storages.StaticStorage'
-MEDIAFILES_LOCATION = 'media'
-STATICFILES_LOCATION = 'static'
+# DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
+# STATICFILES_STORAGE = 'config.storages.StaticStorage'
+# MEDIAFILES_LOCATION = 'media'
+# STATICFILES_LOCATION = 'static'
 
 # AWS Access : LeeDJ
-CONFIG_SECRET_DIR = os.path.join(ROOT_DIR, '.config_secret')
-CONFIG_SETTINGS_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_common.json')
-config_secret = json.loads(open(CONFIG_SETTINGS_COMMON_FILE).read())
-AWS_ACCESS_KEY_ID = config_secret['awsDJ']['access_key_id']
-AWS_SECRET_ACCESS_KEY = config_secret['awsDJ']['secret_access_key']
-AWS_STORAGE_BUCKET_NAME = config_secret['awsDJ']['s3_bucket_name']
+# CONFIG_SECRET_DIR = os.path.join(ROOT_DIR, '.config_secret')
+# CONFIG_SETTINGS_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_common.json')
+# config_secret = json.loads(open(CONFIG_SETTINGS_COMMON_FILE).read())
+# AWS_ACCESS_KEY_ID = config_secret['awsDJ']['access_key_id']
+# AWS_SECRET_ACCESS_KEY = config_secret['awsDJ']['secret_access_key']
+# AWS_STORAGE_BUCKET_NAME = config_secret['awsDJ']['s3_bucket_name']
 
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [

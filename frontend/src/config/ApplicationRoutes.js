@@ -14,6 +14,7 @@ import CreatePost from "../containers/CreatePost/CreatePost";
 import Search from "../containers/Search/Search";
 import MyPage from "../containers/MyPage/MyPage";
 import UserPage from "../containers/UserPage/UserPage";
+import Chatroom from "../containers/Chatroom/Chatroom";
 
 import { Layout } from 'antd';
 import {
@@ -24,7 +25,7 @@ import {
 const { Header, Sider, Content} = Layout;
 
 
-const ApplicationRoutes = () => {
+const ApplicationRoutes = props => {
   const [collapse, setCollapse] = useState(false);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ const ApplicationRoutes = () => {
       <Router>
         <Layout>
           <Sider trigger={null} collapsible collapsed={collapse} width="150">
-            <SideNav />
+            <SideNav handleLogout={props.handleLogout} />
           </Sider>
           <Layout>
             <Header className="siteLayoutBackground" style={{padding: 0, background: "#001529"}}>
@@ -60,6 +61,8 @@ const ApplicationRoutes = () => {
                     <Route path="/myPage" component={MyPage} />
                     <Route path="/createpost" component={CreatePost} />
                     <Route path='/page/:id' component={UserPage} />
+                    <Route path='/chatroom/:id' component={Chatroom} />
+                    <Redirect exact from='/' to='/post' />
                     {/* <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} /> */}
 

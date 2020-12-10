@@ -6,6 +6,9 @@ import Post from '../../containers/Post/Post';
 import { Divider, List, Button, Space } from 'antd';
 import Profile from '../../components/Profile/Profile';
 import Author from '../../components/Author/Author';
+import { useHistory } from 'react-router';
+import GridPost from './GridPost'
+import GameTag from '../../components/GameTag/GameTag';
 
 const MyPageContainer = styled.div`
     display: flex;
@@ -87,6 +90,28 @@ const buttonShake = keyframes`
         transform: translate(0);
     }
 `;
+const TagWrapper = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 10%;
+    margin-bottom: 20px;
+    align-items: middle;
+    align-contents: center;
+    box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
+    align-items: center;
+    height: 100%;
+`;
+
+const ButtonCreate = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 10%;
+    margin-bottom: 20px;
+    align-items: center;
+    box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
+    align-items: middle;
+    height: 100%;
+`;
 
 const MyPageRightContainer = styled.div`
     display: flex;
@@ -102,7 +127,7 @@ const MyPageRightContainer = styled.div`
 
 const GridPostsWrapper = styled.div`
     /* flex-basis: 80%; */
-    flex-basis: 100%;
+    flex-basis: 70%;
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
 `;
 
@@ -113,6 +138,16 @@ const GridPostsWrapper = styled.div`
 // `;
 
 class MyPage extends Component {
+    constructor(props) {
+        super(props);
+        this.props.onGetCurrentUser();
+        this.props.onGetPostList();
+        this.props.onGetUserList();
+    }
+
+    state = {
+        selectedTagList: [],
+    };
 
     // state= {
         // ID: '',
@@ -154,7 +189,13 @@ class MyPage extends Component {
         //         // showOnline: this.props.storeCurrentUser.login,
         //     })
         // }
-        this.props.onGetCurrentUser();
+        if (this.props.storedCurrentUser) {
+            this.setState({ 
+                selectedTagList: this.props.storedCurrentUser.tagList,
+            });
+            console.log('done');
+        }
+
     }
 
     onClickPost() {
@@ -162,11 +203,10 @@ class MyPage extends Component {
     }
 
     onClickCreatePost() {
-        this.props.history.push('/post/create/')
     }
 
     onClickTag() {
-        this.props.changeTagState()
+        this.props.changeTagState();
     }
 
     //TODO:
@@ -175,11 +215,43 @@ class MyPage extends Component {
     }
 
     //TODO:
-    handleShallWeClicked() {
+    async onClickShallWe(receivingUser) {
+        let newChatroom = {
+            isGlobal: false, 
+            title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
+            tag: 1,     //tag가 없는디 어떡하지 
+            maxPersonnel: 2, 
+            discordLink: null,
+        }
+        console.log(receivingUser);
+        let sendingUser = this.props.storedCurrentUser;
+        await this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
+        if(sendingUser.chatroom != -1) {
+            this.props.history.push('/chatroom/' + sendingUser.chatroom);
+        }
+        // current user의 chatroom 바꾸고 redirect?
+        // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
+    }
 
+    handleCreatePostClicked() {
+    }
+
+    onToggleTag = (tag_id) => {
+        const checked = this.state.selectedTagList.indexOf(tag_id) > -1;
+        const { selectedTagList } = this.state;
+        const nextSelectedTags = checked ? selectedTagList.filter(id => id !== tag_id) : [...selectedTagList, tag_id];
+        console.log('You are interested in: ', nextSelectedTags);
+        this.setState({ selectedTagList: nextSelectedTags });
+    }
+
+    onClickCreatePost = () => {
+        if (this.props.storedCurrentUser.tagList.length === 0) {
+            window.alert("Add Your Game Tag! Go to Search");
+        } else this.props.history.push('/createpost')
     }
 
     render() {
+        let test = this.props.storedSelectedChatroom;
         // let name = this.props.storedCurrentUser.username;
         // let avatar = this.props.storedCurrentUser.avatar;
         // let tagList = this.props.storedCurrentUser.tagList;
@@ -195,43 +267,25 @@ class MyPage extends Component {
         ;
         //FIXME: 더미로 테스트하다가 friend 추가 잘 되면, 바꿔놓기.
         // let friendList = this.props.storedCurrentUser.friendList;
+        let userList = this.props.storedUserList;
         let friendList = [];
-        friendList.push({
-            "id": 4,
-            "username": "Song1",
-            "login": true,
-            "avatar": "https://icon2.cleanpng.com/20180320/sqe/kisspng-twitch-computer-icons-streaming-media-youtube-live-tv-twitch-icon-5ab19172461392.001176751521586546287.jpg",
-            "chatroom": -1,
-            "friendList": [],
-            "postList": [6, 8],
-            "shallWeRoomList": [],
-            "watchedPostList": [],
-            "tagList": []
-        })
-        friendList.push({
-            "id": 5,
-            "username": "Lee1",
-            "login": true,
-            "avatar": null,
-            "chatroom": -1,
-            "friendList": [],
-            "postList": [7, 9, 10],
-            "shallWeRoomList": [],
-            "watchedPostList": [],
-            "tagList": []
-        })
-        friendList.push({
-            "id": 6,
-            "username": "\uc774\ub3d9\uc8fc",
-            "login": true,
-            "avatar": null,
-            "chatroom": -1,
-            "friendList": [],
-            "postList": [],
-            "shallWeRoomList": [],
-            "watchedPostList": [],
-            "tagList": []
-        })
+        console.log(this.props.storedUserList);
+        friendList = user.friendList.map(friend_id => {
+            return userList.find(user => user.id === friend_id);
+        });
+
+        let tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
+            return (
+                <GameTag 
+                    key={tag_id}
+                    tagId={tag_id} 
+                    isChecked={this.state.selectedTagList.includes(tag_id)}
+                    onClick={() => this.onToggleTag(tag_id)}
+                />
+            );
+        });
+    
+        
 
         return(
             <MyPageContainer>
@@ -261,11 +315,11 @@ class MyPage extends Component {
                                                 <Button
                                                     type="primary"
                                                     shape="round"
-                                                    onClick={this.handleShallWeClicked}
-                                                    disabled="true"
-                                                    // type="primary"
+                                                    disabled={this.props.storedCurrentUser.chatroom != -1
+                                                    || item.chatroom != -1 || item.login == false}
+                                                    onClick={() => this.onClickShallWe(item)}
                                                     size="small"
-                                                    style={{ fontSize: 10, fontWeight: "bolder" }}
+                                                    style={{ fontSize: 8, fontWeight: "bolder" }}
                                                 >
                                                     Shall We
                                                 </Button>
@@ -277,11 +331,24 @@ class MyPage extends Component {
                     </FriendListWrapper>
                 </MyPageLeftContainer>
                 <MyPageRightContainer>
+                        <TagWrapper>
+                            Your Games: {tagToggle.length > 0 ? tagToggle: "Add your tag!"}
+                        </TagWrapper>
+                        <ButtonCreate>
+                            <Button
+                                type="primary"
+                                onClick={() => this.onClickCreatePost()}
+                            >
+                                create post
+                            </Button>
+                        </ButtonCreate>            
                     <GridPostsWrapper>
                         <Divider orientation="center" style={{ marginTop: 0 }}>
                             Gallery
                         </Divider>
+                        <GridPost selectedTagList={this.state.selectedTagList} />
                     </GridPostsWrapper>
+                    
                 </MyPageRightContainer>
             </MyPageContainer>
         );
@@ -305,13 +372,24 @@ class MyPage extends Component {
 const mapStateToProps = (state) => {
     return {
         storedCurrentUser: state.ur.currentUser,
+        storedPostList: state.ps.postList,
+        storedUserList: state.ur.userList,
+        storedSelectedChatroom: state.chat.selectedChatroom,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         onGetCurrentUser: () => 
-            dispatch(actionCreators.getCurrentUser()),
+            dispatch(actionCreators.getCurrentUser()),    
+        onGetPostList: () =>
+            dispatch(actionCreators.getPostList()),
+        onGetUserList: () =>
+            dispatch(actionCreators.getUserList()),
+        onPutUser: (user) =>
+            dispatch(actionCreators.putUser(user)),
+        onSendShallWe: (newChatroom, sendingUser, receivingUser) => 
+            dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
     }
 }
 

@@ -4,6 +4,10 @@ import { Avatar, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import { useHistory } from 'react-router';
+import {
+    UserAddOutlined,
+    UserDeleteOutlined,
+} from '@ant-design/icons';
 
 const SearchedUser = props => {
     const history = useHistory();
@@ -11,14 +15,15 @@ const SearchedUser = props => {
     if (props.avatar === null) {
         return (
             <div className='SearchedUser'>
-                <div className="left">
-                    <Avatar onClick={() => history.push("/page/" + props.id)} size="large" icon={<UserOutlined />} />
+                <div className="left" >
+                    <Avatar onClick={() => history.push("/page/" + props.id)} size="large" icon={<UserOutlined /> } />
                 </div>
                 <div className="middle">
                     {props.username}
                 </div>
                 <div className="right">
                     <Button onClick={props.onButtonClick}>
+                        {props.addOrDelete==='Add'? <UserAddOutlined /> : <UserDeleteOutlined />}
                         {props.addOrDelete}
                     </Button>
                 </div>
@@ -35,6 +40,7 @@ const SearchedUser = props => {
                 </div>
                 <div className="right">
                     <Button onClick={props.onButtonClick}>
+                        {props.addOrDelete==='Add'? <UserAddOutlined /> : <UserDeleteOutlined />}
                         {props.addOrDelete}
                     </Button>
                 </div>

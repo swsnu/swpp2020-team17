@@ -2,12 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
 import styled from 'styled-components';
-import Post from '../../containers/Post/Post';
 import { Divider } from 'antd';
-import Profile from '../../components/Profile/Profile';
 import Author from '../../components/Author/Author';
+import GridPost from './GridPost';
+
 import { Table, Row, Col, Button, Typography, Tag } from 'antd';
 import GameTag from '../../components/GameTag/GameTag';
+import {
+    UserAddOutlined,
+    UserDeleteOutlined,
+} from '@ant-design/icons';
+
 
 const UserPageContainer = styled.div`
     display: flex;
@@ -22,14 +27,33 @@ const UserPageContainer = styled.div`
     justify-content: space-between;
 `;
 
-const UserPageRowContainer = styled.div`
+const FirstRowContainer = styled.div`
     display: flex;
     flex-direction: row;
-    flex-basis: 80%;
+    flex-basis: 10%;
     /* align-items: middle; */
     /* justify-content: space-between; */
     /* margin-bottom: 10px; */
 `;
+
+const SecondRowContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-basis: 10%;
+    /* align-items: middle; */
+    /* justify-content: space-between; */
+    /* margin-bottom: 10px; */
+`;
+
+const ThirdRowContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-basis: 70%;
+    /* align-items: middle; */
+    /* justify-content: space-between; */
+    /* margin-bottom: 10px; */
+`;
+
 
 const ProfileCardWrapper = styled.div`
     display: flex;
@@ -40,7 +64,7 @@ const ProfileCardWrapper = styled.div`
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
     align-items: center;
     justify-content: center;
-    height: 20%;
+    height: 100%;
 `;
 
 const TagWrapper = styled.div`
@@ -49,9 +73,10 @@ const TagWrapper = styled.div`
     flex-basis: 100%;
     margin-bottom: 20px;
     align-items: middle;
+    align-contents: center;
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
     align-items: center;
-    height: 20%;
+    height: 100%;
 `;
 
 const GridPostsWrapper = styled.div`
@@ -61,15 +86,26 @@ const GridPostsWrapper = styled.div`
 `;
 
 class UserPage extends Component {
+    constructor(props) {
+        super(props);
+    }
+
     // FIXME: User model 수정되면 currentUser 말고 user를 prop으로 받도록 수정 요함.
     state = {
         selectedTagList: [],
+        addOrDelete: null,
     };
 
     componentDidMount() {
+        this.props.onGetCurrentUser();
         this.props.onGetUser(this.props.match.params.id);
-        if (this.props.storedSelectedUser) {
-            this.setState({ selectedTagList: this.props.storedSelectedUser.tagList });
+        if (this.props.storedCurrentUser && this.props.storedSelectedUser) {
+            this.setState({ 
+                selectedTagList: this.props.storedSelectedUser.tagList,
+                addOrDelete: (this.props.storedCurrentUser.friendList.find(id => 
+                    id===this.props.storedSelectedUser.id) == undefined)? 'Add' : 'Delete',
+            });
+            console.log('done');
         }
     }
 
@@ -88,16 +124,50 @@ class UserPage extends Component {
         console.log('You are interested in: ', nextSelectedTags);
         this.setState({ selectedTagList: nextSelectedTags });
     }
+
+    onToggleFriend = () => {
+        let currentUser = this.props.storedCurrentUser;
+        let selectedUserId = this.props.storedSelectedUser.id;
+        if (this.state.addOrDelete === 'Add') {
+            currentUser.friendList.push(selectedUserId);
+            this.setState({ addOrDelete: 'Delete' });
+        } else {
+            currentUser.friendList = currentUser.friendList.filter(id => {
+                return id !== selectedUserId
+            });
+            this.setState({ addOrDelete: 'Add' });
+        }
+        this.props.onPutUser(currentUser);
+        
+    }
+
+    onClickShallWe() {
+        let newChatroom = {
+            isGlobal: false, 
+            title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
+            tag: 1,     //tag가 없는디 어떡하지 
+            maxPersonnel: 2, 
+            discordLink: null,
+        }
+        let receivingUser = this.props.storedSelectedUser;
+        let sendingUser = this.props.storedCurrentUser;
+        this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
+        this.props.history.push('/chatroom/' + sendingUser.chatroom);
+        // current user의 chatroom 바꾸고 redirect?
+        // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
+    }
     
     render() {
-        let user, userProfile, tagToggle;
-        if (this.props.storedSelectedUser) {
-            user = this.props.storedSelectedUser;
+        let currentUser, selectedUser, userProfile, tagToggle;
+        console.log(this.props.storedCurrentUser);
+        if (this.props.storedSelectedUser && this.props.storedCurrentUser) {
+            currentUser = this.props.storedCurrentUser;
+            selectedUser = this.props.storedSelectedUser;
             userProfile = (
-            <Author
-                name={user.username}
-                avatar={user.avatar}
-            />
+                <Author
+                    name={selectedUser.username}
+                    avatar={selectedUser.avatar}
+                />
             );
             tagToggle = this.props.storedSelectedUser.tagList.map(tag_id => {
                 return (
@@ -110,32 +180,36 @@ class UserPage extends Component {
                 );
             });
         }
-        
 
         return(
             <UserPageContainer>
-                <UserPageRowContainer>
+                <FirstRowContainer>
                     <ProfileCardWrapper>
                         {userProfile}
-                        <Button>Add</Button>
-                        <Button>ShallWe</Button>
+                        <Button onClick={() => this.onToggleFriend()}>
+                            {this.state.addOrDelete === 'Add'? <UserAddOutlined /> : <UserDeleteOutlined />}
+                            {this.state.addOrDelete}
+                        </Button>
+                        <Button onClick={() => this.onClickShallWe()}>ShallWe</Button>
                     </ProfileCardWrapper>
-                </UserPageRowContainer>
-                <UserPageRowContainer>
-                    <TagWrapper>
-                        {tagToggle}
-                    </TagWrapper>
-                </UserPageRowContainer>
-                <UserPageRowContainer>
+                </FirstRowContainer>
 
-                </UserPageRowContainer>
-                <UserPageRowContainer>
+                <SecondRowContainer>
+                    <TagWrapper>
+                        {tagToggle && tagToggle.length > 0 ? tagToggle: "User has no tag"}
+                    </TagWrapper>
+                </SecondRowContainer>
+
+                
+                
+                <ThirdRowContainer>
                     <GridPostsWrapper>
-                        <Divider orientation="left" style={{ marginTop: 0 }}>
+                        <Divider orientation="center" style={{ marginTop: 0 }}>
                             Gallery
                         </Divider>
+                        <GridPost selectedTagList={this.state.selectedTagList}/>
                     </GridPostsWrapper>
-            </UserPageRowContainer>
+                </ThirdRowContainer>
             </UserPageContainer>
         );
         // return(
@@ -168,6 +242,10 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getCurrentUser()),
         onGetUser: (user_id) =>
             dispatch(actionCreators.getUser(user_id)),
+        onPutUser: (user) =>
+            dispatch(actionCreators.putUser(user)),
+        onSendShallWe: (newChatroom, sendingUser, receivingUser) =>
+            dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
     }
 }
 
