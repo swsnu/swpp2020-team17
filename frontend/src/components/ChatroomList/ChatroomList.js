@@ -18,7 +18,8 @@ const chatroomColumns = [
     { title: 'Join', dataIndex: 'join'},
 ];
 class ChatroomList extends Component {
-    componentDidMount() {
+    constructor(props) {
+        super(props)
         this.props.onGetCurrentUser();
         this.props.onGetChatroomList();
     }
@@ -114,7 +115,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.deleteChatroom(id)),
         onCreateChatting: (chatroomId, user) =>
             dispatch(actionCreators.createChatting(chatroomId, user)),
-    }
+    }   
 }
 
 

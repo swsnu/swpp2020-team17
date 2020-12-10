@@ -285,8 +285,24 @@ class Post extends Component {
         this.setState({ selectedTagList: nextSelectedTags });
     }
 
-    handleShallWeClicked = () => {
-        console.log("ShallWe click!");
+    async onClickShallWe(receivingUser_id) {
+        await this.props.onGetUser(receivingUser_id)
+        let receivingUser = this.props.storedUser
+        let newChatroom = {
+            isGlobal: false, 
+            title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
+            tag: 1,     //tag가 없는디 어떡하지 
+            maxPersonnel: 2, 
+            discordLink: null,
+        }
+        console.log(receivingUser);
+        let sendingUser = this.props.storedCurrentUser;
+        await this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
+        if(sendingUser.chatroom != -1) {
+            this.props.history.push('/chatroom/' + sendingUser.chatroom);
+        }
+        // current user의 chatroom 바꾸고 redirect?
+        // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
     }
 
     handleBodyClicked = (postId) => {
@@ -506,7 +522,7 @@ class Post extends Component {
                                             <Button
                                                 type="primary"
                                                 shape="round"
-                                                onClick={() => this.handleShallWeClicked()}
+                                                onClick={() => this.onClickShallWe(item.author)}
                                                 // disabled="true"
                                                 style={{ fontSize: 12, fontWeight: "bolder" }}
                                             >
@@ -588,6 +604,7 @@ const mapStateToProps = (state) => {
         storedPostList: state.ps.postList,
         storedCommentList: state.cm.selectedCommentList,
         storedUserList: state.ur.userList,
+        storedUser: state.ur.selectedUser,
     }
 }
 
@@ -595,6 +612,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onGetCurrentUser: () =>
             dispatch(actionCreators.getCurrentUser()),
+        onGetUser: (id) =>
+            dispatch(actionCreators.getUser(id)),
         onPutUser: (user) =>
             dispatch(actionCreators.putUser(user)),
         onGetPostList: () =>
@@ -613,6 +632,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.createComment(postId, comment)),
         onDeleteComment: (comment) => 
             dispatch(actionCreators.deleteComment(comment)),
+        onSendShallWe: (newChatroom, sendingUser, receivingUser) => 
+            dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
     }
 }
 
