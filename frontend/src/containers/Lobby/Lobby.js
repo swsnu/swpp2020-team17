@@ -16,15 +16,15 @@ const GameTagWrapper = styled.div`
 class Lobby extends Component{
     constructor(props) {
         super(props);
+        this.props.onGetCurrentUser();
+        this.props.onGetChatroomList();
+        this.props.onGetTagList();
     }
     state = {
         selectedTagList: [],
     };
 
     componentDidMount() {
-        this.props.onGetCurrentUser();
-        this.props.onGetChatroomList();
-        this.props.onGetTagList();
         if (this.props.storedCurrentUser) {
             this.setState({ selectedTagList: this.props.storedCurrentUser.tagList });
             if(this.props.storedCurrentUser.chatroom != -1) {
