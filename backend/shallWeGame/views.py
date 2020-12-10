@@ -1,5 +1,6 @@
 # views.py
-
+####
+###
 import json
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, \
@@ -13,6 +14,7 @@ from .models import DiscordUser, Post, Comment, Tag, Chatroom
 
 
 AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redirect_uri=https%3A%2F%2Fshallwega.me%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
+
 
 def discord_login(request):
     '''Redirect to Auth Page'''
@@ -44,8 +46,8 @@ def discord_login_redirect(request):
 def exchange_code(code: str):
     '''Exchange Code with Discord API'''
     data = {
-        "client_id": "773940751608053771",
-        "client_secret": "0eOaEEJQAxUPa2Hr7WGwD0qkbPkDI53z",
+        "client_id": "782980326459965490",
+        "client_secret": "wmTVf-X76Zsk_9uNuTiBHrSYtY6Xbe11",
         "grant_type": "authorization_code",
         "code": code,
         "redirect_uri": "https://shallwega.me/api/login/redirect",
@@ -148,9 +150,9 @@ def user_info(request, user_id=0):
     if request.method == 'PUT':
         user = DiscordUser.objects.get(id=user_id)
         print('this : ', user)
-        # non-author returns 403
-        if user != request.user:
-            return HttpResponse(status=403)
+        # # non-author returns 403
+        # if user != request.user:
+        #     return HttpResponse(status=403)
         try:
             req_data = json.loads(request.body.decode())
 
@@ -169,7 +171,6 @@ def user_info(request, user_id=0):
         except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
 
-        print(user_friend_list)
         user.username = user_username
         user.login = user_login
         user.avatar = user_avatar
@@ -182,7 +183,6 @@ def user_info(request, user_id=0):
             [Post.objects.get(id=post_id) for post_id in user_watched_post_list])
         user.tag_list.set([Tag.objects.get(id=tag_id) for tag_id in user_tag_list])
         user.save()
-
         return HttpResponse(status=200)
 
 
@@ -200,25 +200,28 @@ def post_list(request):
         post_response_list = [
             {"id": post.id, "image": post.image, "content": post.content, "author": post.author_id,
              "authorName": post.author.username,
-             "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": post.like_num,
-             "likingUserList": list(post.liking_user_list.all())} for post in Post.objects.all()]
+             "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": len(post.liking_user_list.all()),
+             "likingUserList": [user.id for user in post.liking_user_list.all()]} for post in Post.objects.all()]
         return JsonResponse(post_response_list, safe=False)
     # request.method == 'POST'
-    try:
-        req_data = json.loads(request.body.decode())
-        post_image = req_data['image']
-        post_content = req_data['content']
-        post_tag = req_data['tag_id']
-    except (KeyError, JSONDecodeError):
-        return HttpResponseBadRequest()
-    post_author = request.user
-    tag = Tag.objects.get(id=int(post_tag))
-    post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
-    response_dict = {"id": post.id, "image": post.image, "content": post.content,
-                        "author": post.author_id, "authorName": post.author.username,
-                        "authorAvatar": post.author.avatar, "tag": post.tag.id,
-                        "likeNum": post.like_num,
-                        "likingUserList": list(post.liking_user_list.all())}
+    if request.method == 'POST':
+        try:
+            req_data = json.loads(request.body.decode())
+            post_image = req_data['image']
+            post_content = req_data['content']
+            post_tag = req_data['tag']
+        except (KeyError, JSONDecodeError):
+            return HttpResponseBadRequest()
+        post_author = request.user
+        tag = Tag.objects.get(name=post_tag)
+        post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
+        post.save()
+        response_dict = {"id": post.id, "image": post.image, "content": post.content,
+                        "author": post_author.id, "authorName": post_author.username,
+                        "authorAvatar": post_author.avatar, "tag": post.tag.id,
+                        "likeNum": len(post.liking_user_list.all()),
+                        # "likingUserList": [post_author]
+                        }
     print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
 
@@ -245,27 +248,25 @@ def post_info(request, post_id=0):
         return JsonResponse(
             {"id": post.id, "image": post.image, "content": post.content, "author": post.author_id,
              "authorName": post.author.username,
-             "authorAvatar": post.author.avatar, "tag": post.tag.id, "likeNum": post.like_num,
-             "likingUserList": list(post.liking_user_list.all())})
+             "authorAvatar": post.author.avatar, "tag": post.tag.id, "likeNum": len(post.liking_user_list.all()),
+             "likingUserList": [user.id for user in post.liking_user_list.all()]})
     if request.method == 'PUT':
         post = Post.objects.get(id=post_id)
-        # non-author returns 403
-        if post.author != request.user:
-            return HttpResponse(status=403)
         try:
             req_data = json.loads(request.body.decode())
             post_content = req_data['content']
+            post_liking_user_list = req_data['likingUserList']
         except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
         post = Post.objects.get(id=post_id)
-        liking_user_response_list = []
-        for liking_user in liking_user_object_list:
-            liking_user_response_list.append(liking_user.id)
+        print(post_liking_user_list)
+        post.liking_user_list.set([DiscordUser.objects.get(id=user_id) for user_id in post_liking_user_list])
+        post.save()
         response_dict = {"id": post.id, "image": post.image, "content": post_content,
                          "author": post.author_id, "authorName": post.author.username,
                          "authorAvatar": post.author.avatar, "tag": post.tag.id,
-                         "likeNum": post.like_num,
-                         "likingUserList": list(post.liking_user_list.all())}
+                         "likeNum": len(post_liking_user_list),
+                         "likingUserList": post_liking_user_list}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     # request.method == 'DELETE'
     post = Post.objects.get(id=post_id)
@@ -274,45 +275,6 @@ def post_info(request, post_id=0):
         return HttpResponse(status=403)
     post.delete()
     return HttpResponse(status=200)
-
-
-# @login_required(login_url='/api/login/')
-# def post_like_toggle(request, id=0):
-#     # non-allowed requests returns 405
-#     if request.method != 'POST':
-#         return HttpResponseNotAllowed(['POST'])
-#     # non-existing post returns 404
-#     try:
-#         post = Post.objects.get(id=id)
-#     except Post.DoesNotExist:
-#         return HttpResponseNotFound()
-#     # request.method == 'POST'
-#     user = request.user
-#     filtered_post = user.likingPosts.filter(post=post)
-#     if filtered_post.exist():
-#         user.likingPosts.remove(post)
-#     else:
-#         user.likingPosts.add(post)
-#     return HttpResponse(status=200)
-
-# @login_required(login_url='/api/login/')
-# def post_comment(request, id=0):
-#     # non-allowed requests returns 405
-#     if request.method != 'GET':
-#         return HttpResponseNotAllowed(['GET'])
-#     # non-existing post returns 404
-#     try:
-#         post = Post.objects.get(id=id)
-#     except Post.DoesNotExist:
-#         return HttpResponseNotFound()
-#     #request.method == 'GET'
-#     comment_object_list = [comment for comment in Comment.objects.filter(post=post)]
-#     comment_response_list = []
-#     for comment in comment_object_list:
-#         comment_response_list.append({"post": comment.post.id, \
-    # "content": comment.content, "author": comment.author.id, "author_name": comment.author.username})
-#     return JsonResponse(comment_response_list, safe=False)
-
 
 ######################
 # comment
@@ -326,12 +288,11 @@ def comment_list(request, post_id=0):
         return HttpResponseNotAllowed(['GET', 'POST'])
 
     if request.method == 'GET':
-        comment_object_list = [comment for comment in Comment.objects.all()]
+        comment_object_list = [comment for comment in Comment.objects.all() if comment.post.id==post_id]
         comment_response_list = []
         for comment in comment_object_list:
             comment_response_list.append(
-                {"post": comment.post.id, "content": comment.content, "author": comment.author.id,
-                 "authorName": comment.author.username})
+                {"id": comment.id, "post": comment.post.id, "content": comment.content, "author": comment.author.id})
         return JsonResponse(comment_response_list, safe=False)
     # request.method == 'POST'
     try:
@@ -344,7 +305,7 @@ def comment_list(request, post_id=0):
     comment = Comment(post=comment_post, content=comment_content, author=comment_author)
     comment.save()
     response_dict = {"id": comment.id, "post": comment.post.id, "content": comment.content,
-                        "author": comment.author.id, "authorName": comment.author.username}
+                        "author": comment.author.id}
     return HttpResponse(content=json.dumps(response_dict), status=200)
 
 
@@ -364,8 +325,7 @@ def comment_info(request, comment_id=0):
     if request.method == 'GET':
         comment = Comment.objects.get(id=comment_id)
         return JsonResponse(
-            {"post": comment.post.id, "content": comment.content, "author": comment.author.id,
-             "authorName": comment.author.username})
+            {"post": comment.post.id, "content": comment.content, "author": comment.author.id})
     elif request.method == 'PUT':
         comment = Comment.objects.get(id=comment_id)
         # non-author returns 403
@@ -378,7 +338,7 @@ def comment_info(request, comment_id=0):
             return HttpResponseBadRequest()
         comment.content = comment_content
         response_dict = {"id": comment.id, "post": comment.post.id, "content": comment.content,
-                         "author": comment.author.id, "authorName": comment.author.username}
+                         "author": comment.author.id}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     # request.method == 'DELETE'
     comment = Comment.objects.get(id=comment_id)
@@ -479,10 +439,11 @@ def chatroom_info(request, chatroom_id=0):
 
     if request.method == 'GET':
         chatroom = Chatroom.objects.get(id=chatroom_id)
-        return JsonResponse({"isGlobal": chatroom.is_global, "title": chatroom.title,
-                             "memberList": chatroom.member_list, "tag": chatroom.tag,
-                             "maxPersonnel": chatroom.max_personnel,
-                             "discordLink": chatroom.discord_link})
+        member_list = [member['id'] for member in chatroom.member_list.all().values()]
+        return JsonResponse(
+                {"id": chatroom.id, "isGlobal": chatroom.is_global, "title": chatroom.title,
+                 "memberList": member_list, "tag": chatroom.tag.id,
+                 "maxPersonnel": chatroom.max_personnel, "discordLink": chatroom.discord_link})
     if request.method == 'PUT':
         chatroom = Chatroom.objects.get(id=chatroom_id)
         ## to be added. non-host returns 403
@@ -491,58 +452,23 @@ def chatroom_info(request, chatroom_id=0):
             chatroom_is_global = req_data['isGlobal']
             chatroom_title = req_data['title']
             chatroom_max_personnel = req_data['maxPersonnel']
+            chatroom_member_list = req_data['memberList']
         except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
         chatroom.is_global = chatroom_is_global
         chatroom.title = chatroom_title
         chatroom.max_personnel = chatroom_max_personnel
+        chatroom.member_list.set([DiscordUser.objects.get(id=member_id) \
+            for member_id in chatroom_member_list])
+        member_list = [member['id'] for member in chatroom.member_list.all().values()]
         response_dict = {"id": chatroom.id, "isGlobal": chatroom.is_global, "title": chatroom.title,
-                         "tag": chatroom.tag, "maxPersonnel": chatroom.max_personnel,
-                         "discordLink": chatroom.discord_link}
+                         "memberList": member_list, "tag": chatroom.tag, 
+                         "maxPersonnel": chatroom.max_personnel, "discordLink": chatroom.discord_link}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     # request.method == 'DELETE'
     chatroom = Chatroom.objects.get(id=chatroom_id)
     chatroom.delete()
     return HttpResponse(status=200)
-
-# @login_required(login_url='/api/login/')
-# def chatroom_global_toggle(request, id=0):
-#     # non-allowed requests returns 405
-#     if request.method != 'PUT':
-#         return HttpResponseNotAllowed(['PUT'])
-#     # non-existing chatroom returns 404
-#     try:
-#         chatroom = Chatroom.objects.get(id=id)
-#     except Chatroom.DoesNotExist:
-#         return HttpResponseNotFound()
-#     # request.method == 'PUT'
-#     if chatroom.isGlobal is True:
-#         chatroom.isGlobal = False
-#     else:
-#         chatroom.isGlobal = True
-#     return HttpResponse(status=200)
-
-# @login_required(login_url='/api/login/')
-# def chatroom_message(request, id=0):
-#     # non-allowed requests returns 405
-#     if request.method != 'POST':
-#         return HttpResponseNotAllowed(['POST'])
-#     # non-existing chatroom returns 404
-#     try:
-#         chatroom = Chatroom.objects.get(id=id)
-#     except Chatroom.DoesNotExist:
-#         return HttpResponseNotFound()
-#     # request.method == 'POST'
-#     try:
-#         req_data = json.loads(request.body.decode())
-#         message_content = req_data['content']
-#     except (KeyError, JSONDecodeError) as e:
-#         return HttpResponseBadRequest()
-#     message = Message(author=request.user, chatroom=chatroom, content=message_content)
-#     message.save()
-#     response_dict = {"id": message.id, "author": message.author.id,
-#                       "chatroom": message.chatroom.id, "content": message.content}
-#     return HttpResponse(content=json.dumps(response_dict), status=200)
 
 @ensure_csrf_cookie
 def token(request):

@@ -86,7 +86,7 @@ class Author extends Component {
         // if (this.props.showOnline === true) {
         return (
             <div className="Author">
-                <AuthorWrapper>
+                <AuthorWrapper >
                     <Row align="middle">
                         <Col flex="none" style={{ marginRight: 10 }}>
                             {this.setAvatar()}

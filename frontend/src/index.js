@@ -17,6 +17,7 @@ import userReducer from './store/reducers/user';
 import chatroomReducer from './store/reducers/chatroom';
 import tagReducer from './store/reducers/tag';
 import postReducer from './store/reducers/post';
+import commentReducer from './store/reducers/comment';
 
 const history = createBrowserHistory();
 const rootReducer = combineReducers({
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   tg: tagReducer,
   chat: chatroomReducer,
   ps: postReducer,
+  cm: commentReducer,
   router: connectRouter(history),
 });
 
