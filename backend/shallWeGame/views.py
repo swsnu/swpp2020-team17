@@ -12,7 +12,9 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from .models import DiscordUser, Post, Comment, Tag, Chatroom
 
-AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=782980326459965490&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
+
+AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redirect_uri=https%3A%2F%2Fshallwega.me%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
+
 
 def discord_login(request):
     '''Redirect to Auth Page'''
@@ -22,6 +24,7 @@ def discord_login(request):
 def discord_login_redirect(request):
     '''Redirect when Logged In'''
     code = request.GET.get('code')
+    print(code)
     user = exchange_code(code)
     try:
         discord_user = DiscordUser.objects.get(username=user['username'])
@@ -38,8 +41,7 @@ def discord_login_redirect(request):
         )
         discord_user.save()
     login(request, discord_user)
-    return redirect("http://localhost:3000/")
-
+    return redirect("https://shallwega.me/")
 
 def exchange_code(code: str):
     '''Exchange Code with Discord API'''
@@ -48,7 +50,7 @@ def exchange_code(code: str):
         "client_secret": "wmTVf-X76Zsk_9uNuTiBHrSYtY6Xbe11",
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "http://localhost:8000/api/login/redirect",
+        "redirect_uri": "https://shallwega.me/api/login/redirect",
         "scope": "identify",
         "auth_url": "https://discordapp.com/api/oauth2/authorize",
     }
@@ -58,7 +60,7 @@ def exchange_code(code: str):
     response = requests.post('https://discord.com/api/v6/oauth2/token', data=data, headers=headers)
     credentials = response.json()
     access_token = credentials['access_token']
-    response = requests.get("http://discord.com/api/v6/users/@me", headers={
+    response = requests.get("https://discord.com/api/v6/users/@me", headers={
         'Authorization': 'Bearer %s' % access_token,
         "Content-Type": 'application/json'
     })
@@ -73,7 +75,7 @@ def discord_logout(request):
     user.login = False
     print(user.login)
     logout(request)
-    return redirect('http://localhost:3000/login/')
+    return redirect('https://shallwega.me/login/')
 
 
 ######################
