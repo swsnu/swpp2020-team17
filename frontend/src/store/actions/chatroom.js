@@ -46,11 +46,19 @@ const createChatroom_ = (chatroom) => {
     }
 }
 
-export const createChatroom = (chatroom) => {
+export const createChatroom = (user, chatroom) => {
     return dispatch => {
         return axios.post('/api/chatroom/', chatroom)
-        .then(res => {
-            dispatch(createChatroom_(res.data))
+        .then(res1 => {
+            dispatch(createChatroom_(res1.data));
+
+            dispatch(createChatting_(res1.data, user));
+            
+            user.chatroom = res1.data.id;
+            axios.put('/api/user/' + user.id, user)
+            .then(res2 => {
+                dispatch(putUser_(res2.data));
+            })
         })
     }
 }
