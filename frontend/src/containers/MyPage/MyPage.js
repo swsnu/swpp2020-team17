@@ -140,6 +140,9 @@ const GridPostsWrapper = styled.div`
 class MyPage extends Component {
     constructor(props) {
         super(props);
+        this.props.onGetCurrentUser();
+        this.props.onGetPostList();
+        this.props.onGetUserList();
     }
 
     state = {
@@ -186,9 +189,6 @@ class MyPage extends Component {
         //         // showOnline: this.props.storeCurrentUser.login,
         //     })
         // }
-        this.props.onGetCurrentUser();
-        this.props.onGetPostList();
-        this.props.onGetUserList();
         if (this.props.storedCurrentUser) {
             this.setState({ 
                 selectedTagList: this.props.storedCurrentUser.tagList,
@@ -315,7 +315,8 @@ class MyPage extends Component {
                                                 <Button
                                                     type="primary"
                                                     shape="round"
-                                                    disabled={this.props.storedCurrentUser.chatroom != -1}
+                                                    disabled={this.props.storedCurrentUser.chatroom != -1
+                                                    || item.chatroom != -1 || item.login == false}
                                                     onClick={() => this.onClickShallWe(item)}
                                                     size="small"
                                                     style={{ fontSize: 8, fontWeight: "bolder" }}
