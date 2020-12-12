@@ -43,7 +43,7 @@ class RoomInfo extends Component {
         // let user = this.props.storedCurrentUser;
 
         return (
-            <div>
+            <div className="RoomInfo">
                 <Row gutter={[40, 0]}>
                     <Col span={23}>
                         <Title style={{ textAlign: 'center' }} level={2}>

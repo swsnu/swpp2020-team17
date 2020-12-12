@@ -4,38 +4,21 @@ import { Provider } from 'react-redux';
 import { connectRouter, ConnectedRouter } from 'connected-react-router';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
-import GridPost from './UserPagePostInGrid';
+import LoginPage from './LoginPage';
 import { getMockStore } from '../../test-utils/mocks'
 import { history } from '../../store/store'
 
 import * as userActionCreators from '../../store/actions/user';
-import * as postActionCreators from '../../store/actions/post';
 
-jest.mock('react-photo-gallery', () => {
+jest.mock('../../../node_modules/antd/lib/button', () => {
     return jest.fn(props => {
         return (
-            <div className="spyGallery" onClick={jest.fn()}/>
+            <div className="spyButton" onClick={jest.fn()}/>
         )
     });
 });
 
 const stubInitialState = {
-    postList: [
-        {
-            id: 1,
-            image: null, 
-            content: 'content 1', 
-            author: 1, 
-            tag: 1
-        },
-        {
-            id: 1,
-            image: null, 
-            content: 'content 2', 
-            author: 2, 
-            tag: 2
-        }
-    ],
     currentUser: {
         id: 1, 
         username: 'User1',
@@ -44,40 +27,43 @@ const stubInitialState = {
         chatroom: -1, 
         friendList: [2],
         postList: [1, 5],
-        shallWeRoomList: [1, 2], 
+        shallWeRoomList: [1], 
         watchedPostList: [1, 2, 3], 
         tagList: [1]
-    },
+    }
 }
 
 const mockStore = getMockStore(stubInitialState);
 
-describe('<UserPagePostInGrid />', () => {
-    let gridPost, spyGetPostList, spyGetCurrentUser;
+describe('<RoomInfo />', () => {
+    let login, spyLogin;
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
     beforeEach(() => {
-        gridPost = (
+        login = (
             <Provider store={mockStore}>
               <ConnectedRouter history={history}>
               <Switch>
-                <Route path='/' exact component={(props) => <GridPost {...props} selectedTagList={[1,2]} />} />
+                <Route path='/' exact component={LoginPage} />
               </Switch>
               </ConnectedRouter>
             </Provider>
         );
-        spyGetPostList = jest.spyOn(postActionCreators, 'getPostList')
-            .mockImplementation(() => { return dispatch => {}; });
-        spyGetCurrentUser = jest.spyOn(userActionCreators, 'getCurrentUser')
+
+        spyLogin= jest.spyOn(userActionCreators, 'login')
             .mockImplementation(() => { return dispatch => {}; });
     })
 
-    it('should render without errors', () => {
-        const component = mount(gridPost);
-        let wrapper = component.find(".UserPagePostInGrid");
+    it('should handle login', () => {
+        const component = mount(login);
+        let wrapper = component.find('.LoginPage');
+        //wrapper.at(0).simulate('click');
+        expect(wrapper.length).toBe(1);
+        wrapper = component.find('.spyButton');
         expect(wrapper.length).toBe(1);
     });
+
 });

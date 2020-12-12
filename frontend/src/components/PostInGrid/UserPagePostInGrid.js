@@ -39,7 +39,7 @@ class GridPost extends Component {
         console.log(selectedTagList);
         console.log(myPostList);
         return (
-            <div>
+            <div className="UserPagePostInGrid">
                 {myGrids.length != 0 ? <Gallery photos={myGrids} direction={"column"} /> : ''}
             </div>
             

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { connectRouter, ConnectedRouter } from 'connected-react-router';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
-import GridPost from '../../containers/MyPage/GridPost';
+import GridPost from './PostInGrid';
 import { getMockStore } from '../../test-utils/mocks'
 import { history } from '../../store/store'
 
@@ -14,7 +14,7 @@ import * as postActionCreators from '../../store/actions/post';
 jest.mock('react-photo-gallery', () => {
     return jest.fn(props => {
         return (
-            <div className="spyGallery" />
+            <div className="spyGallery" onClick={jest.fn()}/>
         )
     });
 });
@@ -52,7 +52,7 @@ const stubInitialState = {
 
 const mockStore = getMockStore(stubInitialState);
 
-describe('<GridPost />', () => {
+describe('<PostInGrid />', () => {
     let gridPost, spyGetPostList, spyGetCurrentUser;
 
     afterEach(() => {
@@ -77,7 +77,7 @@ describe('<GridPost />', () => {
 
     it('should render without errors', () => {
         const component = mount(gridPost);
-        let wrapper = component.find(".GridPost");
+        let wrapper = component.find(".PostInGrid");
         expect(wrapper.length).toBe(1);
     });
 });

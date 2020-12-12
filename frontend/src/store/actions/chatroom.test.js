@@ -18,6 +18,30 @@ const stubChatroom2 = {
     maxPersonnel: 20, 
     discordLink: null,
 }
+const stubUser1 = {
+    id: 1, 
+    username: 'User1',
+    login: true,
+    avatar: null, 
+    chatroom: -1, 
+    friendList: [],
+    postList: [1, 5],
+    shallWeRoomList: [1, 2], 
+    watchedPostList: [1, 2, 3], 
+    tagList: [5]
+}
+const stubUser2 = {
+    id: 2, 
+    username: 'User2',
+    login: false,
+    avatar: null, 
+    chatroom: 1, 
+    friendList: [1],
+    postList: [],
+    shallWeRoomList: [3], 
+    watchedPostList: [2, 3], 
+    tagList: [4]
+}
 
 describe('ActionCreators', () => {
     afterEach(() => {
@@ -142,10 +166,26 @@ describe('ActionCreators', () => {
     })
 
     it('deleteChatting should delete Chatting correctly', (done) => {
-        store.dispatch(actionCreators.deleteChatting()).then(() => {
-            const newState = store.getState();
-            expect(newState.chat.selectedChatChannel).toBe(null);
+        actionCreators.deleteChatting();
+        const newState = store.getState();
+        //expect(newState.chat.selectedChatChannel).toBe(null);
+        done();
+    });
+
+    it('sendShallWe should send shallWe correctly', (done) => {
+        const spy = jest.spyOn(axios, 'post')
+        .mockImplementation(url => {
+            return new Promise((resolve, reject) => {
+                const result = {
+                status: 200,
+                data: stubChatroom1
+                };
+                resolve(result);
+            });
+        })
+        store.dispatch(actionCreators.sendShallWe(stubChatroom1, stubUser1, stubUser2)).then(() => {
+            expect(spy).toHaveBeenCalledTimes(1);
             done();
-        }); 
-    })
+        });
+    });
 })
