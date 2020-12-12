@@ -123,5 +123,29 @@ describe('ActionCreators', () => {
             done();
         });
     })
-  
+    
+    it('createChatting should create Chatting correctly', (done) => {
+        const spy = jest.spyOn(axios, 'get')
+        .mockImplementation(url => {
+            return new Promise((resolve, reject) => {
+                const result = {
+                status: 200,
+                data: stubChatroom1
+                };
+                resolve(result);
+            });
+        })
+        store.dispatch(actionCreators.createChatting(1)).then(() => {
+            expect(spy).toHaveBeenCalledTimes(1);
+            done();
+        });
+    })
+
+    it('deleteChatting should delete Chatting correctly', (done) => {
+        store.dispatch(actionCreators.deleteChatting()).then(() => {
+            const newState = store.getState();
+            expect(newState.chat.selectedChatChannel).toBe(null);
+            done();
+        }); 
+    })
 })

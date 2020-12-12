@@ -25,16 +25,18 @@ const Chatting = (props) => {
   //   name: 'Talk about Go',
   // });
   return (
-    <Chat client={props.chatClient} theme={'messaging light'}>
-      <Channel channel={props.channel}>
-        <Window>
-          <ChannelHeader />
-          <MessageList />
-          <MessageInput />
-        </Window>
-        <Thread />
-      </Channel>
-    </Chat>
+    <div className="chatting">
+      <Chat client={props.chatClient} theme={'messaging light'}>
+        <Channel channel={props.channel}>
+          <Window>
+            <ChannelHeader />
+            <MessageList />
+            <MessageInput />
+          </Window>
+          <Thread />
+        </Channel>
+      </Chat>
+    </div>
   )
 };
   

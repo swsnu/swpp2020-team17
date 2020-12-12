@@ -25,6 +25,7 @@ const CommentView = (props) => {
         //console.log(props.commentList);
 
         return (
+            <div className="Comment">
             <CommentWrapper>
                 <CommentFormContainer>
                     <Input.Search
@@ -66,12 +67,13 @@ const CommentView = (props) => {
                     />
                 </CommentListContainer>
             </CommentWrapper>
+            </div>
         );
     } else {
         // Show nothing
         // console.log("Show nothing");
         return (
-            <div>
+            <div className="Comment">
             </div>
         );
     }

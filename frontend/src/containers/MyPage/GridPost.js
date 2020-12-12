@@ -47,7 +47,7 @@ class GridPost extends Component {
             }
         }
         return (
-            <div>
+            <div className="GridPost">
                 {myGrids.length != 0 ? <Gallery photos={myGrids} direction={"column"} /> : ''}
             </div>
             
