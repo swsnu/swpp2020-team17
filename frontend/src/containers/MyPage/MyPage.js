@@ -7,7 +7,7 @@ import { Divider, List, Button, Space } from 'antd';
 import Profile from '../../components/Profile/Profile';
 import Author from '../../components/Author/Author';
 import { useHistory } from 'react-router';
-import GridPost from './GridPost'
+import PostInGrid from '../../components/PostInGrid/PostInGrid'
 import GameTag from '../../components/GameTag/GameTag';
 
 const MyPageContainer = styled.div`
@@ -125,7 +125,7 @@ const MyPageRightContainer = styled.div`
 //     flex-basis: 20%;
 // `;
 
-const GridPostsWrapper = styled.div`
+const PostInGridWrapper = styled.div`
     /* flex-basis: 80%; */
     flex-basis: 70%;
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
@@ -342,12 +342,12 @@ class MyPage extends Component {
                                 create post
                             </Button>
                         </ButtonCreate>            
-                    <GridPostsWrapper>
+                    <PostInGridWrapper>
                         <Divider orientation="center" style={{ marginTop: 0 }}>
                             Gallery
                         </Divider>
-                        <GridPost selectedTagList={this.state.selectedTagList} />
-                    </GridPostsWrapper>
+                        <PostInGrid selectedTagList={this.state.selectedTagList} />
+                    </PostInGridWrapper>
                     
                 </MyPageRightContainer>
             </MyPageContainer>
