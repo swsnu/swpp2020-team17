@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
 import Gallery from "react-photo-gallery";
 import { Row, Col, Image } from 'antd';
+import { withRouter } from 'react-router-dom'
 
 class PostInGrid extends Component {
     constructor(props){
         super(props)
         this.props.onGetCurrentUser();
         this.props.onGetPostList();
+        const postId = this.props.history.location.pathname.replace('/post/', '');
         this.state = {
             myPostList: [],
             height: 0,
@@ -57,7 +59,7 @@ class PostInGrid extends Component {
         return (
             <div>
                 {myGrids.length != 0 ? <Gallery photos={myGrids} direction={"column"}
-                onClick={(e, { index }) => console.log(myPostList[index])} /> : ''}
+                onClick={(e, { index }) => this.props.history.push('/post/' + myPostList[index].id)} /> : ''}
             </div> 
             
         )
@@ -85,4 +87,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostInGrid)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostInGrid))

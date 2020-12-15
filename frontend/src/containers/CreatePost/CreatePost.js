@@ -54,7 +54,7 @@ class CreateNewPost extends React.Component {
     }
 
     onFinish(values) {
-        values.image = 'temp'
+        values.image = this.state.imageUrl;
         console.log(values);
         this.props.createPost(values)
 
