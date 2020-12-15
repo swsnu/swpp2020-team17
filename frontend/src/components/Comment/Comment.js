@@ -12,7 +12,35 @@ const CommentFormContainer = styled.div`
 `;
 const CommentListContainer = styled.div``;
 
+const CommentContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    /* flex-wrap: wrap; */
+    /* justify-content: space-between; */
+    /* border: 1px solid #005691; */
+    /* margin: 5px; */
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    justify-content: space-between;
+    flex-wrap: wrap;
+`;
 
+const CommentLeftContainer = styled.div`
+    display: flex;
+    /*flex-direction: column;*/
+    flex-basis: 80%;
+    align-items: center;
+`;
+
+const CommentRightContainer = styled.div`
+    display: flex;
+    /*flex-direction: column;*/
+    flex-basis: 15%;
+    align-items: center;
+    /* justify-content: space-between; */
+    /* cursor: pointer; */ 
+`;
 
 const CommentView = (props) => {
     const [onLoading] = React.useState(true);
@@ -41,27 +69,34 @@ const CommentView = (props) => {
                         itemLayout="horizontal"
                         dataSource={props.commentList}
                         renderItem={item => (
-                            <li>
-                                <Comment
-                                    avatar={props.userList.find(user => (user.id === item.author)).avatar?
-                                        <Avatar 
-                                            onClick={() => {
-                                                if (item.author === props.currentUser.id) history.push("/myPage/");
-                                                else history.push("/page/" + item.author);
-                                            }}
-                                            style={{ backgroundColor: '#1A516E' }} 
-                                            src={props.userList.find(user => (user.id === item.author)).avatar} />
-                                        : <Avatar 
-                                            onClick={() => {
-                                                if (item.author === props.currentUser.id) history.push("/myPage/");
-                                                else history.push("/page/" + item.author);
-                                            }}
-                                            icon={<UserOutlined />} />}
-                                    author={props.userList.find(user => (user.id === item.author)).username}
-                                    content={item.content}
-                                />
-                                {props.returnDeleteButton(item)}
-                            </li>
+               
+                                <CommentContainer>
+                                <CommentLeftContainer>
+                                    <Comment
+                                        avatar={props.userList.find(user => (user.id === item.author)).avatar?
+                                            <Avatar 
+                                                onClick={() => {
+                                                    if (item.author === props.currentUser.id) history.push("/myPage/");
+                                                    else history.push("/page/" + item.author);
+                                                }}
+                                                style={{ backgroundColor: '#1A516E' }} 
+                                                src={props.userList.find(user => (user.id === item.author)).avatar} />
+                                            : <Avatar 
+                                                onClick={() => {
+                                                    if (item.author === props.currentUser.id) history.push("/myPage/");
+                                                    else history.push("/page/" + item.author);
+                                                }}
+                                                icon={<UserOutlined />} />}
+                                        author={props.userList.find(user => (user.id === item.author)).username}
+                                        content={item.content}
+                                    />
+                                </CommentLeftContainer>
+                                <CommentRightContainer>
+                                    {props.returnDeleteButton(item)}
+                                </CommentRightContainer>
+                                </CommentContainer>
+
+                    
                         )}
                     />
                 </CommentListContainer>

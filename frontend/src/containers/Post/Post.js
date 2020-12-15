@@ -449,7 +449,7 @@ class Post extends Component {
     returnDeleteButton = (comment) => {
         if (this.props.storedCurrentUser.id === comment.author) {
             return (
-                <DeleteOutlined onClick={() => this.clickDeleteComment(comment)} style={{ cursor: "pointer" }} />
+                <DeleteOutlined onClick={() => this.clickDeleteComment(comment)} size="large" style={{ cursor: "pointer" }} />
             );
         } else {
             return null;
