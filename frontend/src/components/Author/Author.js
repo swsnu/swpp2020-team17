@@ -51,6 +51,7 @@ class Author extends Component {
                 <Avatar
                     src={this.props.avatar} // 함수로 바꿔줘야함
                     size="default"
+                    showOnline={this.props.login}
                 />
             );
         } else {
@@ -58,6 +59,7 @@ class Author extends Component {
                 <Avatar
                     icon = {< UserOutlined />}
                     size="default"
+                    showOnline={this.props.login}
                 />
             );
         }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 //FIXME: Infinite scroll to be implemented
 // import InfiniteScroll from 'react-infinite-scroller';
-import { List, Divider, Space, Button, Comment } from 'antd';
+import { List, Divider, Space, Button, Switch, Menu, Dropdown } from 'antd';
 //FIXME: Infinite scroll to be implemented
 // import { Spin, message } from 'antd';
 import { MessageTwoTone, HeartTwoTone, DeleteOutlined } from '@ant-design/icons';
@@ -10,7 +10,7 @@ import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
 import Author from '../../components/Author/Author'
 import CommentView from '../../components/Comment/Comment';
-
+import CSRFToken from '../../csrftoken'
 /* Components */
 import GameTag from '../../components/GameTag/GameTag'
 // import CommentList from './CommentList';
@@ -24,9 +24,28 @@ const PostPageWrapper = styled.div`
     
 `;
 
-const GameTagWrapper = styled.div`
+const LineWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
+    flex-direction: row;
+    width: 70%;
+    justify-content: space-between;
+    align-self: center;
+`;
+
+const GameTagWrapper = styled.div`
+    display: flex;
+    flex-basis: 60%;
+    align-items: center;
+`;
+
+const RecommendToggleWrapper = styled.div`
+    display: flex;
+    flex-basis: 40%;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 0;
+    justify-content: flex-end;
 `;
 
 const LoadingWrapper = styled.div`
@@ -240,6 +259,7 @@ class Post extends Component {
             clickedPostId: null,
             commentingPostId: null,
             likingPostId: null,
+            isRecommend: true,
         //FIXME: Infinite scroll to be implemented
         // loading: false,
         // hasMore: true,
@@ -273,7 +293,10 @@ class Post extends Component {
             });
         }
     }
-
+    onToggleRecommend = (checked) => {
+        this.setState({ isRecommend: checked });
+        console.log(`switch to ${checked}`);
+    }
 
     onToggleTag = (tag_id) => {
         const checked = this.state.selectedTagList.indexOf(tag_id) > -1;
@@ -285,13 +308,11 @@ class Post extends Component {
         this.setState({ selectedTagList: nextSelectedTags });
     }
 
-    async onClickShallWe(receivingUser_id) {
-        await this.props.onGetUser(receivingUser_id)
-        let receivingUser = this.props.storedUser
+    async onClickShallWe(receivingUser, tagId) {
         let newChatroom = {
             isGlobal: false, 
             title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
-            tag: 1,     //tag가 없는디 어떡하지 
+            tag: tagId,     //tag가 없는디 어떡하지 
             maxPersonnel: 2, 
             discordLink: null,
         }
@@ -449,7 +470,7 @@ class Post extends Component {
     returnDeleteButton = (comment) => {
         if (this.props.storedCurrentUser.id === comment.author) {
             return (
-                <DeleteOutlined onClick={() => this.clickDeleteComment(comment)} style={{ cursor: "pointer" }} />
+                <DeleteOutlined onClick={() => this.clickDeleteComment(comment)} size="large" style={{ cursor: "pointer" }} />
             );
         } else {
             return null;
@@ -457,17 +478,38 @@ class Post extends Component {
     }
 
     render() {
-        let { postList } = this.state;
+        let { postList, isRecommend } = this.state;
         let user = null;
         let tagList = [];
         let tagToggle = [];
         let activePostList = [];
+        let menuItems = this.props.storedUserList.map(user => {
+            let menu = user.tagList.map(tagId => {
+                return (
+                    <Menu.Item onClick={() => this.onClickShallWe(user, tagId)}>
+                        <a>
+                            {tagId===1 ? "LOL": tagId===2 ? "HearthStone": "MapleStory"}
+                        </a>
+                    </Menu.Item>
+                );
+            });
+            return {
+                id: user.id,
+                menu: menu,
+            };
+        });
         // FIXME: Infinite scroll to be implemented
         console.log(this.props.storedPostList);
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
             tagList = this.props.storedTagList;
-            postList = this.props.storedPostList;
+            if (isRecommend) {
+                postList = this.props.storedPostList.filter(post => post.author !== user.id && !user.friendList.includes(post.author));
+            } else {
+                postList = this.props.storedPostList.filter(post => user.friendList.includes(post.author));
+            }
+            console.log(postList);
+            
             tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
                 return (
                     <GameTag
@@ -481,18 +523,26 @@ class Post extends Component {
 
             // FIXME: Infinite scroll to be implemented
             // postList = this.props.storedPostList;
-            activePostList = this.props.storedPostList.filter(post => {
+            activePostList = postList.filter(post => {
                 return this.state.selectedTagList.includes(post.tag);
             });
         }
-
+        if (this.state.commentingPostId && !this.props.storedCommentList) this.props.onGetCommentList(this.state.commentingPostId);
         return (
             <PostPageWrapper>
-                <GameTagWrapper>
-                    <span style={{ marginRight: 8 }}>Your Games:</span>
-                    {tagToggle.length > 0 ? tagToggle: "Add your Tag!"}
-                </GameTagWrapper>
-
+                <LineWrapper>
+                    <GameTagWrapper>
+                        <span style={{ marginRight: 8 }}>Your Games:</span>
+                        {tagToggle.length > 0 ? tagToggle: "Add your Tag!"}
+                    </GameTagWrapper>
+                    <RecommendToggleWrapper>
+                        {tagToggle.length > 0 ? 
+                            <Switch checkedChildren="Recommend" unCheckedChildren="Friend's Posts" defaultChecked onChange={this.onToggleRecommend}/>
+                            : null
+                        }
+                    </RecommendToggleWrapper>
+                </LineWrapper>
+                
                 <PostListWrapper>
                     {/*
                 //FIXME: Infinite scroll to be implemented
@@ -515,19 +565,39 @@ class Post extends Component {
                                                 //FIXME: user로 넘기도록 수정해야함
                                                 name={item.authorName}
                                                 avatar={item.authorAvatar}
-                                                showOnline={true}
+                                                showOnline={this.props.storedUserList.find(user => user.id===item.author).login}
                                             />
                                         </AuthorItem>
                                         <ButtonItem>
-                                            <Button
-                                                type="primary"
-                                                shape="round"
-                                                onClick={() => this.onClickShallWe(item.author)}
-                                                // disabled="true"
-                                                style={{ fontSize: 12, fontWeight: "bolder" }}
-                                            >
-                                                Shall We ?
-                                            </Button>
+                                        <CSRFToken />
+                                                <Dropdown 
+                                                    overlay={
+                                                        <Menu>
+                                                            {menuItems.find(value => value.id === item.author) 
+                                                            && this.props.storedUserList.find(user => user.id===item.author).tagList.length > 0 ? 
+                                                                menuItems.find(value => value.id === item.author).menu
+                                                                : <Menu.Item>
+                                                                    <a>User Has No Game Tag</a>
+                                                                    <a>(Cannot Send ShallWe)</a>
+                                                                </Menu.Item>
+                                                            }
+                                                        </Menu>
+                                                    } 
+                                                    placement="bottomLeft" 
+                                                    arrow
+                                                >
+                                                    <Button
+                                                        type="primary"
+                                                        shape="round"
+                                                        disabled={this.props.storedCurrentUser.chatroom != -1
+                                                        || item.chatroom != -1 || item.login == false}
+                                                        /*onClick={() => this.onClickShallWe(item)}*/
+                                                        size="small"
+                                                        style={{ fontSize: 8, fontWeight: "bolder" }}
+                                                    >
+                                                        Shall We
+                                                    </Button>
+                                                </Dropdown>
                                         </ButtonItem>
                                         <GameTagItem>
                                             <GameTag

@@ -242,7 +242,7 @@ def post_info(request, post_id=0):
                                    post.liking_user_list.all().values()]
         liking_user_response_list = []
         for liking_user in liking_user_object_list:
-            liking_user_response_list.append(liking_user.id)
+            liking_user_response_list.append(liking_user['id'])
         return JsonResponse(
             {"id": post.id, "image": post.image, "content": post.content, "author": post.author_id,
              "authorName": post.author.username,

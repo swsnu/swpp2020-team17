@@ -12,6 +12,24 @@ import { history } from '../../store/store'
 import * as userActionCreators from '../../store/actions/user';
 import * as chatroomActionCreators from '../../store/actions/chatroom';
 
+jest.mock('../../../node_modules/antd/lib/form', () => {
+    return jest.fn(props => {
+        return (
+            <div>
+                <div className="spyForm" onClick={props.onFinish} />
+            </div>
+            
+        )
+    });
+});
+
+jest.mock('../../../node_modules/antd/lib/button', () => {
+    return jest.fn(props => {
+        return (
+            <div className="spyButton" onClick={jest.fn()} />
+        )
+    });
+});
 
 const stubInitialState = {
     currentUser: {
@@ -19,7 +37,7 @@ const stubInitialState = {
         username: 'User1',
         login: true,
         avatar: null, 
-        chatroom: -1, 
+        chatroom: 1, 
         friendList: [2],
         postList: [1, 5],
         shallWeRoomList: [1], 
@@ -68,24 +86,70 @@ describe('<RoomInfo />', () => {
             .mockImplementation(() => { return dispatch => {}; });
     })
 
-    it('should create chatroom', () => {
+    it('should render without errors', () => {
         const component = mount(roomInfo);
-        const wrapper = component.find('#save-button');
-        wrapper.at(0).simulate('click');
+        const wrapper = component.find('.RoomInfo');
+        expect(wrapper.length).toBe(1);
     });
-
-    it('should redirect back to lobby page', () => {
-        const component = mount(roomInfo);
-        const wrapper = component.find('#back-button');
-        wrapper.at(0).simulate('click');
-    });
-
-    // it('should submit form', () => {
+    // it('should create chatroom', () => {
     //     const component = mount(roomInfo);
-    //     const wrapper = component.find('#title-input');
-    //     expect(wrapper.length).toBe(1);
-    //     const wrapper = component.find('#submit-form');
-    //     wrapper.props().onFinish();
+    //     const wrapper = component.find('#save-button');
+    //     wrapper.at(0).simulate('click');
     // });
 
+    // it('should redirect back to lobby page', () => {
+    //     const spyHistoryPush = jest.spyOn(history, 'push')
+    //         .mockImplementation(path => {});
+    //     const component = mount(roomInfo);
+    //     const wrapper = component.find('#back-button');
+    //     expect(wrapper.length).toBe(1);
+    //     wrapper.at(0).simulate('click');
+    //     expect(spyHistoryPush).toBeCalledTimes(1);
+    // });
+
+    // it('should handle button', () => {
+    //     const component = mount(roomInfo);
+    //     const wrapper = component.find('.spyButton');
+    //     expect(wrapper.length).toBe(4);
+    // });
+
+    it('should render submit form', () => {
+        const component = mount(roomInfo);
+        let wrapper = component.find('.spyForm');
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate('click');
+    });
+
+    // it('should redirect to lobby when chatroom=-1', () => {
+    //     const spyHistoryPush = jest.spyOn(history, 'push')
+    //         .mockImplementation(path => {});
+    //     const stubInitialState = {
+    //         currentUser: {
+    //             id: 1, 
+    //             username: 'User1',
+    //             login: true,
+    //             avatar: null, 
+    //             chatroom: -1, 
+    //             friendList: [2],
+    //             postList: [1, 5],
+    //             shallWeRoomList: [1], 
+    //             watchedPostList: [1, 2, 3], 
+    //             tagList: [1]
+    //         }
+    //     };
+    //     const mockStore = getMockStore(stubInitialState);
+    //     roomInfo = (
+    //         <Provider store={mockStore}>
+    //           <ConnectedRouter history={history}>
+    //           <Switch>
+    //             <Route path='/' exact component={RoomInfo} />
+    //           </Switch>
+    //           </ConnectedRouter>
+    //         </Provider>
+    //     );
+    //     const component = mount(roomInfo);
+    //     const wrapper = component.find('#save-button');
+    //     wrapper.at(0).simulate('click');
+    //     expect(spyHistoryPush).toBeCalledTimes(1);
+    // })
 });

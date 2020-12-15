@@ -42,7 +42,8 @@ class Lobby extends Component{
     }
 
     onClickCreateRoom = () => {
-        this.props.history.push('/RoomInfo')
+        if (this.props.storedCurrentUser.tagList.length === 0) window.alert("Add Your Game Tag! Go to Search");
+        else this.props.history.push('/RoomInfo')
     }
 
     render() {
@@ -69,7 +70,10 @@ class Lobby extends Component{
                 return user.shallWeRoomList.includes(room.id) && this.state.selectedTagList.includes(room.tag);
             });
             chatroomList = this.props.storedChatroomList.filter(room => {
-                return !user.shallWeRoomList.includes(room.id) && room.isGlobal && this.state.selectedTagList.includes(room.tag);
+                return !user.shallWeRoomList.includes(room.id) 
+                        && room.isGlobal 
+                        && this.state.selectedTagList.includes(room.tag)
+                        && room.memberList && room.memberList.length < room.maxPersonnel;
             });
         }
 
@@ -78,7 +82,7 @@ class Lobby extends Component{
                 <div className="tagToggle">
                     <GameTagWrapper>
                         <span style={{ marginRight: 8 }}>Your Games:</span>
-                        {tagToggle}
+                        {tagToggle.length > 0 ? tagToggle: "Add your tag!"}
                     </GameTagWrapper> 
                 </div>
                 
