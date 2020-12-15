@@ -161,7 +161,7 @@ class Chatroom extends Component {
                                                             //FIXME: user로 넘기도록 수정해야함
                                                             name={item.username}
                                                             avatar={item.avatar}
-                                                            showOnline={true}
+                                                            showOnline={item.login}
                                                         />
                                                     </AuthorItem>
                                                     <SpaceBetweenItem />

@@ -73,7 +73,7 @@ class Lobby extends Component{
                 return !user.shallWeRoomList.includes(room.id) 
                         && room.isGlobal 
                         && this.state.selectedTagList.includes(room.tag)
-                        && room.memberList.length < room.maxPersonnel;
+                        && room.memberList && room.memberList.length < room.maxPersonnel;
             });
         }
 
