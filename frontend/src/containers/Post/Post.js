@@ -523,7 +523,10 @@ class Post extends Component {
                         {tagToggle.length > 0 ? tagToggle: "Add your Tag!"}
                     </GameTagWrapper>
                     <RecommendToggleWrapper>
-                        <Switch checkedChildren="Recommend" unCheckedChildren="Friend's Posts" defaultChecked onChange={this.onToggleRecommend}/>
+                        {tagToggle.length > 0 ? 
+                            <Switch checkedChildren="Recommend" unCheckedChildren="Friend's Posts" defaultChecked onChange={this.onToggleRecommend}/>
+                            : null
+                        }
                     </RecommendToggleWrapper>
                 </LineWrapper>
                 

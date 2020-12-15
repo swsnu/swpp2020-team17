@@ -88,13 +88,14 @@ const GridPostsWrapper = styled.div`
 class UserPage extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            selectedTagList: [],
+            addOrDelete: null,
+        };
     }
 
     // FIXME: User model 수정되면 currentUser 말고 user를 prop으로 받도록 수정 요함.
-    state = {
-        selectedTagList: [],
-        addOrDelete: null,
-    };
+    
 
     componentDidMount() {
         this.props.onGetCurrentUser();
@@ -158,6 +159,7 @@ class UserPage extends Component {
     }
     
     render() {
+        let { addOrDelete } = this.state;
         let currentUser, selectedUser, userProfile, tagToggle;
         console.log(this.props.storedCurrentUser);
         if (this.props.storedSelectedUser && this.props.storedCurrentUser) {
@@ -187,8 +189,8 @@ class UserPage extends Component {
                     <ProfileCardWrapper>
                         {userProfile}
                         <Button onClick={() => this.onToggleFriend()}>
-                            {this.state.addOrDelete === 'Add'? <UserAddOutlined /> : <UserDeleteOutlined />}
-                            {this.state.addOrDelete}
+                            {addOrDelete === 'Add'? <UserAddOutlined /> : <UserDeleteOutlined />}
+                            {addOrDelete}
                         </Button>
                         <Button onClick={() => this.onClickShallWe()}>ShallWe</Button>
                     </ProfileCardWrapper>
