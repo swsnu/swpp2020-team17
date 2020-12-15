@@ -99,9 +99,6 @@ class Recommend:
 
         return bigram_token
 
-    import collections
-    from sys import path
-
     def test(tag_id, tagged):
         model_name = ''
         if tag_id == 1:
