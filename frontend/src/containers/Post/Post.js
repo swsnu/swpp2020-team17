@@ -268,7 +268,7 @@ class Post extends Component {
         this.props.onGetUserList();
         this.props.onGetPostList();
         this.props.onGetTagList();
-        this.props.onRecommendPost();
+        this.props.onRecommendPostList();
     }
 
     // state = {
@@ -484,7 +484,7 @@ class Post extends Component {
         let tagList = [];
         let tagToggle = [];
         let activePostList = [];
-       
+
         // FIXME: Infinite scroll to be implemented
         console.log(this.props.storedPostList);
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
@@ -495,7 +495,6 @@ class Post extends Component {
                 postList = this.props.storedRecommendPostList;
             } else {
                 postList = this.props.storedPostList.filter(post => user.friendList.includes(post.author));
-                postList = postList.slice(postList.length - 1, postList.length);
             }
             console.log(postList);
             
@@ -514,7 +513,7 @@ class Post extends Component {
             // postList = this.props.storedPostList;
             activePostList = postList.filter(post => {
                 return this.state.selectedTagList.includes(post.tag);
-            });
+            }).slice(-15);
         }
         if (this.state.commentingPostId && !this.props.storedCommentList) this.props.onGetCommentList(this.state.commentingPostId);
         return (

@@ -94,7 +94,7 @@ def current_user(request):  # get current user information
                      "avatar": user.avatar, "chatroom": chatroom, "friendList": friend_list,
                      "postList": post_list, "shallWeRoomList": shallwe_room_list,
                      "watchedPostList": watched_post_list, "tagList": tag_list}
-    print(response_dict)
+    # print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
 
 def user_list(request):
@@ -230,15 +230,15 @@ def recommend_post(request):
     # like
     # write
     # watched
-    user = Discord.objects.get(id=request.user.id)
-    watched = user.watched_post_list
-    wrote = user.post_list
-    like = user.liking_post_list
+    user = request.user
+    watched = user.watched_post_list.all().values()
+    wrote = user.post_list.all().values()
+    like = user.liking_post_list.all().values()
 
     post_list = []
 
-    for post in watched_post_list:
-        post_list.append(Post.objects.get(id=post))
+    for post in watched:
+        post_list.append(post)
     for post in wrote:
         post_list.append(post)
     for post in like:
@@ -253,18 +253,18 @@ def recommend_post(request):
     MP = []
 
     for post in post_list:
-        if post.tag == 1:
+        if post.tag.id == 1:
             Lo.append(post.content)
-        elif post.tag == 2:
+        elif post.tag.id == 2:
             HS.append(post.content)
-        elif post.tag == 3:
+        elif post.tag.id == 3:
             MP.append(post.content)
 
     rec = []
     rec += Recommend.recommend_with(1, Lo)
     rec += Recommend.recommend_with(2, HS)
     rec += Recommend.recommend_with(3, MP)
-
+    print(rec)
     post_response_list = []
 
     for index in rec:
