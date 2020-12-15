@@ -316,7 +316,7 @@ class MyPage extends Component {
                                                     type="primary"
                                                     shape="round"
                                                     disabled={this.props.storedCurrentUser.chatroom != -1
-                                                    || item.chatroom != -1 || item.login == false}
+                                                    || item.chatroom != -1 /* || item.login == false */}
                                                     onClick={() => this.onClickShallWe(item)}
                                                     size="small"
                                                     style={{ fontSize: 8, fontWeight: "bolder" }}

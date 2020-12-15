@@ -148,9 +148,9 @@ export const createChatting_ = (chatroom, user) => {
 
 export const createChatting = (chatroomId, user) => {
     return dispatch => {
-        return axios.get('api/chatroom/', chatroomId)
+        return axios.get('api/chatroom/' + chatroomId + '/')
         .then(res1 => {
-            dispatch(createChatting_(res1.data, user));
+            dispatch(dispatch(createChatting_(res1.data, user)));
         });
     }
 }
