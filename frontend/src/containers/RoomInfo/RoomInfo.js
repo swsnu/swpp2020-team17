@@ -17,7 +17,7 @@ const layout = {
 class RoomInfo extends Component {
 
     constructor(props){
-        super(props)
+        super(props);
         this.props.onGetCurrentUser();
     }
 
@@ -41,7 +41,9 @@ class RoomInfo extends Component {
         // const [loading, setLoading] = useState(false);
         // const history = useHistory();
         // let user = this.props.storedCurrentUser;
-
+        let option = this.props.storedCurrentUser.tagList.map(id => {
+            return (<Select.Option value={id}>{id===1 ? "LOL" : id===2 ? "HearthStone" : "MapleStory"}</Select.Option>)
+        });
         return (
             <div>
                 <Row gutter={[40, 0]}>
@@ -73,9 +75,7 @@ class RoomInfo extends Component {
                                 ]}
                             >
                                 <Select placeholder="Select Game Tag">
-                                    <Select.Option value="1">LOL</Select.Option>
-                                    <Select.Option value="2">HearthStone</Select.Option>
-                                    <Select.Option value="3">MapleStory</Select.Option>
+                                    {option}
                                 </Select>
                             </Form.Item>
                             <Form.Item id="maxPersonnel-input" name="maxPersonnel" label="Max Personnel"
@@ -86,7 +86,7 @@ class RoomInfo extends Component {
                                     }
                                 ]}
                             >
-                                <Slider />
+                                <Slider min={2} max={100} />
                             </Form.Item>
                             <Form.Item id="isGlobal-input" name="isGlobal" label="Public" valuePropName="checked"
                             >
