@@ -45,7 +45,9 @@ const CommentRightContainer = styled.div`
 const CommentView = (props) => {
     const [onLoading] = React.useState(true);
     const history = useHistory();
-
+    console.log("currPost: " + props.currPost.id);
+    console.log("commentingPost: " + props.commentingPostId);
+    console.log("commentList: "+ props.commentList);
     if (props.currPost && props.commentingPostId === props.currPost.id && props.commentList) {
         // console.log(commentList);
         // TODO: Show Form, commentList
@@ -104,7 +106,7 @@ const CommentView = (props) => {
         );
     } else {
         // Show nothing
-        // console.log("Show nothing");
+        console.log("Show nothing");
         return (
             <div>
             </div>

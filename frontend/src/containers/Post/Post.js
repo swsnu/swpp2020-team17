@@ -485,7 +485,7 @@ class Post extends Component {
                 return this.state.selectedTagList.includes(post.tag);
             });
         }
-
+        if (this.state.commentingPostId && !this.props.storedCommentList) this.props.onGetCommentList(this.state.commentingPostId);
         return (
             <PostPageWrapper>
                 <GameTagWrapper>
