@@ -289,10 +289,14 @@ class PostInUserPage extends Component {
                             </Button>
                         </BackWrapper>
                         <DeleteWrapper>
-                            <Button onClick={() => this.handleDeleteButton(item)}> 
-                                <DeleteOutlined />
-                                Delete 
-                            </Button>
+                            {item.author === this.props.storedCurrentUser.id ?
+                                <Button onClick={() => this.handleDeleteButton(item)}> 
+                                    <DeleteOutlined />
+                                    Delete 
+                                </Button>
+                                : null
+                            }
+                            
                         </DeleteWrapper>
                     </LineWrapper>
                     
@@ -309,15 +313,18 @@ class PostInUserPage extends Component {
                                     />
                                 </AuthorItem>
                                 <ButtonItem>
-                                    <Button
-                                        type="primary"
-                                        shape="round"
-                                        onClick={() => this.onClickShallWe(item.author)}
-                                        disabled={item.author == this.props.storedCurrentUser.id}
-                                        style={{ fontSize: 12, fontWeight: "bolder" }}
-                                    >
-                                        Shall We ?
-                                    </Button>
+                                    {item.author !== this.props.storedCurrentUser.id ?
+                                        <Button
+                                            type="primary"
+                                            shape="round"
+                                            onClick={() => this.onClickShallWe(item.author)}
+                                            disabled={this.props.storedCurrentUser.chatroom != -1 || author.chatroom != -1 || !author.login}
+                                            style={{ fontSize: 12, fontWeight: "bolder" }}
+                                        >
+                                            Shall We ?
+                                        </Button>
+                                        : null
+                                    }
                                 </ButtonItem>
                                 <GameTagItem>
                                     <GameTag

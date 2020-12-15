@@ -40,7 +40,8 @@ class GridPost extends Component {
         console.log(myPostList);
         return (
             <div className="UserPagePostInGrid">
-                {myGrids.length != 0 ? <Gallery photos={myGrids} direction={"column"} /> : ''}
+                {myGrids.length != 0 ? <Gallery photos={myGrids} direction={"column"}
+                onClick={(e, { index }) => this.props.history.push('/post/' + myPostList[index].id)} /> : ''}
             </div>
             
         )
