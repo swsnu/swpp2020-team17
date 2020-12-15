@@ -55,7 +55,7 @@ const ApplicationRoutes = props => {
               <Content style={{margin: '24px 16px', padding: 24, minHeight: "calc(100vh - 114px)", background: "#fff"}}>
                 <Switch>
                     {/* <Route path='/login' component={Login} /> */}
-                    <Route path="/post" component={Posts} />
+                    <Route exact path="/post" component={Posts} />
                     <Route path="/lobby" component={Lobby} />
                     <Route path="/RoomInfo" component={RoomInfo} />
                     <Route path="/search" component={Search} />
@@ -63,7 +63,7 @@ const ApplicationRoutes = props => {
                     <Route path="/createpost" component={CreatePost} />
                     <Route path='/page/:id' component={UserPage} />
                     <Route path='/chatroom/:id' component={Chatroom} />
-                    <Route path='/post/:id' component={PostInUserPage} />
+                    <Route exact path='/post/:id' component={PostInUserPage} />
                     <Redirect exact from='/' to='/post' />
                     {/* <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} /> */}

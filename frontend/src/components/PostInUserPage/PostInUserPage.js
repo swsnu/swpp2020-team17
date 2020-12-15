@@ -184,104 +184,168 @@ const IconContainer = styled.div`
 class PostInUserPage extends Component {
     constructor(props) {
         super(props)
+        this.props.onGetUserList();
         this.props.onGetCurrentUser();
         this.props.onGetPost(this.props.match.params.id);
+        this.props.onGetCommentList(this.props.match.params.id);
         this.state = {
-            
+            post: this.props.storedSelectedPost,
         }
     }
 
+    componentDidMount() {
+        if (this.props.storedSelectedPost) this.setState({ post: this.props.storedSelectedPost });
+    }
+
+    returnLike = (post) => {
+        console.log(post.likingUserList);
+        if (post.likingUserList.includes(this.props.storedCurrentUser.id)) return "#eb2f96";
+        else return "#808080";
+    }
+    
+    handleLikeClicked = (post) => {
+        console.log(post);
+        let currentUser = this.props.storedCurrentUser;
+        if (post.likingUserList.includes(currentUser.id)) {
+            post.likingUserList = post.likingUserList.filter(id => id !== currentUser.id);
+            this.props.onPutPost(post);
+        } else {
+            post.likingUserList.push(currentUser.id);
+            this.props.onPutPost(post);
+        }
+    }
+
+    clickDeleteComment = (comment) => {
+        this.props.onDeleteComment(comment);
+    }
+    returnDeleteButton = (comment) => {
+        if (this.props.storedCurrentUser.id === comment.author) {
+            return (
+                <DeleteOutlined onClick={() => this.clickDeleteComment(comment)} style={{ cursor: "pointer" }} />
+            );
+        } else {
+            return null;
+        }
+    }
+
+    onEnterComment = (value) => {
+        console.log("New comment: ", value);
+        this.props.onCreateComment(this.props.match.params.id, { content: value });
+    }
+
+    handleBackButton = (author) => {
+        if (author === this.props.storedCurrentUser.id) this.props.history.push('/myPage');
+        else this.props.history.push('/page/' + author);
+    }
+
     render() {
-        let item = this.props.storedSelectedPost;
-        return (
-            <PostPageWrapper>
-                <PostListWrapper>
-                    <PostContainer>
-                        <PostHeaderContainer>
-                            <AuthorItem onClick={() => this.props.history.push("/page/" + item.author)} style={{ cursor: "pointer" }} >
-                                <Author
-                                    //FIXME: user로 넘기도록 수정해야함
-                                    name={item.authorName}
-                                    avatar={item.authorAvatar}
-                                    showOnline={true}
+        console.log(this.props.match.params.id);
+        console.log(this.props.storedSelectedPost);
+        let { post } = this.state;
+        let item, author;
+        if (this.props.storedSelectedPost) {
+            item = this.props.storedSelectedPost;
+            author = this.props.storedUserList.find(user => user.id === item.author);
+        } else this.props.onGetPost(this.props.match.params.id);
+        if (!this.props.storedCommentList) this.props.onGetCommentList(this.props.match.params.id);
+
+        if (item && author && item.likingUserList) {
+            return (
+                <PostPageWrapper>
+                    <Button onClick={() => this.handleBackButton(item.author)}> back </Button>
+                    <PostListWrapper>
+                        <PostContainer>
+                            <PostHeaderContainer>
+                                <AuthorItem onClick={() => this.handleBackButton(item.author)} style={{ cursor: "pointer" }} >
+                                    <Author
+                                        //FIXME: user로 넘기도록 수정해야함
+                                        name={author.username}
+                                        avatar={author.avatar}
+                                        showOnline={true}
+                                    />
+                                </AuthorItem>
+                                <ButtonItem>
+                                    <Button
+                                        type="primary"
+                                        shape="round"
+                                        onClick={() => this.onClickShallWe(item.author)}
+                                        disabled={item.author == this.props.storedCurrentUser.id}
+                                        style={{ fontSize: 12, fontWeight: "bolder" }}
+                                    >
+                                        Shall We ?
+                                    </Button>
+                                </ButtonItem>
+                                <GameTagItem>
+                                    <GameTag
+                                        key={item.tag}
+                                        tagId={item.tag}
+                                        isChecked={true}
+                                    />
+                                </GameTagItem>
+                            </PostHeaderContainer>
+    
+                            <Divider style={{ marginTop: 0, marginBottom: 10 }} />
+    
+                            <WidePostWrapper>
+                                <WideImageContainer>
+                                    <img src={item.image} style={{ width: "100%" }} />
+                                </WideImageContainer>
+                                <WideContentsContainer style={{ width: "100%" }}>
+                                    {item.content}
+                                </WideContentsContainer>
+                            </WidePostWrapper>
+    
+                            <Divider style={{ marginTop: 0, marginBottom: 10 }} />
+    
+                            <PostFooterContainer>
+                                <IconContainer>
+                                    <div>
+                                        <Space>
+                                            <HeartTwoTone
+                                                onClick={() => this.handleLikeClicked(item)}
+                                                twoToneColor={this.returnLike(item)}
+                                            />
+                                            {item.likeNum}
+                                        </Space>
+                                    </div>
+                                    <Divider
+                                        type="vertical"
+                                        style={{ alignSelf: "center", marginLeft: "10px", marginRight: "10px" }}
+                                    />
+                                    <div>
+                                        <Space>
+                                            <MessageTwoTone />
+                                        </Space>
+                                    </div>
+                                </IconContainer>
+                                <CommentView
+                                    commentingPostId={item.id}
+                                    currPost={item}
+                                    userList={this.props.storedUserList}
+                                    commentList={this.props.storedCommentList}
+                                    currentUser={this.props.storedCurrentUser}
+                                    onEnterComment={this.onEnterComment}
+                                    returnDeleteButton={this.returnDeleteButton}
                                 />
-                            </AuthorItem>
-                            <ButtonItem>
-                                <Button
-                                    type="primary"
-                                    shape="round"
-                                    onClick={() => this.onClickShallWe(item.author)}
-                                    disabled={item.author == this.props.currentUser.id}
-                                    style={{ fontSize: 12, fontWeight: "bolder" }}
-                                >
-                                    Shall We ?
-                                            </Button>
-                            </ButtonItem>
-                            <GameTagItem>
-                                <GameTag
-                                    key={item.tag}
-                                    tagId={item.tag}
-                                    isChecked={true}
-                                />
-                            </GameTagItem>
-                        </PostHeaderContainer>
-
-                        <Divider style={{ marginTop: 0, marginBottom: 10 }} />
-
-                        <WidePostWrapper>
-                            <WideImageContainer>
-                                <img src={item.image} style={{ width: "100%" }} />
-                            </WideImageContainer>
-                            <WideContentsContainer style={{ width: "100%" }}>
-                                {item.content}
-                            </WideContentsContainer>
-                        </WidePostWrapper>
-
-                        <Divider style={{ marginTop: 0, marginBottom: 10 }} />
-
-                        <PostFooterContainer>
-                            <IconContainer>
-                                <div>
-                                    <Space>
-                                        <HeartTwoTone
-                                            onClick={() => this.handleLikeClicked(item)}
-                                            twoToneColor={this.returnLike(item)}
-                                        />
-                                        {item.likeNum}
-                                    </Space>
-                                </div>
-                                <Divider
-                                    type="vertical"
-                                    style={{ alignSelf: "center", marginLeft: "10px", marginRight: "10px" }}
-                                />
-                                <div>
-                                    <Space>
-                                        <MessageTwoTone
-                                            onClick={() => this.handleCommentClicked(item.id)}
-                                        />
-                                    </Space>
-                                </div>
-                            </IconContainer>
-                            <CommentView
-                                commentingPostId={this.state.commentingPostId}
-                                currPost={item}
-                                userList={this.props.storedUserList}
-                                commentList={this.props.storedCommentList}
-                                currentUser={this.props.storedCurrentUser}
-                                onEnterComment={this.onEnterComment}
-                                returnDeleteButton={this.returnDeleteButton}
-                            />
-                        </PostFooterContainer>
-                    </PostContainer>
-                </PostListWrapper>
-            </PostPageWrapper>
-        )
+                            </PostFooterContainer>
+                        </PostContainer>
+                    </PostListWrapper>
+                </PostPageWrapper>
+            )
+        } else {
+            return (
+                <div>
+                </div>
+            )
+        }
+        
     }
 }
 
 const mapStateToProps = (state) => {
     return {
         storedCurrentUser: state.ur.currentUser,
+        storedUserList: state.ur.userList,
         storedSelectedPost: state.ps.selectedPost,
         storedCommentList: state.cm.selectedCommentList,
     }
@@ -291,8 +355,12 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onGetCurrentUser: () =>
             dispatch(actionCreators.getCurrentUser()),
+        onGetUserList: () => 
+            dispatch(actionCreators.getUserList()),
         onGetPost: (postId) =>
             dispatch(actionCreators.getPost(postId)),
+        onPutPost: (post) =>
+            dispatch(actionCreators.putPost(post)),
         onGetCommentList: (id) =>
             dispatch(actionCreators.getCommentList(id)),
         onCreateComment: (postId, comment) =>
