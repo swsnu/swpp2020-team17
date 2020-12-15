@@ -15,6 +15,7 @@ import Search from "../containers/Search/Search";
 import MyPage from "../containers/MyPage/MyPage";
 import UserPage from "../containers/UserPage/UserPage";
 import Chatroom from "../containers/Chatroom/Chatroom";
+import PostInUserPage from '../components/PostInUserPage/PostInUserPage';
 
 import { Layout } from 'antd';
 import {
@@ -62,6 +63,7 @@ const ApplicationRoutes = props => {
                     <Route path="/createpost" component={CreatePost} />
                     <Route path='/page/:id' component={UserPage} />
                     <Route path='/chatroom/:id' component={Chatroom} />
+                    <Route path='/post/:id' component={PostInUserPage} />
                     <Redirect exact from='/' to='/post' />
                     {/* <Route path="/files" component={File} />
                     <Route path="/videos" component={Videos} /> */}
