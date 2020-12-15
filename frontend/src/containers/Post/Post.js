@@ -491,7 +491,7 @@ class Post extends Component {
             user = this.props.storedCurrentUser;
             tagList = this.props.storedTagList;
             if (isRecommend) {
-                postList = this.props.storedPostList.filter(post => !user.friendList.includes(post.author));
+                postList = this.props.storedPostList.filter(post => post.author !== user.id && !user.friendList.includes(post.author));
             } else {
                 postList = this.props.storedPostList.filter(post => user.friendList.includes(post.author));
             }
@@ -523,7 +523,10 @@ class Post extends Component {
                         {tagToggle.length > 0 ? tagToggle: "Add your Tag!"}
                     </GameTagWrapper>
                     <RecommendToggleWrapper>
-                        <Switch checkedChildren="Recommend" unCheckedChildren="Friend's Posts" defaultChecked onChange={this.onToggleRecommend}/>
+                        {tagToggle.length > 0 ? 
+                            <Switch checkedChildren="Recommend" unCheckedChildren="Friend's Posts" defaultChecked onChange={this.onToggleRecommend}/>
+                            : null
+                        }
                     </RecommendToggleWrapper>
                 </LineWrapper>
                 
