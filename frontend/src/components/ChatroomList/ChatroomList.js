@@ -1,6 +1,7 @@
 import React, { Component } from 'react'; 
 import { Table, Row, Col, Button, Typography } from 'antd';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import * as actionCreators from '../../store/actions/index';
 
 const shallWeColumns = [
@@ -24,21 +25,22 @@ class ChatroomList extends Component {
         this.props.onGetChatroomList();
     }
 
-    onClickJoin = (id) => {
+    onClickJoin = async (id) => {
         let user = this.props.storedCurrentUser;
         user.chatroom = id;
-        this.props.onPutUser(user);
-        this.props.onCreateChatting(id, user);
+        await this.props.onPutUser(user);
+        await this.props.onCreateChatting(id, user);
         this.props.history.push('/chatroom/' + id);
     }
 
-    onClickSure = (id) => {
+    onClickSure = async (id) => {
         let user = this.props.storedCurrentUser;
         user.shallWeRoomList.filter(room => {
             return room.id != id;
         });
         user.chatroom = id;
-        this.props.onPutUser(user);
+        await this.props.onPutUser(user);
+        await this.props.onCreateChatting(id, user);
         this.props.history.push('/chatroom/' + id);
     }
     
@@ -133,4 +135,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChatroomList);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChatroomList));

@@ -111,5 +111,25 @@
             "content": "comment of bbbb",
             "author": "5"
         }
+    },
+    {
+        "model": "shallWeGame.Chatroom",
+        "pk": 13,
+        "fields": {
+            "is_global": true,
+            "title": "test title 1",
+            "tag": "1",
+            "max_personnel": "10"
+        }
+    },
+    {
+        "model": "shallWeGame.Chatroom",
+        "pk": 14,
+        "fields": {
+            "is_global": true,
+            "title": "test title 2",
+            "tag": "2",
+            "max_personnel": "10"
+        }
     }
 ]
