@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 //FIXME: Infinite scroll to be implemented
 // import InfiniteScroll from 'react-infinite-scroller';
-import { List, Divider, Space, Button, Comment } from 'antd';
+import { List, Divider, Space, Button, Switch } from 'antd';
 //FIXME: Infinite scroll to be implemented
 // import { Spin, message } from 'antd';
 import { MessageTwoTone, HeartTwoTone, DeleteOutlined } from '@ant-design/icons';
@@ -24,9 +24,28 @@ const PostPageWrapper = styled.div`
     
 `;
 
-const GameTagWrapper = styled.div`
+const LineWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
+    flex-direction: row;
+    width: 70%;
+    justify-content: space-between;
+    align-self: center;
+`;
+
+const GameTagWrapper = styled.div`
+    display: flex;
+    flex-basis: 60%;
+    align-items: center;
+`;
+
+const RecommendToggleWrapper = styled.div`
+    display: flex;
+    flex-basis: 40%;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 0;
+    justify-content: flex-end;
 `;
 
 const LoadingWrapper = styled.div`
@@ -240,6 +259,7 @@ class Post extends Component {
             clickedPostId: null,
             commentingPostId: null,
             likingPostId: null,
+            isRecommend: true,
         //FIXME: Infinite scroll to be implemented
         // loading: false,
         // hasMore: true,
@@ -273,7 +293,10 @@ class Post extends Component {
             });
         }
     }
-
+    onToggleRecommend = (checked) => {
+        this.setState({ isRecommend: checked });
+        console.log(`switch to ${checked}`);
+    }
 
     onToggleTag = (tag_id) => {
         const checked = this.state.selectedTagList.indexOf(tag_id) > -1;
@@ -457,7 +480,7 @@ class Post extends Component {
     }
 
     render() {
-        let { postList } = this.state;
+        let { postList, isRecommend } = this.state;
         let user = null;
         let tagList = [];
         let tagToggle = [];
@@ -467,7 +490,13 @@ class Post extends Component {
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
             tagList = this.props.storedTagList;
-            postList = this.props.storedPostList;
+            if (isRecommend) {
+                postList = this.props.storedPostList.filter(post => !user.friendList.includes(post.author));
+            } else {
+                postList = this.props.storedPostList.filter(post => user.friendList.includes(post.author));
+            }
+            console.log(postList);
+            
             tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
                 return (
                     <GameTag
@@ -481,18 +510,23 @@ class Post extends Component {
 
             // FIXME: Infinite scroll to be implemented
             // postList = this.props.storedPostList;
-            activePostList = this.props.storedPostList.filter(post => {
+            activePostList = postList.filter(post => {
                 return this.state.selectedTagList.includes(post.tag);
             });
         }
         if (this.state.commentingPostId && !this.props.storedCommentList) this.props.onGetCommentList(this.state.commentingPostId);
         return (
             <PostPageWrapper>
-                <GameTagWrapper>
-                    <span style={{ marginRight: 8 }}>Your Games:</span>
-                    {tagToggle.length > 0 ? tagToggle: "Add your Tag!"}
-                </GameTagWrapper>
-
+                <LineWrapper>
+                    <GameTagWrapper>
+                        <span style={{ marginRight: 8 }}>Your Games:</span>
+                        {tagToggle.length > 0 ? tagToggle: "Add your Tag!"}
+                    </GameTagWrapper>
+                    <RecommendToggleWrapper>
+                        <Switch checkedChildren="Recommend" unCheckedChildren="Friend's Posts" defaultChecked onChange={this.onToggleRecommend}/>
+                    </RecommendToggleWrapper>
+                </LineWrapper>
+                
                 <PostListWrapper>
                     {/*
                 //FIXME: Infinite scroll to be implemented
