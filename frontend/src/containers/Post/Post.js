@@ -483,7 +483,21 @@ class Post extends Component {
         let tagList = [];
         let tagToggle = [];
         let activePostList = [];
-       
+        let menuItems = this.props.storedUserList.map(user => {
+            let menu = user.tagList.map(tagId => {
+                return (
+                    <Menu.Item onClick={() => this.onClickShallWe(user, tagId)}>
+                        <a>
+                            {tagId===1 ? "LOL": tagId===2 ? "HearthStone": "MapleStory"}
+                        </a>
+                    </Menu.Item>
+                );
+            });
+            return {
+                id: user.id,
+                menu: menu,
+            };
+        });
         // FIXME: Infinite scroll to be implemented
         console.log(this.props.storedPostList);
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
@@ -555,19 +569,35 @@ class Post extends Component {
                                             />
                                         </AuthorItem>
                                         <ButtonItem>
-                                            <CSRFToken />
-                                            <Button
-                                                type="primary"
-                                                shape="round"
-                                                disabled={this.props.storedCurrentUser.chatroom != -1
-                                                || this.props.storedUserList.find(user => user.id===item.author).chatroom != -1 
-                                                || this.props.storedUserList.find(user => user.id===item.author).login == false}
-                                                onClick={() => this.onClickShallWe(this.props.storedUserList.find(user => user.id===item.author), item.tag)}
-                                                size="small"
-                                                style={{ fontSize: 8, fontWeight: "bolder" }}
-                                            >
-                                                Shall We
-                                            </Button>
+                                        <CSRFToken />
+                                                <Dropdown 
+                                                    overlay={
+                                                        <Menu>
+                                                            {menuItems.find(value => value.id === item.author) 
+                                                            && this.props.storedUserList.find(user => user.id===item.author).tagList.length > 0 ? 
+                                                                menuItems.find(value => value.id === item.author).menu
+                                                                : <Menu.Item>
+                                                                    <a>User Has No Game Tag</a>
+                                                                    <a>(Cannot Send ShallWe)</a>
+                                                                </Menu.Item>
+                                                            }
+                                                        </Menu>
+                                                    } 
+                                                    placement="bottomLeft" 
+                                                    arrow
+                                                >
+                                                    <Button
+                                                        type="primary"
+                                                        shape="round"
+                                                        disabled={this.props.storedCurrentUser.chatroom != -1
+                                                        || item.chatroom != -1 || item.login == false}
+                                                        /*onClick={() => this.onClickShallWe(item)}*/
+                                                        size="small"
+                                                        style={{ fontSize: 8, fontWeight: "bolder" }}
+                                                    >
+                                                        Shall We
+                                                    </Button>
+                                                </Dropdown>
                                         </ButtonItem>
                                         <GameTagItem>
                                             <GameTag

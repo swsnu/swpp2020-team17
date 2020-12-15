@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
 import styled from 'styled-components';
-import { Divider } from 'antd';
+import { Divider, Menu, Dropdown } from 'antd';
 import Author from '../../components/Author/Author';
 import GridPost from '../../components/PostInGrid/UserPagePostInGrid';
 
@@ -12,6 +12,7 @@ import {
     UserAddOutlined,
     UserDeleteOutlined,
 } from '@ant-design/icons';
+import CSRFToken from '../../csrftoken'
 
 
 const UserPageContainer = styled.div`
@@ -141,24 +142,25 @@ class UserPage extends Component {
         
     }
 
-    onClickShallWe() {
+    async onClickShallWe(tagId) {
+        let receivingUser = this.props.storedSelectedUser;
         let newChatroom = {
             isGlobal: false, 
             title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
-            tag: 1,     //tag가 없는디 어떡하지 
+            tag: tagId, 
             maxPersonnel: 2, 
             discordLink: null,
-        }
-        let receivingUser = this.props.storedSelectedUser;
+        };
         let sendingUser = this.props.storedCurrentUser;
-        this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
-        this.props.history.push('/chatroom/' + sendingUser.chatroom);
-        // current user의 chatroom 바꾸고 redirect?
-        // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
+        await this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
+        if(sendingUser.chatroom != -1) {
+            this.props.history.push('/chatroom/' + sendingUser.chatroom);
+        }
     }
     
     render() {
         let currentUser, selectedUser, userProfile, tagToggle;
+        let tagList = [];
         console.log(this.props.storedCurrentUser);
         if (this.props.storedSelectedUser && this.props.storedCurrentUser) {
             currentUser = this.props.storedCurrentUser;
@@ -180,39 +182,82 @@ class UserPage extends Component {
                     />
                 );
             });
+            tagList = this.props.storedSelectedUser.tagList;
         }
 
-        return(
-            <UserPageContainer>
-                <FirstRowContainer>
-                    <ProfileCardWrapper>
-                        {userProfile}
-                        <Button onClick={() => this.onToggleFriend()}>
-                            {this.state.addOrDelete === 'Add'? <UserAddOutlined /> : <UserDeleteOutlined />}
-                            {this.state.addOrDelete}
-                        </Button>
-                        <Button onClick={() => this.onClickShallWe()}>ShallWe</Button>
-                    </ProfileCardWrapper>
-                </FirstRowContainer>
-
-                <SecondRowContainer>
-                    <TagWrapper>
-                        {tagToggle && tagToggle.length > 0 ? tagToggle: "User has no tag"}
-                    </TagWrapper>
-                </SecondRowContainer>
-
-                
-                
-                <ThirdRowContainer>
-                    <GridPostsWrapper>
-                        <Divider orientation="center" style={{ marginTop: 0 }}>
-                            Gallery
-                        </Divider>
-                        <GridPost selectedTagList={this.state.selectedTagList}/>
-                    </GridPostsWrapper>
-                </ThirdRowContainer>
-            </UserPageContainer>
-        );
+        let menu = tagList.map(tagId => {
+            return (
+                <Menu.Item onClick={() => this.onClickShallWe(tagId)}>
+                    <a>
+                        {tagId===1 ? "LOL": tagId===2 ? "HearthStone": "MapleStory"}
+                    </a>
+                </Menu.Item>
+            );
+        });
+        if (currentUser && selectedUser) {
+            return(
+                <UserPageContainer>
+                    <FirstRowContainer>
+                        <ProfileCardWrapper>
+                            {userProfile}
+                            <Button onClick={() => this.onToggleFriend()}>
+                                {this.state.addOrDelete === 'Add'? <UserAddOutlined /> : <UserDeleteOutlined />}
+                                {this.state.addOrDelete}
+                            </Button>
+                            <CSRFToken />
+                            <Dropdown 
+                                overlay={
+                                    <Menu>
+                                        {menu && tagList.length > 0 ? 
+                                            menu
+                                            : <Menu.Item>
+                                                <a>User Has No Game Tag</a>
+                                                <a>(Cannot Send ShallWe)</a>
+                                            </Menu.Item>
+                                        }
+                                    </Menu>
+                                } 
+                                placement="bottomLeft" 
+                                arrow
+                            >
+                                <Button
+                                    type="primary"
+                                    disabled={currentUser.chatroom != -1
+                                    || selectedUser.chatroom != -1 || selectedUser.login == false}
+                                    /*onClick={() => this.onClickShallWe(item)}*/
+                                >
+                                    Shall We
+                                </Button>
+                            </Dropdown>
+                        </ProfileCardWrapper>
+                    </FirstRowContainer>
+    
+                    <SecondRowContainer>
+                        <TagWrapper>
+                            {tagToggle && tagToggle.length > 0 ? tagToggle: "User has no tag"}
+                        </TagWrapper>
+                    </SecondRowContainer>
+    
+                    
+                    
+                    <ThirdRowContainer>
+                        <GridPostsWrapper>
+                            <Divider orientation="center" style={{ marginTop: 0 }}>
+                                Gallery
+                            </Divider>
+                            <GridPost selectedTagList={this.state.selectedTagList}/>
+                        </GridPostsWrapper>
+                    </ThirdRowContainer>
+                </UserPageContainer>
+            );
+        } else {
+            return (
+                <div>
+                    Loading
+                </div>
+            );
+        }
+        
         // return(
 
         //     <div>
