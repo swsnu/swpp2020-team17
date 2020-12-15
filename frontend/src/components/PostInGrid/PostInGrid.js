@@ -20,10 +20,6 @@ class PostInGrid extends Component {
             isOpen: false
         }
     }
-
-    onClickImage() {
-
-    }
     
     // state = {
     //     myPostList: [],
@@ -77,6 +73,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onGetCurrentUser: () =>
             dispatch(actionCreators.getCurrentUser()),
+        onPutUser: (user) =>
+            dispatch(actionCreators.putUser(user)),
         onGetPostList: () =>
             dispatch(actionCreators.getPostList()),
         onPutPost: (id, post) =>
