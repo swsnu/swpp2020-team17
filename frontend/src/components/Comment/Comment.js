@@ -34,9 +34,9 @@ const CommentLeftContainer = styled.div`
 `;
 
 const CommentRightContainer = styled.div`
-    display: flex;
+display: flex;
     /*flex-direction: column;*/
-    flex-basis: 15%;
+    flex-basis: 10%;
     align-items: center;
     /* justify-content: space-between; */
     /* cursor: pointer; */ 
@@ -45,9 +45,9 @@ const CommentRightContainer = styled.div`
 const CommentView = (props) => {
     const [onLoading] = React.useState(true);
     const history = useHistory();
-    console.log("currPost: " + props.currPost.id);
-    console.log("commentingPost: " + props.commentingPostId);
-    console.log("commentList: "+ props.commentList);
+    // console.log("currPost: " + props.currPost.id);
+    // console.log("commentingPost: " + props.commentingPostId);
+    // console.log("commentList: "+ props.commentList);
     if (props.currPost && props.commentingPostId === props.currPost.id && props.commentList) {
         // console.log(commentList);
         // TODO: Show Form, commentList
