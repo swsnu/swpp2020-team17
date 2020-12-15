@@ -268,6 +268,7 @@ class Post extends Component {
         this.props.onGetUserList();
         this.props.onGetPostList();
         this.props.onGetTagList();
+        this.props.onRecommendPost();
     }
 
     // state = {
@@ -490,9 +491,11 @@ class Post extends Component {
             user = this.props.storedCurrentUser;
             tagList = this.props.storedTagList;
             if (isRecommend) {
-                postList = this.props.storedPostList.filter(post => post.author !== user.id && !user.friendList.includes(post.author));
+                // postList = this.props.storedPostList.filter(post => post.author !== user.id && !user.friendList.includes(post.author));
+                postList = this.props.storedRecommendPostList;
             } else {
                 postList = this.props.storedPostList.filter(post => user.friendList.includes(post.author));
+                postList = postList.slice(postList.length - 1, postList.length);
             }
             console.log(postList);
             
@@ -645,6 +648,7 @@ const mapStateToProps = (state) => {
         storedCommentList: state.cm.selectedCommentList,
         storedUserList: state.ur.userList,
         storedUser: state.ur.selectedUser,
+        storedRecommendPostList: state.ps.recommendPostList,
     }
 }
 
@@ -674,6 +678,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.deleteComment(comment)),
         onSendShallWe: (newChatroom, sendingUser, receivingUser) => 
             dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
+        onRecommendPostList: () =>
+            dispatch(actionCreators.recommendPostList()),
     }
 }
 
