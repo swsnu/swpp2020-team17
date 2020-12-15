@@ -46,7 +46,7 @@ class Search extends Component {
         let users = []
         let tags = []
 
-        if (this.props.storedCurrentUser) console.log(this.props.storedCurrentUser);
+        //if (this.props.storedCurrentUser) console.log(this.props.storedCurrentUser);
         if (this.state.searchInput !== null) {
             if (this.props.storedCurrentUser && this.props.storedUserList && this.props.storedTagList)  {
                 users = this.props.storedUserList.map(user => {

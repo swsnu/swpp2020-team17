@@ -20,20 +20,24 @@ class LoginPage extends Component {
 
     render(){
         return(
-            <Positioner>
+            <div className="LoginPage">
+                <Positioner>
                 <CSRFToken />
                 <Result
                     icon={<SmileOutlined />}
                     title="shallWeGame"
                     extra={
                         <Button
+                            id="login-button"
                             type="primary"
-                        onClick={this.onClickLogin}
+                            onClick={this.onClickLogin}
                         >
                             Login with Discord
                 </Button>}
                 />
             </Positioner>
+            </div>
+            
         );
     }
 }

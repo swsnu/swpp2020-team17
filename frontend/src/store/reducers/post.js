@@ -18,7 +18,7 @@ const reducer = (state = {
                     return { ...action.post };
                 } else return { ...post };
             })
-            const modifiedSelectedPost = ((state.selectedPost.id === action.post.id) ? action.post : state.selectedPost);
+            const modifiedSelectedPost = (state.selectedPost && (state.selectedPost.id === action.post.id) ? action.post : state.selectedPost);
             return { ...state, postList: modifiedPosts, selectedPost: modifiedSelectedPost };
         case actionTypes.DeletePost:
             const deletedPosts = state.postList.filter(post => {
