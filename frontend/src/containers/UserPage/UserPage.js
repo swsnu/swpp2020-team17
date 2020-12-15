@@ -4,7 +4,7 @@ import * as actionCreators from '../../store/actions/index';
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import Author from '../../components/Author/Author';
-import GridPost from './GridPost';
+import GridPost from '../../components/PostInGrid/UserPagePostInGrid';
 
 import { Table, Row, Col, Button, Typography, Tag } from 'antd';
 import GameTag from '../../components/GameTag/GameTag';

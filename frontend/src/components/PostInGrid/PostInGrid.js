@@ -57,7 +57,7 @@ class PostInGrid extends Component {
             }
         }
         return (
-            <div>
+            <div className="PostInGrid">
                 {myGrids.length != 0 ? <Gallery photos={myGrids} direction={"column"}
                 onClick={(e, { index }) => this.props.history.push('/post/' + myPostList[index].id)} /> : ''}
             </div> 

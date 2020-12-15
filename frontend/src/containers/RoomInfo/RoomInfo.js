@@ -45,7 +45,7 @@ class RoomInfo extends Component {
             return (<Select.Option value={id}>{id===1 ? "LOL" : id===2 ? "HearthStone" : "MapleStory"}</Select.Option>)
         });
         return (
-            <div>
+            <div className="RoomInfo">
                 <Row gutter={[40, 0]}>
                     <Col span={23}>
                         <Title style={{ textAlign: 'center' }} level={2}>

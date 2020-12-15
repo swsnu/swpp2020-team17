@@ -66,7 +66,9 @@ class App extends Component {
       return (
         <Router>
             <Switch>
-              <ApplicationRoutes handleLogout={this.handleLogout} />
+              <div className="App">
+                <ApplicationRoutes handleLogout={this.handleLogout} />
+              </div>
             </Switch>
           </Router>
       );
@@ -74,7 +76,9 @@ class App extends Component {
     return (
       <Router>
         <Switch>
-          <LoginPage />
+          <div className="App">
+            <LoginPage />
+          </div> 
         </Switch>
       </Router>
     );

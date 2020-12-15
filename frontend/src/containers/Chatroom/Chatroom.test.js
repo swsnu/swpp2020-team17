@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { connectRouter, ConnectedRouter } from 'connected-react-router';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
-import ChatroomList from './ChatroomList';
+import Chatroom from './Chatroom';
 import { getMockStore } from '../../test-utils/mocks'
 import { history } from '../../store/store'
 
@@ -15,6 +15,21 @@ jest.mock('antd', () => {
     return jest.fn(props => {
         return (
             <div className="spyantd" onClick={jest.fn()}/>
+        )
+    });
+});
+
+jest.mock('react-router', () => ({
+    ...jest.requireActual('styled-components'),
+    styled: () => ({
+        text: jest.fn(),
+    }),
+}));
+
+jest.mock('styled-components', () => {
+    return jest.fn(props => {
+        return (
+            <div className="spyStyle" onClick={jest.fn()}/>
         )
     });
 });
@@ -59,27 +74,24 @@ const stubInitialState = {
 
 const mockStore = getMockStore(stubInitialState);
 
-describe('<ChatroomList />', () => {
-    let chatroomList, spyGetCurrentUser, spyPutUser, spyGetChatroomList, spyDeleteChatroom, spyCreateChatting;
+describe('<Chatroom />', () => {
+    let chatroomList, spyGetUserList, spyGetCurrentUser, spyPutUser, spyGetChatroomList, spyDeleteChatroom, spyCreateChatting;
     afterEach(() => {
         jest.clearAllMocks();
     });
 
     beforeEach(() => {
-       chatroomList = (
+       chatroom = (
             <Provider store={mockStore}>
               <ConnectedRouter history={history}>
               <Switch>
-                <Route path='/' exact component={(props) => 
-                    <ChatroomList {...props} 
-                        isShallWe={true}
-                        list={propsList}
-                    />} 
-                />
+                <Route path='/' exact component={Chatroom} />
               </Switch>
               </ConnectedRouter>
             </Provider>
         );
+        spyGetUserList = jest.spyOn(userActionCreators, 'getUserList')
+            .mockImplementation(() => { return dispatch => {}; });
         spyGetCurrentUser = jest.spyOn(userActionCreators, 'getCurrentUser')
             .mockImplementation(() => { return dispatch => {}; });
         spyPutUser = jest.spyOn(userActionCreators, 'putUser')
@@ -88,49 +100,13 @@ describe('<ChatroomList />', () => {
             .mockImplementation(() => { return dispatch => {}; }); 
         spyDeleteChatroom = jest.spyOn(chatActionCreators, 'deleteChatroom')
             .mockImplementation(() => { return dispatch => {}; });
-        spyCreateChatting = jest.spyOn(chatActionCreators, 'createChatting')
+        spyDeleteChatting = jest.spyOn(chatActionCreators, 'deleteChatting')
             .mockImplementation(() => { return dispatch => {}; });
     })
 
     // it('should render without errors', () => {
-    //     const component = mount(chatroomList);
-    //     let wrapper = component.find(".ChatroomList");
+    //     const component = mount(chatroom);
+    //     let wrapper = component.find(".Chatroom");
     //     expect(wrapper.length).toBe(1);
     // });
 });
-
-// import React from 'react';
-// import { shallow } from 'enzyme';
-// import ChatroomList from './ChatroomList';
-
-// describe('<ChatroomList />', () => {
-//     const fakeList = [
-//         {
-//             id: 1, 
-//             title: 'chatroom1', 
-//             tag: 1, 
-//             memberList: [1, 2],
-//         }
-//     ]
-//     const fakeTagList = [
-//         {
-//             id: 1,
-//             name: 'LOL'
-//         }
-//     ]
-//     let onClick;
-//     beforeEach(() => {
-//         onClick = jest.fn();
-//     })
-//     it('should render without errors', () => {
-//         const component = shallow(<ChatroomList list={fakeList} tagList={fakeTagList} isShallWe={false} onClickJoin={onClick}/>);
-//         const wrapper = component.find('.ChatroomList');
-//         expect(wrapper.length).toBe(1);
-//     });
-
-//     it('should render without errors when isShallWe=true', () => {
-//         const component = shallow(<ChatroomList list={fakeList} tagList={fakeTagList} isShallWe={true} onClickSorry={onClick} onClickSure={onClick}/>);
-//         const wrapper = component.find('.ChatroomList');
-//         expect(wrapper.length).toBe(1);
-//     });
-// });
