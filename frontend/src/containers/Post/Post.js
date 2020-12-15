@@ -326,7 +326,7 @@ class Post extends Component {
         // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
     }
 
-    handleBodyClicked = (postId) => {
+    handleBodyClicked = async (postId) => {
         if (this.state.clickedPostId === null) {
             this.setState({
                 clickedPostId: postId
@@ -340,6 +340,14 @@ class Post extends Component {
                 clickedPostId: postId
             })
         }
+
+        let user = this.props.storedCurrentUser
+        if (user.watchedPostList.length === 0
+            || user.watchedPostList.filter(id => id === postId).length === 0) {
+            user.watchedPostList.push(postId)
+            this.props.onPutUser(user)
+        }
+
     }
 
     handleLikeClicked = (post) => {
@@ -672,6 +680,7 @@ const mapStateToProps = (state) => {
         storedCurrentUser: state.ur.currentUser,
         storedTagList: state.tg.tagList,
         storedPostList: state.ps.postList,
+        storedSelectedPost: state.ps.selectedPost,
         storedCommentList: state.cm.selectedCommentList,
         storedUserList: state.ur.userList,
         storedUser: state.ur.selectedUser,
