@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from .models import DiscordUser, Post, Comment, Tag, Chatroom
+from .recommend import Recommend
 
 AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=782980326459965490&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
 
@@ -222,6 +223,16 @@ def post_list(request):
                         }
     print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
+
+def recommend_post(request):
+    # like
+    # write
+    # watched
+    user_id = request.user.id
+
+    
+
+    recommend_with = Recommend.recommend_with()
 
 
 @login_required(login_url='/api/login/')
@@ -460,7 +471,7 @@ def chatroom_info(request, chatroom_id=0):
             for member_id in chatroom_member_list])
         member_list = [member['id'] for member in chatroom.member_list.all().values()]
         response_dict = {"id": chatroom.id, "isGlobal": chatroom.is_global, "title": chatroom.title,
-                         "memberList": member_list, "tag": chatroom.tag, 
+                         "memberList": member_list, "tag": chatroom.tag,
                          "maxPersonnel": chatroom.max_personnel, "discordLink": chatroom.discord_link}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     # request.method == 'DELETE'
