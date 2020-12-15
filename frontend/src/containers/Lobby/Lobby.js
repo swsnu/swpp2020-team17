@@ -24,10 +24,13 @@ class Lobby extends Component{
         selectedTagList: [],
     };
 
-    componentDidMount() {
+    async componentDidMount() {
         if (this.props.storedCurrentUser) {
             this.setState({ selectedTagList: this.props.storedCurrentUser.tagList });
             if(this.props.storedCurrentUser.chatroom != -1) {
+                const id = this.props.storedCurrentUser.chatroom
+                const user = this.props.storedCurrentUser
+                await this.props.onCreateChatting(id, user);
                 this.props.history.push('/chatroom/' + this.props.storedCurrentUser.chatroom);
             }
         }
@@ -150,6 +153,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getChatroomList()),
         onGetTagList: () => 
             dispatch(actionCreators.getTagList()),
+        onCreateChatting: (chatroomId, user) =>
+            dispatch(actionCreators.createChatting(chatroomId, user)),
     }
 }
 

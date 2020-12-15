@@ -95,7 +95,7 @@ class CreateNewPost extends React.Component {
                     </select>
                 </Form.Item>
 
-                <Form.Item name='image' label='Image' rules={[{ required: false }]}>
+                <Form.Item name='image' label='Image' rules={[{ required: true }]}>
                     <Upload
                         name="avatar"
                         listType="picture-card"
