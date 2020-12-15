@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
 import Post from '../../containers/Post/Post';
-import { Divider, List, Button, Space } from 'antd';
+import { Divider, List, Button, Space, Menu, Dropdown } from 'antd';
 import Profile from '../../components/Profile/Profile';
 import Author from '../../components/Author/Author';
 import { useHistory } from 'react-router';
 import PostInGrid from '../../components/PostInGrid/PostInGrid'
 import GameTag from '../../components/GameTag/GameTag';
+import CSRFToken from '../../csrftoken'
 
 const MyPageContainer = styled.div`
     display: flex;
@@ -198,28 +199,21 @@ class MyPage extends Component {
 
     }
 
-    onClickPost() {
-        //- PostInGrid popup (PostInGrid 구현 후 작성)
-    }
+    // onClickTag() {
+    //     this.props.changeTagState();
+    // }
 
-    onClickCreatePost() {
-    }
-
-    onClickTag() {
-        this.props.changeTagState();
-    }
-
-    //TODO:
-    handleAuthorClicked() {
-
+    // //TODO:
+    handleAuthorClicked = (id) => {
+        this.props.history.push('/page/' + id);
     }
 
     //TODO:
-    async onClickShallWe(receivingUser) {
+    async onClickShallWe(receivingUser, tagId) {
         let newChatroom = {
             isGlobal: false, 
             title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
-            tag: 1,     //tag가 없는디 어떡하지 
+            tag: tagId,     //tag가 없는디 어떡하지 
             maxPersonnel: 2, 
             discordLink: null,
         }
@@ -231,9 +225,6 @@ class MyPage extends Component {
         }
         // current user의 chatroom 바꾸고 redirect?
         // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
-    }
-
-    handleCreatePostClicked() {
     }
 
     onToggleTag = (tag_id) => {
@@ -284,8 +275,41 @@ class MyPage extends Component {
                 />
             );
         });
-    
         
+        let menuItems = friendList.map(friend => {
+            let menu = friend.tagList.map(tagId => {
+                return (
+                    <Menu.Item onClick={() => this.onClickShallWe(friend, tagId)}>
+                        <a>
+                            {tagId===1 ? "LOL": tagId===2 ? "HearthStone": "MapleStory"}
+                        </a>
+                    </Menu.Item>
+                );
+            });
+            return {
+                id: friend.id,
+                menu: menu,
+            };
+        });
+        // const menu = (
+        //     <Menu>
+        //       <Menu.Item onClick={() => this.onClickShallWe(friend, 1)}>
+        //         <a target="_blank">
+        //           LOL
+        //         </a>
+        //       </Menu.Item>
+        //       <Menu.Item onClick={() => this.onClickShallWe(friend, 2)}>
+        //         <a target="_blank">
+        //           HearthStone
+        //         </a>
+        //       </Menu.Item>
+        //       <Menu.Item onClick={() => this.onClickShallWe(friend, 3)}>
+        //         <a target="_blank">
+        //           MapleStory
+        //         </a>
+        //       </Menu.Item>
+        //     </Menu>
+        // );
 
         return(
             <MyPageContainer>
@@ -302,7 +326,7 @@ class MyPage extends Component {
                             renderItem={item => (
                                 <List.Item key={item.id}>
                                         <FriendItemWrapper>
-                                            <AuthorItem onClick={this.handleAuthorClicked} style={{ cursor: "pointer" }} >
+                                            <AuthorItem onClick={() => this.handleAuthorClicked(item.id)} style={{ cursor: "pointer" }} >
                                                 <Author
                                                     //FIXME: user로 넘기도록 수정해야함
                                                     name={item.username}
@@ -312,17 +336,34 @@ class MyPage extends Component {
                                                 </AuthorItem>
                                             <SpaceBetweenItem />
                                             <ButtonItem>
-                                                <Button
-                                                    type="primary"
-                                                    shape="round"
-                                                    disabled={this.props.storedCurrentUser.chatroom != -1
-                                                    || item.chatroom != -1 || item.login == false}
-                                                    onClick={() => this.onClickShallWe(item)}
-                                                    size="small"
-                                                    style={{ fontSize: 8, fontWeight: "bolder" }}
+                                                <CSRFToken />
+                                                <Dropdown 
+                                                    overlay={
+                                                        <Menu>
+                                                            {menuItems.find(value => value.id === item.id) && item && item.tagList && item.tagList.length > 0 ? 
+                                                                menuItems.find(value => value.id === item.id).menu
+                                                                : <Menu.Item>
+                                                                    <a>User Has No Game Tag</a>
+                                                                    <a>(Cannot Send ShallWe)</a>
+                                                                </Menu.Item>
+                                                            }
+                                                        </Menu>
+                                                    } 
+                                                    placement="bottomLeft" 
+                                                    arrow
                                                 >
-                                                    Shall We
-                                                </Button>
+                                                    <Button
+                                                        type="primary"
+                                                        shape="round"
+                                                        disabled={this.props.storedCurrentUser.chatroom != -1
+                                                        || item.chatroom != -1 || item.login == false}
+                                                        /*onClick={() => this.onClickShallWe(item)}*/
+                                                        size="small"
+                                                        style={{ fontSize: 8, fontWeight: "bolder" }}
+                                                    >
+                                                        Shall We
+                                                    </Button>
+                                                </Dropdown>
                                             </ButtonItem>
                                         </FriendItemWrapper>
                                 </List.Item>
