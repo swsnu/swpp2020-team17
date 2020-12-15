@@ -25,22 +25,22 @@ class ChatroomList extends Component {
         this.props.onGetChatroomList();
     }
 
-    onClickJoin = (id) => {
+    onClickJoin = async (id) => {
         let user = this.props.storedCurrentUser;
         user.chatroom = id;
-        this.props.onPutUser(user);
-        this.props.onCreateChatting(id, user);
+        await this.props.onPutUser(user);
+        await this.props.onCreateChatting(id, user);
         this.props.history.push('/chatroom/' + id);
     }
 
-    onClickSure = (id) => {
+    onClickSure = async (id) => {
         let user = this.props.storedCurrentUser;
         user.shallWeRoomList.filter(room => {
             return room.id != id;
         });
         user.chatroom = id;
-        this.props.onPutUser(user);
-        this.props.onCreateChatting(id, user);
+        await this.props.onPutUser(user);
+        await this.props.onCreateChatting(id, user);
         this.props.history.push('/chatroom/' + id);
     }
     
