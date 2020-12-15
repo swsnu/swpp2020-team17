@@ -132,6 +132,15 @@ class Recommend:
             res = test(tag_id, tagged)    # 5 recommended post ids
             recommendation = [content[0] for content in res]
 
+            # HS starts from 0  // 2
+            # LoL starts from 1400  // 1
+            # MP starts from 2359  // 3
+
+            if tag_id == 1:
+                recommendation = list(map(lambda x: x+1400, recommendation))
+            if tag_id == 3:
+                recommendation = list(map(lambda x: x+2359, recommendation))
+
         return recommendation
 
     # if __name__ == '__main__':

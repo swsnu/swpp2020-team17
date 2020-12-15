@@ -224,15 +224,56 @@ def post_list(request):
     print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
 
+@login_required(login_url='/api/login/')
 def recommend_post(request):
     # like
     # write
     # watched
-    user_id = request.user.id
+    user = Discord.objects.get(id=request.user.id)
+    watched = user.watched_post_list
+    wrote = user.post_list
+    like = user.liking_post_list
 
-    
+    post_list = []
 
-    recommend_with = Recommend.recommend_with()
+    for post in watched_post_list:
+        post_list.append(Post.objects.get(id=post))
+    for post in wrote:
+        post_list.append(post)
+    for post in like:
+        post_list.append(post)
+
+    # HS starts from 0  // 2
+    # LoL starts from 1400  // 1
+    # MP starts from 2359  // 3
+
+    Lo = []
+    HS = []
+    MP = []
+
+    for post in post_list:
+        if post.tag == 1:
+            Lo.append(post.content)
+        elif post.tag == 2:
+            HS.append(post.content)
+        elif post.tag == 3:
+            MP.append(post.content)
+
+    rec = []
+    rec += Recommend.recommend_with(1, Lo)
+    rec += Recommend.recommend_with(2, HS)
+    rec += Recommend.recommend_with(3, MP)
+
+    post_response_list = []
+
+    for index in rec:
+        post = Post.objects.get(id=index)
+        post_response_list.append({"id": post.id, "image": post.image, "content": post.content, "author": post.author_id,
+                "authorName": post.author.username,
+                "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": len(post.liking_user_list.all()),
+                "likingUserList": [user.id for user in post.liking_user_list.all()]} for post in Post.objects.all()]})
+
+return JsonResponse(post_response_list, safe=False)
 
 
 @login_required(login_url='/api/login/')
