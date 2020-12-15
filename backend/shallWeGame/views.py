@@ -200,7 +200,8 @@ def post_list(request):
             {"id": post.id, "image": post.image, "content": post.content, "author": post.author_id,
              "authorName": post.author.username,
              "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": len(post.liking_user_list.all()),
-             "likingUserList": [user.id for user in post.liking_user_list.all()]} for post in Post.objects.all()]
+             "likingUserList": [user.id for user in post.liking_user_list.all()]
+            } for post in Post.objects.all()]
         return JsonResponse(post_response_list, safe=False)
     # request.method == 'POST'
     if request.method == 'POST':
@@ -271,9 +272,8 @@ def recommend_post(request):
         post_response_list.append({"id": post.id, "image": post.image, "content": post.content, "author": post.author_id,
                 "authorName": post.author.username,
                 "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": len(post.liking_user_list.all()),
-                "likingUserList": [user.id for user in post.liking_user_list.all()]} for post in Post.objects.all()]})
-
-return JsonResponse(post_response_list, safe=False)
+                "likingUserList": [user.id for user in post.liking_user_list.all()]})
+    return JsonResponse(post_response_list, safe=False)
 
 
 @login_required(login_url='/api/login/')
