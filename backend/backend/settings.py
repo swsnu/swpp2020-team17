@@ -11,9 +11,12 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
+import json
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+ROOT_DIR = os.path.dirname(BASE_DIR)
+# ROOT_DIR = BASE_DIR
 
 
 # Quick-start development settings - unsuitable for production
@@ -23,12 +26,32 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'e*90s1khk_s)stmhzl9sz(!27pssafv(kyg@h&%h*&w9l2(we#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# Edit before run
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ec2-54-236-84-205.compute-1.amazonaws.com', '54.236.84.205', 'shallwega.me', 'www.shallwega.me', 'localhost', 'localhost:8000']
 
 AUTHENTICATION_BACKENDS = [
     'shallWeGame.auth.DiscordAuthenticationBackend'
+]
+
+# S3 Storage
+# DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
+# STATICFILES_STORAGE = 'config.storages.StaticStorage'
+# MEDIAFILES_LOCATION = 'media'
+# STATICFILES_LOCATION = 'static'
+
+# AWS Access : LeeDJ
+# CONFIG_SECRET_DIR = os.path.join(ROOT_DIR, '.config_secret')
+# CONFIG_SETTINGS_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_common.json')
+# config_secret = json.loads(open(CONFIG_SETTINGS_COMMON_FILE).read())
+# AWS_ACCESS_KEY_ID = config_secret['awsDJ']['access_key_id']
+# AWS_SECRET_ACCESS_KEY = config_secret['awsDJ']['secret_access_key']
+# AWS_STORAGE_BUCKET_NAME = config_secret['awsDJ']['s3_bucket_name']
+
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+	STATIC_DIR,
 ]
 
 # Application definition
@@ -41,7 +64,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+	'storages'
 ]
 
 STATIC_URL = '/static/'
