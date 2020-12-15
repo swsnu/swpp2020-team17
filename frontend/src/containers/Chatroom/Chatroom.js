@@ -8,6 +8,10 @@ import Chatting from '../../components/Chatting/Chatting';
 import Author from '../../components/Author/Author';
 import styled, { keyframes } from 'styled-components';
 import { Divider, List, Button, Space } from 'antd';
+import {
+    UserAddOutlined,
+    UserDeleteOutlined,
+} from '@ant-design/icons';
 
 const MyPageContainer = styled.div`
     display: flex;
@@ -124,6 +128,21 @@ class Chatroom extends Component {
         this.props.onPutUser(user);
         this.props.history.push('/lobby');
     }
+    onToggleFriend = (id) => {
+        let currentUser = this.props.storedCurrentUser;
+        let selectedUserId = id;
+        if (this.state.addOrDelete === 'Add') {
+            currentUser.friendList.push(selectedUserId);
+            this.setState({ addOrDelete: 'Delete' });
+        } else {
+            currentUser.friendList = currentUser.friendList.filter(id => {
+                return id !== selectedUserId
+            });
+            this.setState({ addOrDelete: 'Add' });
+        }
+        this.props.onPutUser(currentUser);
+        
+    }
 
     render() {
         let chatroom = this.props.storedSelectedChatroom;
@@ -212,7 +231,14 @@ class Chatroom extends Component {
                                                 </AuthorItem>
                                                 <SpaceBetweenItem />
                                                 <ButtonItem>
-                                                    {item.id !== this.props.storedCurrentUser.id ? <Button>AddorDelete</Button> : null}
+                                                    {item.id !== this.props.storedCurrentUser.id ? 
+                                                        <Button onClick={() => this.onToggleFriend(item.id)}>
+                                                            {this.props.storedCurrentUser.friendList.includes(item.id)? 
+                                                                <UserDeleteOutlined /> : <UserAddOutlined />}
+                                                            {this.props.storedCurrentUser.friendList.includes(item.id)? 
+                                                                'Delete' : 'Add'}
+                                                        </Button> 
+                                                        : null}
                                                 </ButtonItem>
                                             </FriendItemWrapper>
                                     </List.Item>
