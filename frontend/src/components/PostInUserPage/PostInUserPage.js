@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { List, Divider, Space, Button, Comment } from 'antd';
-import { MessageTwoTone, HeartTwoTone, DeleteOutlined } from '@ant-design/icons';
+import { MessageTwoTone, HeartTwoTone, DeleteOutlined, RollbackOutlined } from '@ant-design/icons';
 import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
 import Author from '../../components/Author/Author'
@@ -104,6 +104,31 @@ const ButtonItem = styled.div`
     animation: ${buttonShake} .8s ;
     `}
 `;
+
+const LineWrapper = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 70%;
+    justify-content: space-between;
+    align-self: center;
+`;
+
+const BackWrapper = styled.div`
+    display: flex;
+    flex-basis: 60%;
+    align-items: center;
+`;
+
+const DeleteWrapper = styled.div`
+    display: flex;
+    flex-basis: 40%;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 0;
+    justify-content: flex-end;
+`;
+
 
 // FIXME: 애니메이션 작동 안됨.
 const buttonShake = keyframes`
@@ -238,6 +263,10 @@ class PostInUserPage extends Component {
         else this.props.history.push('/page/' + author);
     }
 
+    handleDeleteButton = (item) => {
+        this.props.onDeletePost(item.id);
+        this.handleBackButton(item.author);
+    }
     render() {
         console.log(this.props.match.params.id);
         console.log(this.props.storedSelectedPost);
@@ -252,7 +281,22 @@ class PostInUserPage extends Component {
         if (item && author && item.likingUserList) {
             return (
                 <PostPageWrapper>
-                    <Button onClick={() => this.handleBackButton(item.author)}> back </Button>
+                    <LineWrapper>
+                        <BackWrapper>
+                            <Button onClick={() => this.handleBackButton(item.author)}> 
+                                <RollbackOutlined />
+                                Back 
+                            </Button>
+                        </BackWrapper>
+                        <DeleteWrapper>
+                            <Button onClick={() => this.handleDeleteButton(item)}> 
+                                <DeleteOutlined />
+                                Delete 
+                            </Button>
+                        </DeleteWrapper>
+                    </LineWrapper>
+                    
+                    
                     <PostListWrapper>
                         <PostContainer>
                             <PostHeaderContainer>
@@ -361,6 +405,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getPost(postId)),
         onPutPost: (post) =>
             dispatch(actionCreators.putPost(post)),
+        onDeletePost: (postId) =>
+            dispatch(actionCreators.deletePost(postId)),
         onGetCommentList: (id) =>
             dispatch(actionCreators.getCommentList(id)),
         onCreateComment: (postId, comment) =>
