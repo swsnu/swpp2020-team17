@@ -449,7 +449,7 @@ class Post extends Component {
     returnDeleteButton = (comment) => {
         if (this.props.storedCurrentUser.id === comment.author) {
             return (
-                <DeleteOutlined onClick={() => this.clickDeleteComment(comment)} style={{ cursor: "pointer" }} />
+                <DeleteOutlined onClick={() => this.clickDeleteComment(comment)} size="large" style={{ cursor: "pointer" }} />
             );
         } else {
             return null;
@@ -485,7 +485,7 @@ class Post extends Component {
                 return this.state.selectedTagList.includes(post.tag);
             });
         }
-
+        if (this.state.commentingPostId && !this.props.storedCommentList) this.props.onGetCommentList(this.state.commentingPostId);
         return (
             <PostPageWrapper>
                 <GameTagWrapper>
