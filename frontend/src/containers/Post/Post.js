@@ -565,7 +565,7 @@ class Post extends Component {
                                                 //FIXME: user로 넘기도록 수정해야함
                                                 name={item.authorName}
                                                 avatar={item.authorAvatar}
-                                                showOnline={true}
+                                                showOnline={this.props.storedUserList.find(user => user.id===item.author).login}
                                             />
                                         </AuthorItem>
                                         <ButtonItem>

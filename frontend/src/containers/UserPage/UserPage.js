@@ -167,6 +167,7 @@ class UserPage extends Component {
                 <Author
                     name={selectedUser.username}
                     avatar={selectedUser.avatar}
+                    login={selectedUser.login}
                 />
             );
             tagToggle = this.props.storedSelectedUser.tagList.map(tag_id => {

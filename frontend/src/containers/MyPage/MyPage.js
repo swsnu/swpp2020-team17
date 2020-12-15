@@ -253,6 +253,7 @@ class MyPage extends Component {
                 name={user.username}
                 avatar={user.avatar}
                 tagList={user.tagList}
+                login={user.login}
             />):
             (<p>Please login!</p>)
         ;
@@ -331,7 +332,7 @@ class MyPage extends Component {
                                                     //FIXME: user로 넘기도록 수정해야함
                                                     name={item.username}
                                                     avatar={item.avatar}
-                                                    showOnline={true}
+                                                    showOnline={item.login}
                                                 />
                                                 </AuthorItem>
                                             <SpaceBetweenItem />
