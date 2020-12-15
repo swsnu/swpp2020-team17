@@ -8,6 +8,8 @@ import { Row, Col, Image } from 'antd';
 class GridPost extends Component {
     constructor(props){
         super(props)
+        this.props.onGetPostList();
+        this.props.onGetCurrentUser();
         this.state = {
             myPostList: [],
             height: 0,
@@ -16,7 +18,19 @@ class GridPost extends Component {
         }
     }
     componentDidMount() {
-        this.props.onGetPostList();
+        
+    }
+
+    onClickImage = (post) => {
+        let user = this.props.storedCurrentUser
+        if (user.watchedPostList.length === 0
+            || user.watchedPostList.filter(id => id === post.id).length === 0) {
+            user.watchedPostList.push(post.id)
+            this.props.onPutUser(user)
+            console.log(user)   
+            }
+
+        this.props.history.push('/post/' + post.id)
     }
 
     render() {
@@ -35,13 +49,14 @@ class GridPost extends Component {
                 })
             }
         }
+        
         console.log("gridPost");
         console.log(selectedTagList);
         console.log(myPostList);
         return (
             <div className="UserPagePostInGrid">
                 {myGrids.length != 0 ? <Gallery photos={myGrids} direction={"column"}
-                onClick={(e, { index }) => this.props.history.push('/post/' + myPostList[index].id)} /> : ''}
+                onClick={(e, { index }) => this.onClickImage(myPostList[index])} /> : ''}
             </div>
             
         )
@@ -50,12 +65,17 @@ class GridPost extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        storedCurrentUser: state.ur.currentUser,
         storedPostList: state.ps.postList,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        onGetCurrentUser: () =>
+            dispatch(actionCreators.getCurrentUser()),
+        onPutUser: (user) =>
+            dispatch(actionCreators.putUser(user)),
         onGetPostList: () =>
             dispatch(actionCreators.getPostList()),
     }
