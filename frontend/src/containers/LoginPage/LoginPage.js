@@ -6,7 +6,9 @@ import styled from 'styled-components';
 import * as actionCreators from '../../store/actions/index'
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import CSRFToken from '../../csrftoken'
+import CSRFToken from '../../csrftoken';
+
+import {Redirect} from 'react-router-dom';
 
 const Positioner = styled.div`
     margin-top: 10%;
@@ -19,8 +21,10 @@ class LoginPage extends Component {
     }
 
     render(){
+        console.log("HERE!!!!")
         return(
             <div className="LoginPage">
+                {Redirect}
                 <Positioner>
                 <CSRFToken />
                 <Result
@@ -37,7 +41,6 @@ class LoginPage extends Component {
                 />
             </Positioner>
             </div>
-            
         );
     }
 }
@@ -49,7 +52,7 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(withRouter(LoginPage));
+export default connect(null, mapDispatchToProps)(LoginPage);
 // export default LoginPage;
 
 // // import * as actionCreators from '../../store/actions/index';

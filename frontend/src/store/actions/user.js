@@ -12,18 +12,17 @@ export function getCookie(name) {
             const cookie = cookies[i].trim();
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break; 
+                break;
             }
-            return cookieValue; 
+            return cookieValue;
         }
-    } 
+    }
 }
 const csrftoken = getCookie('csrftoken');
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
-  
 export const login = () => {
     return dispatch => {
         return axios.get('https://discord.com/api/oauth2/authorize?client_id=782980326459965490&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify');
@@ -92,5 +91,21 @@ export const putUser = (user) => {
     }
 }
 
+
+const logout_= (currentUser) => {
+    return {
+        type: actionTypes.Logout,
+        currentUser: currentUser,
+    }
+}
+
+export const logout = () => {       // read user info from /api/user/
+    return dispatch => {
+        return axios.get('/api/logout/')
+        .then(res => {
+            return dispatch(logout_(res.data))
+        })
+    }
+}
 
 

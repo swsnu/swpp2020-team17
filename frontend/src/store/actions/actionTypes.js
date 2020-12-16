@@ -3,6 +3,8 @@ export const GetCurrentUser = 'GetCurrentUser'
 export const GetUser = 'GetUser'
 export const PutUser = 'PutUser'
 
+export const Logout = 'Logout'
+
 export const GetTagList = 'GetTagList'
 
 export const GetChatroomList = 'GetChatroomList'

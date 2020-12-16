@@ -28,6 +28,7 @@ def discord_login_redirect(request):
     try:
         discord_user = DiscordUser.objects.get(username=user['username'])
         discord_user.login = True
+        discord_user.save()
         print('signup user')
     except DiscordUser.DoesNotExist:
         print('new user')
@@ -41,7 +42,6 @@ def discord_login_redirect(request):
         discord_user.save()
     login(request, discord_user)
     return redirect("http://localhost:3000/")
-
 
 def exchange_code(code: str):
     '''Exchange Code with Discord API'''
@@ -67,16 +67,32 @@ def exchange_code(code: str):
     user = response.json()
     return user
 
-
 @ensure_csrf_cookie
 def discord_logout(request):
     '''Not Implemented'''
-    user = DiscordUser.objects.filter(id=request.user.id)
+    user = DiscordUser.objects.get(id=request.user.id)
     user.login = False
-    print(user.login)
-    logout(request)
-    return redirect('http://localhost:3000/login/')
+    user.save()
 
+
+    user = DiscordUser.objects.get(id=request.user.id)
+
+    logout(request)
+
+    # user = request.user
+
+    chatroom = user.chatroom.id if user.chatroom is not None else -1
+    friend_list = [friend['id'] for friend in user.friend_list.all().values()]
+    post_list = [post['id'] for post in user.post_list.all().values()]
+    shallwe_room_list = [room['id'] for room in user.shallwe_room.all().values()]
+    watched_post_list = [post['id'] for post in user.watched_post_list.all().values()]
+    tag_list = [tag['id'] for tag in user.tag_list.all().values()]
+    response_dict = {"id": user.id, "username": user.username, "login": user.login,
+                     "avatar": user.avatar, "chatroom": chatroom, "friendList": friend_list,
+                     "postList": post_list, "shallWeRoomList": shallwe_room_list,
+                     "watchedPostList": watched_post_list, "tagList": tag_list}
+    # print(response_dict)
+    return HttpResponse(content=json.dumps(response_dict), status=201)
 
 ######################
 # user
@@ -184,7 +200,6 @@ def user_info(request, user_id=0):
         user.tag_list.set([Tag.objects.get(id=tag_id) for tag_id in user_tag_list])
         user.save()
         return HttpResponse(status=200)
-
 
 ######################
 # post

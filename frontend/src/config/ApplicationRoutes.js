@@ -16,6 +16,9 @@ import MyPage from "../containers/MyPage/MyPage";
 import UserPage from "../containers/UserPage/UserPage";
 import Chatroom from "../containers/Chatroom/Chatroom";
 import PostInUserPage from '../components/PostInUserPage/PostInUserPage';
+import LoginPage from "../containers/LoginPage/LoginPage";
+
+import { ConnectedRouter } from 'connected-react-router';
 
 import { Layout } from 'antd';
 import {
@@ -39,41 +42,43 @@ const ApplicationRoutes = props => {
     }
   return (
     <div className="ApplicationRoutes">
-      <Router>
-        <Layout>
-          <Sider trigger={null} collapsible collapsed={collapse} width="150">
-            <SideNav handleLogout={props.handleLogout} />
-          </Sider>
-          <Layout>
-            <Header className="siteLayoutBackground" style={{padding: 0, background: "#001529"}}>
-                      {React.createElement(collapse ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                          className: 'trigger',
-                          onClick: handleToggle,
-                          style: {color: "#fff"}
-                      })}
-            </Header>
-              <Content style={{margin: '24px 16px', padding: 24, minHeight: "calc(100vh - 114px)", background: "#fff"}}>
-                <Switch>
-                    {/* <Route path='/login' component={Login} /> */}
-                    <Route exact path="/post" component={Posts} />
-                    <Route path="/lobby" component={Lobby} />
-                    <Route path="/RoomInfo" component={RoomInfo} />
-                    <Route path="/search" component={Search} />
-                    <Route path="/myPage" component={MyPage} />
-                    <Route path="/createpost" component={CreatePost} />
-                    <Route path='/page/:id' component={UserPage} />
-                    <Route path='/chatroom/:id' component={Chatroom} />
-                    <Route exact path='/post/:id' component={PostInUserPage} />
-                    <Redirect exact from='/' to='/post' />
-                    {/* <Route path="/files" component={File} />
-                    <Route path="/videos" component={Videos} /> */}
-
-                    {/* <redirect to="/post" from="/" /> */}
-                </Switch>
-              </Content>
-          </Layout>
-        </Layout>
-      </Router>
+      <ConnectedRouter history={props.history} >
+        <Switch>
+            <Layout>
+              <Sider trigger={null} collapsible collapsed={collapse} width="150">
+                <SideNav handleLogout={props.handleLogout} />
+              </Sider>
+              <Layout>
+                <Header className="siteLayoutBackground" style={{padding: 0, background: "#001529"}}>
+                          {React.createElement(collapse ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                              className: 'trigger',
+                              onClick: handleToggle,
+                              style: {color: "#fff"}
+                          })}
+                </Header>
+                  <Content style={{margin: '24px 16px', padding: 24, minHeight: "calc(100vh - 114px)", background: "#fff"}}>
+                    {/* <Switch> */}
+                        {/* <Route path='/login' component={Login} /> */}
+                        <Route exact path="/post" component={Posts} />
+                        <Route path="/lobby" component={Lobby} />
+                        <Route path="/RoomInfo" component={RoomInfo} />
+                        <Route path="/search" component={Search} />
+                        <Route path="/myPage" component={MyPage} />
+                        <Route path="/createpost" component={CreatePost} />
+                        <Route path='/page/:id' component={UserPage} />
+                        <Route path='/chatroom/:id' component={Chatroom} />
+                        <Route exact path='/post/:id' component={PostInUserPage} />
+                        <Redirect exact from='/' to='/post' />
+                        {/* <Route path="/files" component={File} />
+                        <Route path="/videos" component={Videos} /> */
+                        /* <redirect to="/post" from="/" /> */}
+                    {/* </Switch> */}
+                  </Content>
+                  {/* <Route path="/login" component={LoginPage} /> */}
+              </Layout>
+            </Layout>
+        </Switch>
+      </ConnectedRouter>
     </div>
   );
 }

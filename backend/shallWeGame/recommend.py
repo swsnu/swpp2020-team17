@@ -135,7 +135,6 @@ class Recommend:
 
         if len(interest_contents) is 0:
             recommendation = [int(random.random() * max_id) for i in range(5)]  # random recommendation
-            print('this : ', recommendation)
         else:
             tagged = []
             for content in interest_contents:
@@ -152,7 +151,5 @@ class Recommend:
             recommendation = list(map(lambda x: x+1421, recommendation))
         if tag_id == 3:
             recommendation = list(map(lambda x: x+2401, recommendation))
-
-        print(tag_id, recommendation)
 
         return recommendation

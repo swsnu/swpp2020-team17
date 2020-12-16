@@ -15,13 +15,15 @@ import CSRFToken from '../../csrftoken'
 import GameTag from '../../components/GameTag/GameTag'
 // import CommentList from './CommentList';
 
+import {Redirect} from 'react-router-dom';
+
 const PostPageWrapper = styled.div`
     display: flex;
     flex-direction: column;
     /* overflow: auto; */
     /* padding: 8px 24px; */
     height: 100%;
-    
+
 `;
 
 const LineWrapper = styled.div`
@@ -58,14 +60,14 @@ const LoadingWrapper = styled.div`
 const PostListWrapper = styled.div`
 /*Responsive Styles*/
 /* Smartphones (portrait) ---------------- */
-@media only screen 
+@media only screen
 and (max-width : 320px)
 {
 /* Add Your CSS Styling Here */
 }
 
 /* Smartphones (landscape) ---------------- */
-@media only screen 
+@media only screen
 and (min-width : 321px)
 and (max-width : 767px)
 {
@@ -73,28 +75,28 @@ and (max-width : 767px)
 }
 
 /* Tablets (portrait) -------------------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
 and (orientation : portrait)
 {
 /* Add Your CSS Styling Here */
 }
 
 /* Tablets (landscape) ------------------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
 and (orientation : landscape)
-{   
+{
 /* Add Your CSS Styling Here */
     width: 90%;
     align-self: center;
 }
 /* Old Desktops and laptops ------------------ */
 
-@media only screen 
-and (min-width : 1025px) 
+@media only screen
+and (min-width : 1025px)
 {
 /* Add Your CSS Styling Here */
     width: 80%;
@@ -102,8 +104,8 @@ and (min-width : 1025px)
 }
 
 /* Desktops ------------------ */
-@media only screen 
-and (min-width : 1201px) 
+@media only screen
+and (min-width : 1201px)
 {
 /* Add Your CSS Styling Here */
     width: 70%;
@@ -311,10 +313,10 @@ class Post extends Component {
 
     async onClickShallWe(receivingUser, tagId) {
         let newChatroom = {
-            isGlobal: false, 
-            title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
-            tag: tagId,     //tag가 없는디 어떡하지 
-            maxPersonnel: 2, 
+            isGlobal: false,
+            title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username,
+            tag: tagId,     //tag가 없는디 어떡하지
+            maxPersonnel: 2,
             discordLink: null,
         }
         console.log(receivingUser);
@@ -497,6 +499,8 @@ class Post extends Component {
         console.log(this.props.storedPostList);
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
+            if(!user.login) return <Redirect to='/login'/>
+
             tagList = this.props.storedTagList;
             if (isRecommend) {
                 // postList = this.props.storedPostList.filter(post => post.author !== user.id && !user.friendList.includes(post.author));
@@ -505,7 +509,7 @@ class Post extends Component {
                 postList = this.props.storedPostList.filter(post => user.friendList.includes(post.author));
             }
             console.log(postList);
-            
+
             tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
                 return (
                     <GameTag
@@ -533,13 +537,13 @@ class Post extends Component {
                         {tagToggle.length > 0 ? tagToggle: "Add your Tag!"}
                     </GameTagWrapper>
                     <RecommendToggleWrapper>
-                        {tagToggle.length > 0 ? 
+                        {tagToggle.length > 0 ?
                             <Switch checkedChildren="Recommend" unCheckedChildren="Friend's Posts" defaultChecked onChange={this.onToggleRecommend}/>
                             : null
                         }
                     </RecommendToggleWrapper>
                 </LineWrapper>
-                
+
                 <PostListWrapper>
                     {/*
                 //FIXME: Infinite scroll to be implemented
@@ -571,7 +575,7 @@ class Post extends Component {
                                                 type="primary"
                                                 shape="round"
                                                 disabled={this.props.storedCurrentUser.chatroom != -1
-                                                || this.props.storedUserList.find(user => user.id===item.author).chatroom != -1 
+                                                || this.props.storedUserList.find(user => user.id===item.author).chatroom != -1
                                                 || this.props.storedUserList.find(user => user.id===item.author).login == false}
                                                 onClick={() => this.onClickShallWe(this.props.storedUserList.find(user => user.id===item.author), item.tag)}
                                                 size="small"
@@ -621,7 +625,7 @@ class Post extends Component {
                                                 </Space>
                                             </div>
                                         </IconContainer>
-                                        <CommentView 
+                                        <CommentView
                                             commentingPostId={this.state.commentingPostId}
                                             currPost={item}
                                             userList={this.props.storedUserList}
@@ -677,15 +681,15 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getTagList()),
         onGetCommentList: (id) =>
             dispatch(actionCreators.getCommentList(id)),
-        onGetPost: (id) => 
+        onGetPost: (id) =>
             dispatch(actionCreators.getPost(id)),
         onGetUserList: () =>
             dispatch(actionCreators.getUserList()),
-        onCreateComment: (postId, comment) => 
+        onCreateComment: (postId, comment) =>
             dispatch(actionCreators.createComment(postId, comment)),
-        onDeleteComment: (comment) => 
+        onDeleteComment: (comment) =>
             dispatch(actionCreators.deleteComment(comment)),
-        onSendShallWe: (newChatroom, sendingUser, receivingUser) => 
+        onSendShallWe: (newChatroom, sendingUser, receivingUser) =>
             dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
         onRecommendPostList: () =>
             dispatch(actionCreators.recommendPostList()),
