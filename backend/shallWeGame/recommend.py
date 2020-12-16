@@ -14,7 +14,7 @@ class Recommend:
     def __init__(self, ref=1):
         self.ref = ref
 
-    def process(docs):
+    def process(self, docs):
         # sentence_tokenized_text = docs
 
         sentence_tokenized_text = []
@@ -93,13 +93,19 @@ class Recommend:
         # 지금 이걸 쓰는 곳이 없음
         corpus = [dictionary.doc2bow(text) for text in bigram_token]
 
-        ret = TaggedDocument(words=bigram_token[0], tags=[10000])
+        if len(bigram_token) > 0:
+            ret = TaggedDocument(words=bigram_token[0], tags=[10000])
+        else:
+            ret = TaggedDocument(words=[], tags=[10000])
+        # if len(bigram_token) > 0:
+        #     ret = bigram_token[0]
+        # else:
+        #     ret = []
+        # print(ret)
+        return ret
 
-        print(ret)
-
-        return bigram_token
-
-    def test(tag_id, tagged):
+    def test(self, tag_id, tagged):
+        path = os.path.dirname( os.path.abspath( __file__ ))
         model_name = ''
         if tag_id == 1:
             model_name = 'model_Lo'
@@ -107,7 +113,7 @@ class Recommend:
             model_name = 'model_HS'
         elif tag_id == 3:
             model_name = 'model_MP'
-        model = doc2vec.Doc2Vec.load(model_name)
+        model = doc2vec.Doc2Vec.load(path + '/' +model_name)
 
         vec = [model.infer_vector(content[0]) for content in tagged]
 
@@ -117,34 +123,35 @@ class Recommend:
     ## @params interest_contents n(maximum) number of contents of certain tag that user watched, liked, and wrote
     ## @ret    recommendation    5 number of post ids
 
-    def recommend_with(tag_id, interest_contents):
+    def recommend_with(self, tag_id, interest_contents):
         recommendation = []     # list of post ids recommended
         max_id = 1
         if tag_id == 1:
-            max_id = 958
+            max_id = 980
         elif tag_id == 2:
-            max_id = 1399
+            max_id = 1421
         elif tag_id == 3:
-            max_id = 864
+            max_id = 868
 
         if len(interest_contents) is 0:
             recommendation = [int(random.random() * max_id) for i in range(5)]  # random recommendation
         else:
             tagged = []
             for content in interest_contents:
-                tagged.append(process(content))
+                tagged.append(self.process(content))
 
-            res = test(tag_id, tagged)    # 5 recommended post ids
+            res = self.test(tag_id, tagged)    # 5 recommended post ids
             recommendation = [content[0] for content in res]
 
         # HS starts from 0  // 2
-        # LoL starts from 1400  // 1
-        # MP starts from 2359  // 3
-        if tag_id == 1:
-            recommendation = list(map(lambda x: x+1400, recommendation))
-        if tag_id == 3:
-            recommendation = list(map(lambda x: x+2359, recommendation))
-            
+        # LoL starts from 1421  // 1
+        # MP starts from 2401  // 3
+        
+        # if tag_id == 1:
+        #     recommendation = list(map(lambda x: x+1421, recommendation))
+        # if tag_id == 3:
+        #     recommendation = list(map(lambda x: x+2401, recommendation))
+
         return recommendation
 
     # if __name__ == '__main__':

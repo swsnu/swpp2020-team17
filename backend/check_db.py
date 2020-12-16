@@ -15,7 +15,6 @@ cur = con.cursor()
 # # Connection 닫기
 # con.close()
 
-
 init = sqlite3.connect("db_init.sqlite3")
 init_cur = init.cursor()
 init_cur.execute('select * from shallWeGame_post')

@@ -255,17 +255,18 @@ def recommend_post(request):
     MP = []
 
     for post in post_list:
-        if post.tag.id == 1:
-            Lo.append(post.content)
-        elif post.tag.id == 2:
-            HS.append(post.content)
-        elif post.tag.id == 3:
-            MP.append(post.content)
+        if post['tag_id'] == 1:
+            Lo.append(post['content'])
+        elif post['tag_id'] == 2:
+            HS.append(post['content'])
+        elif post['tag_id'] == 3:
+            MP.append(post['content'])
 
     rec = []
-    rec += Recommend.recommend_with(1, Lo)
-    rec += Recommend.recommend_with(2, HS)
-    rec += Recommend.recommend_with(3, MP)
+    recom = Recommend()
+    rec += recom.recommend_with(1, Lo)
+    rec += recom.recommend_with(2, HS)
+    rec += recom.recommend_with(3, MP)
     print(rec)
     post_response_list = []
 
