@@ -75,7 +75,7 @@ const stubInitialState = {
 const mockStore = getMockStore(stubInitialState);
 
 describe('<Chatroom />', () => {
-    let chatroomList, spyGetUserList, spyGetCurrentUser, spyPutUser, spyGetChatroomList, spyDeleteChatroom, spyCreateChatting;
+    let chatroom, spyGetUserList, spyGetCurrentUser, spyPutUser, spyGetChatroomList, spyDeleteChatroom, spyDeleteChatting;
     afterEach(() => {
         jest.clearAllMocks();
     });
