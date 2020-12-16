@@ -118,7 +118,7 @@ def user_list(request):
                                    "friendList": friend_list,
                                    "postList": post_list, "shallWeRoomList": shallwe_room_list,
                                    "watchedPostList": watched_post_list, "tagList": tag_list})
-    print(user_response_list)
+    # print(user_response_list)
     return JsonResponse(user_response_list, safe=False)
 
 
@@ -149,7 +149,7 @@ def user_info(request, user_id=0):
 
     if request.method == 'PUT':
         user = DiscordUser.objects.get(id=user_id)
-        print('this : ', user)
+        # print('this : ', user)
         # # non-author returns 403
         # if user != request.user:
         #     return HttpResponse(status=403)
