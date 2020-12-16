@@ -217,7 +217,11 @@ def post_list(request):
 
     if request.method == 'POST':
         try:
-            req_data = json.loads(request.body.decode())
+            req_data_origin = json.loads(request.body.decode())
+            req_data = req_data_origin['formData']
+            file_type = req_data_origin['fileType']
+            print("[DEBUG] req_data: ", req_data)
+            print("[DEBUG] file_type: ", file_type)
             # post_image = req_data['image']
             post_content = req_data['content']
             post_tag = req_data['tag']
@@ -227,18 +231,19 @@ def post_list(request):
         tag = Tag.objects.get(name=post_tag)
         post = Post(image='', content=post_content, author=post_author, tag=tag) # Now, post.image is empty
         post.save() # Now, we have post.id
-        key = str(post.id)
+
+        key = post.id
         print("[DEBUG] key: ", key)
         url = s3.generate_presigned_url(
             ClientMethod='put_object',
             Params={
                 'Bucket': 'shallwe-bucket',
-                'ContentType':'image/jpeg',
-                'Key': key
+                'Key': str(key) + '.' + file_type
             },
             ExpiresIn=604800
         )
         print("[DEBUG] url: ", url)
+        print("[DEBUG] presigned url's key: ", (str(key) + '.' + file_type))
         data = {'key': key, 'url': url}
         return JsonResponse(data, status=200)
 
@@ -246,14 +251,15 @@ def post_list(request):
 # param; data{key, url}, file
 # @login_required(login_url='/api/login/')
 @csrf_exempt
-def post_upload(request):
+def post_upload(request, post_id=0):
     print("Entered @post_upload!")
     if request.method == 'POST':
         req_data = json.loads(request.body.decode())
         try:
             key = req_data['key']
+            print("[DEBUG] key: ", key)
             url = req_data['url']
-            print(key, url)
+            print("[DEBUG] url: ", url)
         except(KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest()
         try:

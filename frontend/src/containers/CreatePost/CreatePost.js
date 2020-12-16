@@ -7,39 +7,36 @@ import {Form, Input, message, Button} from 'antd';
 import {Upload} from 'antd';
 import {LoadingOutlined, PlusOutlined} from '@ant-design/icons';
 
-function getBase64(img, callback) {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-};
+// function getBase64(img, callback) {
+//     const reader = new FileReader();
+//     reader.addEventListener('load', () => callback(reader.result));
+//     reader.readAsDataURL(img);
+// };
 
-function beforeUpload(file) {
-    // const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    // if (!isJpgOrPng) {
-    //     message.error('You can only upload JPG/PNG file!');
-    // }
-    const isJpg = file.type === 'image/jpeg';
-    if (!isJpg) {
-        message.error('You can only upload JPG file!');
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-        message.error("Image is bigger than 2MB!");
-    }
-    return isJpg && isLt2M;
-};
-
-// function handleChange(file) {
-
-// }
-
+// function beforeUpload(file) {
+//     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+//     if (!isJpgOrPng) {
+//         message.error('You can only upload JPG/PNG file!');
+//     }
+//     // const isJpg = file.type === 'image/jpeg';
+//     // if (!isJpg) {
+//     //     message.error('You can only upload JPG file!');
+//     // }
+//     const isLt2M = file.size / 1024 / 1024 < 2;
+//     if (!isLt2M) {
+//         message.error("Image is bigger than 2MB!");
+//     }
+//     return isJpgOrPng && isLt2M;
+// };
 
 class CreateNewPost extends React.Component {
     state = {
         loading: false,
         // imageUrl: '',
         file: '',
-        fileName: '',
+        fileType: '',
+        upload: '',
+        preview: '',
     };
 
     // handleChange = (info) => {
@@ -75,6 +72,33 @@ class CreateNewPost extends React.Component {
     //     })
     // }
 
+    //TODO: antd 넣을떄 같이
+    beforeUpload(file) {
+        const isJpg = file.type === 'image/jpeg';
+        const isPng = file.type === 'image/png';
+
+        if (isJpg) {
+            this.setState({
+                fileType: 'jpeg'
+            })
+            console.log("[DEBUG] filetype is jpeg");
+        } else if (isPng) {
+            this.setState({
+                fileType: 'png'
+            })
+            console.log("[DEBUG] filetype is png");
+        } else {
+            message.error('You can only upload JPG/PNG file!');
+        }
+
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+            message.error("Image is bigger than 2MB!");
+        }
+
+        return (isJpg || isPng) && isLt2M;
+    };
+
     componentDidUpdate(prevProps, prevState) {
         if(prevProps.selectedPost !== this.props.selectedPost)
             this.props.history.push('/mypage');
@@ -83,26 +107,25 @@ class CreateNewPost extends React.Component {
     onFinish(values) {
         // values.image = this.state.imageUrl;
         // console.log('File type is:', values);
-        this.props.createPost(values, this.state.file)
+        console.log('[DEBUG] values: ', values);
+        console.log('[DEBUG] this.state.file: ', this.state.file);
+        console.log('[DEBUG] this.state.fileType: ', this.state.fileType);
+        this.props.createPost(values, this.state.file, this.state.fileType)
     }
 
     fileChange = e => {
         if(e.target.files){
-        this.setState(
-          { file: e.target.files[0], fileName: e.target.files[0].name, upload: true},
-          () => { console.log( "File chosen --->", this.state.file, console.log("File name  --->", this.state.fileName))},
-          )
-          this.setState({ preview:  URL.createObjectURL( e.target.files[0])});
-
-          console.log("FILE UPLOAD DONE");
-        }
-        
-        else {
+            this.setState({
+                file: e.target.files[0],
+                fileType: e.target.files[0].type.split('/')[1],
+                upload: true,
+                preview: URL.createObjectURL(e.target.files[0])
+            })
         }
     }
 
     render() {
-        const { loading, imageUrl} = this.state;
+        const { loading, file, fileType, preview} = this.state;
 
         const layout = {
             labelCol: {span: 5},
@@ -136,8 +159,8 @@ class CreateNewPost extends React.Component {
                     </select>
                 </Form.Item>
 
-                {/* <Form.Item name='image' label='Image' rules={[{ required: true }]}>
-                    <Upload
+                {/* <Form.Item name='image' label='Image' rules={[{ required: true }]}> */}
+                    {/* <Upload
                         name="avatar"
                         listType="picture-card"
                         className="avatar-uploader"
@@ -150,9 +173,10 @@ class CreateNewPost extends React.Component {
                         // data={this.handleData}
                     >
                         {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-                    </Upload>
-                </Form.Item> */}
+                    </Upload> */}
+                {/* </Form.Item> */}
 
+                {/* Preview 만들어야해! */}
                 <input type="file" id="file" onChange={this.fileChange}/>
 
                 <Form.Item name='content' label="Content" rules={[{ required: true }]}>
@@ -178,9 +202,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createPost: (post, file) =>
-            dispatch(actionCreators.createPost(post, file)),
-
+        createPost: (post, file, fileType) =>
+            dispatch(actionCreators.createPost(post, file, fileType)),
         getCurrentUser: () => {
             dispatch(actionCreators.getCurrentUser())
         },

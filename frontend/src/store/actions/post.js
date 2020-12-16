@@ -43,16 +43,16 @@ const createPost_ = (post) => {
     }
 }
 
-export const createPost = (formData, file) => {
+export const createPost = (formData, file, fileType) => {
     const s3prefix = 'https://shallwe-bucket.s3.amazonaws.com/'
     return dispatch => {
-        return axios.post('/api/post/', formData)
+        return axios.post('/api/post/', {'formData': formData, 'fileType': fileType})
             .then(res1 => {
                 //FIXME: file 없는 경우 배제.
                 // const response = await axios.put(res1.data.url, file, {
                 axios.put(res1.data.url, file, {
                     headers: {
-                        'Content-Type': 'image/jpeg'
+                        'Content-Type': 'image/' + fileType
                     }
                 })
                 res1.data.url = s3prefix + res1.data.key;
