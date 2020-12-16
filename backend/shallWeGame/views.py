@@ -194,14 +194,6 @@ def user_info(request, user_id=0):
 # @login_required(login_url='/api/login/')
 @csrf_exempt
 def post_list(request):
-    #FIXME: start
-    access_key=os.getenv('AWS_ACCESS_KEY_ID')
-    secret_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-    session = boto3.Session(aws_access_key_id=access_key, aws_secret_access_key=secret_key, region_name='us-east-1')
-    # s3 = boto3.client('s3', region_name = 'us-east-1', config=Config(signature_version='s3v4'))
-    s3 = session.client('s3', config=boto3.session.Config(s3={'addressing_style': 'path'}, signature_version='s3v4'), region_name = 'us-east-1')
-    #FIXME: end
-
     '''Get Post List and Post New Post'''
     # non-allowed requests returns 405
     if request.method != 'GET' and request.method != 'POST':
@@ -234,16 +226,23 @@ def post_list(request):
 
         key = post.id
         print("[DEBUG] key: ", key)
+        #FIXME: start
+        access_key=os.getenv('AWS_ACCESS_KEY_ID')
+        secret_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+        session = boto3.Session(aws_access_key_id=access_key, aws_secret_access_key=secret_key, region_name='us-east-1')
+        s3 = session.client('s3', config=boto3.session.Config(s3={'addressing_style': 'path'}, signature_version='s3v4'), region_name = 'us-east-1')
+        #FIXME: end
+
         url = s3.generate_presigned_url(
             ClientMethod='put_object',
             Params={
                 'Bucket': 'shallwe-bucket',
-                'Key': str(key) + '.' + file_type
+                'Key': 'images/' + str(key) + '.' + file_type
             },
             ExpiresIn=604800
         )
         print("[DEBUG] url: ", url)
-        print("[DEBUG] presigned url's key: ", (str(key) + '.' + file_type))
+        print("[DEBUG] presigned url's key: ", ('images/' + str(key) + '.' + file_type))
         data = {'key': key, 'url': url}
         return JsonResponse(data, status=200)
 
@@ -254,7 +253,7 @@ def post_list(request):
 def post_upload(request, post_id=0):
     print("Entered @post_upload!")
     if request.method == 'POST':
-        req_data = json.loads(request.body.decode())
+        req_data = json.loads(request.body.decode())['data']
         try:
             key = req_data['key']
             print("[DEBUG] key: ", key)
@@ -266,8 +265,9 @@ def post_upload(request, post_id=0):
             post = Post.objects.get(id=key)
         except Post.DoesNotExist:
             return HttpResponseNotFound()
-
+        print("[DEBUG] post: ", post)
         post.image = url # Assign url to post.image
+        print("[DEBUG] post after assigning url : ", post)
         response_dict = {
             "id": post.id,
             "image": post.image,
@@ -280,8 +280,10 @@ def post_upload(request, post_id=0):
             "likingUserList": [user.id for user in post.liking_user_list.all()]
         }
         print(response_dict)
-    else:
+        post.save()
         return HttpResponse(content=json.dumps(response_dict), status=201)
+    else:
+        return HttpResponseNotFound()
     #FIXME: end
 
 @login_required(login_url='/api/login/')

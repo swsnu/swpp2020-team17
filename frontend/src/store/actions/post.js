@@ -55,9 +55,11 @@ export const createPost = (formData, file, fileType) => {
                         'Content-Type': 'image/' + fileType
                     }
                 })
-                res1.data.url = s3prefix + res1.data.key;
+                res1.data.url = s3prefix + 'images/'+ res1.data.key + '.' + fileType;
+                console.log("[DEBUG] res1.data after re-assign url: ", res1.data);
+
                 axios.post('/api/post/upload/' + res1.data.key, res1)
-                    .then(res2 => createPost_(res2.data))
+                    .then(res2 => dispatch(createPost_(res2.data)))
             })
     }
 }
