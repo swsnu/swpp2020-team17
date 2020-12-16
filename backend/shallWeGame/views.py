@@ -12,6 +12,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from .models import DiscordUser, Post, Comment, Tag, Chatroom
 from .recommend import Recommend
+import random
 
 AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=782980326459965490&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
 
@@ -202,6 +203,7 @@ def post_list(request):
              "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": len(post.liking_user_list.all()),
              "likingUserList": [user.id for user in post.liking_user_list.all()]
             } for post in Post.objects.all()]
+        random.shuffle(post_response_list)
         return JsonResponse(post_response_list, safe=False)
     # request.method == 'POST'
     if request.method == 'POST':
@@ -273,6 +275,7 @@ def recommend_post(request):
                 "authorName": post.author.username,
                 "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": len(post.liking_user_list.all()),
                 "likingUserList": [user.id for user in post.liking_user_list.all()]})
+    random.shuffle(post_response_list)
     return JsonResponse(post_response_list, safe=False)
 
 

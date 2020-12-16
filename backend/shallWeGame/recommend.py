@@ -8,7 +8,7 @@ import time
 from gensim.models import Phrases
 from gensim.models.phrases import Phraser
 import gensim
-
+import random
 class Recommend:
 
     def __init__(self, ref=1):
@@ -119,8 +119,16 @@ class Recommend:
 
     def recommend_with(tag_id, interest_contents):
         recommendation = []     # list of post ids recommended
+        max_id = 1
+        if tag_id == 1:
+            max_id = 958
+        elif tag_id == 2:
+            max_id = 1399
+        elif tag_id == 3:
+            max_id = 864
+
         if len(interest_contents) is 0:
-            recommendation = [i for i in range(5)]  # random recommendation
+            recommendation = [int(random.random() * max_id) for i in range(5)]  # random recommendation
         else:
             tagged = []
             for content in interest_contents:
