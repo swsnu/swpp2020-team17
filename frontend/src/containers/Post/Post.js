@@ -327,7 +327,7 @@ class Post extends Component {
         // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
     }
 
-    handleBodyClicked = (postId) => {
+    handleBodyClicked = async (postId) => {
         if (this.state.clickedPostId === null) {
             this.setState({
                 clickedPostId: postId
@@ -341,6 +341,14 @@ class Post extends Component {
                 clickedPostId: postId
             })
         }
+
+        let user = this.props.storedCurrentUser
+        if (user.watchedPostList.length === 0
+            || user.watchedPostList.filter(id => id === postId).length === 0) {
+            user.watchedPostList.push(postId)
+            this.props.onPutUser(user)
+        }
+
     }
 
     handleLikeClicked = (post) => {
@@ -557,19 +565,35 @@ class Post extends Component {
                                             />
                                         </AuthorItem>
                                         <ButtonItem>
-                                            <CSRFToken />
-                                            <Button
-                                                type="primary"
-                                                shape="round"
-                                                disabled={this.props.storedCurrentUser.chatroom != -1
-                                                || this.props.storedUserList.find(user => user.id===item.author).chatroom != -1 
-                                                || this.props.storedUserList.find(user => user.id===item.author).login == false}
-                                                onClick={() => this.onClickShallWe(this.props.storedUserList.find(user => user.id===item.author), item.tag)}
-                                                size="small"
-                                                style={{ fontSize: 8, fontWeight: "bolder" }}
-                                            >
-                                                Shall We
-                                            </Button>
+                                        <CSRFToken />
+                                                <Dropdown 
+                                                    overlay={
+                                                        <Menu>
+                                                            {menuItems.find(value => value.id === item.author) 
+                                                            && this.props.storedUserList.find(user => user.id===item.author).tagList.length > 0 ? 
+                                                                menuItems.find(value => value.id === item.author).menu
+                                                                : <Menu.Item>
+                                                                    <a>User Has No Game Tag</a>
+                                                                    <a>(Cannot Send ShallWe)</a>
+                                                                </Menu.Item>
+                                                            }
+                                                        </Menu>
+                                                    } 
+                                                    placement="bottomLeft" 
+                                                    arrow
+                                                >
+                                                    <Button
+                                                        type="primary"
+                                                        shape="round"
+                                                        disabled={this.props.storedCurrentUser.chatroom != -1
+                                                        || item.chatroom != -1 || item.login == false}
+                                                        /*onClick={() => this.onClickShallWe(item)}*/
+                                                        size="small"
+                                                        style={{ fontSize: 8, fontWeight: "bolder" }}
+                                                    >
+                                                        Shall We
+                                                    </Button>
+                                                </Dropdown>
                                         </ButtonItem>
                                         <GameTagItem>
                                             <GameTag
@@ -644,6 +668,7 @@ const mapStateToProps = (state) => {
         storedCurrentUser: state.ur.currentUser,
         storedTagList: state.tg.tagList,
         storedPostList: state.ps.postList,
+        storedSelectedPost: state.ps.selectedPost,
         storedCommentList: state.cm.selectedCommentList,
         storedUserList: state.ur.userList,
         storedUser: state.ur.selectedUser,
