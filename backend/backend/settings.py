@@ -13,14 +13,18 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 import json
+<<<<<<< HEAD
 import sys
 # import environ
 
+=======
+>>>>>>> master
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 # ROOT_DIR = os.path.dirname(BASE_DIR)
 ROOT_DIR = BASE_DIR
 
+<<<<<<< HEAD
 # env = environ.Env(
 #     DEBUG=(bool, False),
 #     DJANGO_SECRET_KEY=(str, 'SECRET_KEY'),
@@ -33,6 +37,8 @@ ROOT_DIR = BASE_DIR
 # AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 AWS_QUERYSTRING_AUTH = False
 AUTH_USER_MODEL = 'shallWeGame.DiscordUser'
+=======
+>>>>>>> master
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -58,6 +64,7 @@ MEDIAFILES_LOCATION = 'media'
 STATICFILES_LOCATION = 'static'
 
 # AWS Access : LeeDJ
+<<<<<<< HEAD
 # CONFIG_SECRET_DIR = os.path.join(ROOT_DIR, '.config_secret')
 # CONFIG_SETTINGS_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_common.json')
 # config_secret = json.loads(open(CONFIG_SETTINGS_COMMON_FILE).read())
@@ -65,6 +72,14 @@ STATICFILES_LOCATION = 'static'
 # # AWS_ACCESS_KEY_ID = config_secret['default']['access_key_id']
 # # AWS_SECRET_ACCESS_KEY = config_secret['default']['secret_access_key']
 AWS_STORAGE_BUCKET_NAME = 'shallwe-bucket'
+=======
+CONFIG_SECRET_DIR = os.path.join(ROOT_DIR, '.config_secret')
+CONFIG_SETTINGS_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_common.json')
+config_secret = json.loads(open(CONFIG_SETTINGS_COMMON_FILE).read())
+AWS_ACCESS_KEY_ID = config_secret['awsDJ']['access_key_id']
+AWS_SECRET_ACCESS_KEY = config_secret['awsDJ']['secret_access_key']
+AWS_STORAGE_BUCKET_NAME = config_secret['awsDJ']['s3_bucket_name']
+>>>>>>> master
 
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
@@ -81,8 +96,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
 	'storages',
     'corsheaders'
+=======
+	'storages'
+>>>>>>> master
 ]
 
 MIDDLEWARE = [

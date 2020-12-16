@@ -15,6 +15,10 @@ import boto3
 from botocore.config import Config
 import os
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redirect_uri=https%3A%2F%2Fshallwega.me%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
 
 def discord_login(request):
