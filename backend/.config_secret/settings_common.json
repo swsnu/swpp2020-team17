@@ -1,0 +1,7 @@
+{
+  "default": {
+    "aws_access_key_id": "ASIA5BXPT65NMQT6SQM3",
+    "aws_secret_access_key": "SejgKIbt8CgWvkgeNNgPcp/jgiAeyOE03+ktt8An",
+    "aws_s3_bucket_name": "shallwe-bucket"
+  }
+}
