@@ -99,8 +99,22 @@ const deletePost_ = (post) => {
 
 export const deletePost = (id) => {
     return dispatch => {
-        return axios.delete('api/post/' + id)
+        return axios.delete('/api/post/' + id)
             .then(res => dispatch(deletePost_(res.data)))
+    }
+}
+
+const recommendPostList_ = (posts) => {
+    return {
+        type: actionTypes.RecommendPostList,
+        posts: posts
+    }
+}
+
+export const recommendPostList = () => {
+    return dispatch => {
+        return axios.get('/api/recommend/')
+            .then(res => dispatch(recommendPostList_(res.data)));
     }
 }
 

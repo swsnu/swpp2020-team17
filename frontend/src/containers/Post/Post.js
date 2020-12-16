@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 //FIXME: Infinite scroll to be implemented
 // import InfiniteScroll from 'react-infinite-scroller';
-import { List, Divider, Space, Button, Switch } from 'antd';
+import { List, Divider, Space, Button, Switch, Menu, Dropdown } from 'antd';
 //FIXME: Infinite scroll to be implemented
 // import { Spin, message } from 'antd';
 import { MessageTwoTone, HeartTwoTone, DeleteOutlined } from '@ant-design/icons';
@@ -10,7 +10,7 @@ import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
 import Author from '../../components/Author/Author'
 import CommentView from '../../components/Comment/Comment';
-
+import CSRFToken from '../../csrftoken'
 /* Components */
 import GameTag from '../../components/GameTag/GameTag'
 // import CommentList from './CommentList';
@@ -268,6 +268,7 @@ class Post extends Component {
         this.props.onGetUserList();
         this.props.onGetPostList();
         this.props.onGetTagList();
+        this.props.onRecommendPostList();
     }
 
     // state = {
@@ -308,13 +309,11 @@ class Post extends Component {
         this.setState({ selectedTagList: nextSelectedTags });
     }
 
-    async onClickShallWe(receivingUser_id) {
-        await this.props.onGetUser(receivingUser_id)
-        let receivingUser = this.props.storedUser
+    async onClickShallWe(receivingUser, tagId) {
         let newChatroom = {
             isGlobal: false, 
             title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
-            tag: 1,     //tag가 없는디 어떡하지 
+            tag: tagId,     //tag가 없는디 어떡하지 
             maxPersonnel: 2, 
             discordLink: null,
         }
@@ -328,7 +327,7 @@ class Post extends Component {
         // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
     }
 
-    handleBodyClicked = (postId) => {
+    handleBodyClicked = async (postId) => {
         if (this.state.clickedPostId === null) {
             this.setState({
                 clickedPostId: postId
@@ -342,6 +341,14 @@ class Post extends Component {
                 clickedPostId: postId
             })
         }
+
+        let user = this.props.storedCurrentUser
+        if (user.watchedPostList.length === 0
+            || user.watchedPostList.filter(id => id === postId).length === 0) {
+            user.watchedPostList.push(postId)
+            this.props.onPutUser(user)
+        }
+
     }
 
     handleLikeClicked = (post) => {
@@ -485,13 +492,15 @@ class Post extends Component {
         let tagList = [];
         let tagToggle = [];
         let activePostList = [];
+
         // FIXME: Infinite scroll to be implemented
         console.log(this.props.storedPostList);
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
             tagList = this.props.storedTagList;
             if (isRecommend) {
-                postList = this.props.storedPostList.filter(post => post.author !== user.id && !user.friendList.includes(post.author));
+                // postList = this.props.storedPostList.filter(post => post.author !== user.id && !user.friendList.includes(post.author));
+                postList = this.props.storedRecommendPostList;
             } else {
                 postList = this.props.storedPostList.filter(post => user.friendList.includes(post.author));
             }
@@ -512,7 +521,8 @@ class Post extends Component {
             // postList = this.props.storedPostList;
             activePostList = postList.filter(post => {
                 return this.state.selectedTagList.includes(post.tag);
-            });
+            }).slice(-15);
+            console.log(activePostList);
         }
         if (this.state.commentingPostId && !this.props.storedCommentList) this.props.onGetCommentList(this.state.commentingPostId);
         return (
@@ -552,18 +562,22 @@ class Post extends Component {
                                                 //FIXME: user로 넘기도록 수정해야함
                                                 name={item.authorName}
                                                 avatar={item.authorAvatar}
-                                                showOnline={true}
+                                                showOnline={this.props.storedUserList.find(user => user.id===item.author).login}
                                             />
                                         </AuthorItem>
                                         <ButtonItem>
+                                        <CSRFToken />
                                             <Button
                                                 type="primary"
                                                 shape="round"
-                                                onClick={() => this.onClickShallWe(item.author)}
-                                                // disabled="true"
-                                                style={{ fontSize: 12, fontWeight: "bolder" }}
+                                                disabled={this.props.storedCurrentUser.chatroom != -1
+                                                || this.props.storedUserList.find(user => user.id===item.author).chatroom != -1 
+                                                || this.props.storedUserList.find(user => user.id===item.author).login == false}
+                                                onClick={() => this.onClickShallWe(this.props.storedUserList.find(user => user.id===item.author), item.tag)}
+                                                size="small"
+                                                style={{ fontSize: 8, fontWeight: "bolder" }}
                                             >
-                                                Shall We ?
+                                                Shall We
                                             </Button>
                                         </ButtonItem>
                                         <GameTagItem>
@@ -639,9 +653,11 @@ const mapStateToProps = (state) => {
         storedCurrentUser: state.ur.currentUser,
         storedTagList: state.tg.tagList,
         storedPostList: state.ps.postList,
+        storedSelectedPost: state.ps.selectedPost,
         storedCommentList: state.cm.selectedCommentList,
         storedUserList: state.ur.userList,
         storedUser: state.ur.selectedUser,
+        storedRecommendPostList: state.ps.recommendPostList,
     }
 }
 
@@ -671,6 +687,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.deleteComment(comment)),
         onSendShallWe: (newChatroom, sendingUser, receivingUser) => 
             dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
+        onRecommendPostList: () =>
+            dispatch(actionCreators.recommendPostList()),
     }
 }
 

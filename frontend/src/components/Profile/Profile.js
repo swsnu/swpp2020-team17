@@ -112,7 +112,7 @@ class Profile extends Component {
                                     name={this.props.name}
                                     avatar={this.props.avatar}
                                     //FIXME: model추가 필요
-                                    showOnline={true}
+                                    showOnline={this.props.login}
                                 />
                             </AuthorWrapper>
                         }

@@ -23,7 +23,7 @@ class RoomInfo extends Component {
 
     async handleSubmit(value) {
         let newChatroom = {
-            isGlobal: (value.isGlobal==undefined)? false : true,
+            isGlobal: true,
             title: value.title,
             tag: value.tag,
             maxPersonnel: value.maxPersonnel,
@@ -88,10 +88,10 @@ class RoomInfo extends Component {
                             >
                                 <Slider min={2} max={100} />
                             </Form.Item>
-                            <Form.Item id="isGlobal-input" name="isGlobal" label="Public" valuePropName="checked"
+                            {/* <Form.Item id="isGlobal-input" name="isGlobal" label="Public" valuePropName="checked"
                             >
                                 <Switch />
-                            </Form.Item>
+                            </Form.Item> */}
                             <div style={{ textAlign: "right" }}>
                                 <Button id="save-button" type="primary" htmlType="submit">
                                     Save

@@ -267,6 +267,25 @@ class PostInUserPage extends Component {
         this.props.onDeletePost(item.id);
         this.handleBackButton(item.author);
     }
+
+    async onClickShallWe(receivingUser, tagId) {
+        let newChatroom = {
+            isGlobal: false, 
+            title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
+            tag: tagId,     
+            maxPersonnel: 2, 
+            discordLink: null,
+        }
+        console.log(receivingUser);
+        let sendingUser = this.props.storedCurrentUser;
+        await this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
+        if(sendingUser.chatroom != -1) {
+            this.props.history.push('/chatroom/' + sendingUser.chatroom);
+        }
+        // current user의 chatroom 바꾸고 redirect?
+        // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
+    }
+
     render() {
         console.log(this.props.match.params.id);
         console.log(this.props.storedSelectedPost);
@@ -289,10 +308,14 @@ class PostInUserPage extends Component {
                             </Button>
                         </BackWrapper>
                         <DeleteWrapper>
-                            <Button onClick={() => this.handleDeleteButton(item)}> 
-                                <DeleteOutlined />
-                                Delete 
-                            </Button>
+                            {item.author === this.props.storedCurrentUser.id ?
+                                <Button onClick={() => this.handleDeleteButton(item)}> 
+                                    <DeleteOutlined />
+                                    Delete 
+                                </Button>
+                                : null
+                            }
+                            
                         </DeleteWrapper>
                     </LineWrapper>
                     
@@ -309,15 +332,18 @@ class PostInUserPage extends Component {
                                     />
                                 </AuthorItem>
                                 <ButtonItem>
-                                    <Button
-                                        type="primary"
-                                        shape="round"
-                                        onClick={() => this.onClickShallWe(item.author)}
-                                        disabled={item.author == this.props.storedCurrentUser.id}
-                                        style={{ fontSize: 12, fontWeight: "bolder" }}
-                                    >
-                                        Shall We ?
-                                    </Button>
+                                    {item.author !== this.props.storedCurrentUser.id ?
+                                        <Button
+                                            type="primary"
+                                            shape="round"
+                                            onClick={() => this.onClickShallWe(this.props.storedUserList.find(user => user.id === item.author), item.tag)}
+                                            disabled={this.props.storedCurrentUser.chatroom != -1 || author.chatroom != -1 || !author.login}
+                                            style={{ fontSize: 12, fontWeight: "bolder" }}
+                                        >
+                                            Shall We
+                                        </Button>
+                                        : null
+                                    }
                                 </ButtonItem>
                                 <GameTagItem>
                                     <GameTag

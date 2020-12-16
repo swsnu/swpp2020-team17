@@ -1,6 +1,7 @@
 import React, { Component } from 'react'; 
 import { Table, Row, Col, Button, Typography } from 'antd';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import * as actionCreators from '../../store/actions/index';
 
 const shallWeColumns = [
@@ -24,21 +25,22 @@ class ChatroomList extends Component {
         this.props.onGetChatroomList();
     }
 
-    onClickJoin = (id) => {
+    onClickJoin = async (id) => {
         let user = this.props.storedCurrentUser;
         user.chatroom = id;
-        this.props.onPutUser(user);
-        this.props.onCreateChatting(id, user);
+        await this.props.onPutUser(user);
+        await this.props.onCreateChatting(id, user);
         this.props.history.push('/chatroom/' + id);
     }
 
-    onClickSure = (id) => {
+    onClickSure = async (id) => {
         let user = this.props.storedCurrentUser;
         user.shallWeRoomList.filter(room => {
             return room.id != id;
         });
         user.chatroom = id;
-        this.props.onPutUser(user);
+        await this.props.onPutUser(user);
+        await this.props.onCreateChatting(id, user);
         this.props.history.push('/chatroom/' + id);
     }
     
@@ -51,13 +53,19 @@ class ChatroomList extends Component {
         let data = [];
         if (this.props.isShallWe) {
             this.props.list.map(room => {
-                data.push({
-                    game: room.tag == 1? 'LOL' : room.tag == 2? 'HearthStone' : 'MapleStory',
-                    gamers: room.memberList.length,
-                    title: room.title,
-                    sorry: <Button type="primary" key="1" onClick={() => this.onClickSorry(room.id)}> Sorry </Button>,
-                    sure: <Button type="primary" key="2" onClick={() =>this.onClickSure(room.id)}> Sure </Button>,
-                })
+                if (room.memberList) {
+                    if (room.memberList.length < 1) {
+                        this.props.onDeleteChatroom(room.id);
+                        this.props.onDeleteChatting();
+                    }
+                    data.push({
+                        game: room.tag == 1? 'LOL' : room.tag == 2? 'HearthStone' : 'MapleStory',
+                        gamers: room.memberList.length,
+                        title: room.title,
+                        sorry: <Button type="primary" key="1" onClick={() => this.onClickSorry(room.id)}> Sorry </Button>,
+                        sure: <Button type="primary" key="2" onClick={() =>this.onClickSure(room.id)}> Sure </Button>,
+                    })
+                }
                 return data;
             });
             return (
@@ -71,13 +79,19 @@ class ChatroomList extends Component {
             );
         } else {
             this.props.list.map(room => {
-                data.push({
-                    game: room.tag == 1? 'LOL' : room.tag == 2? 'HearthStone' : 'MapleStory',
-                    gamers: room.memberList.length,
-                    title: room.title,
-                    empty: null,
-                    join: <Button type="primary" onClick={() => this.onClickJoin(room.id)}> Join </Button>,
-                })
+                if (room.memberList) {
+                    if (room.memberList.length < 1) {
+                        this.props.onDeleteChatroom(room.id);
+                        this.props.onDeleteChatting();
+                    }
+                    data.push({
+                        game: room.tag == 1? 'LOL' : room.tag == 2? 'HearthStone' : 'MapleStory',
+                        gamers: room.memberList.length,
+                        title: room.title,
+                        empty: null,
+                        join: <Button type="primary" onClick={() => this.onClickJoin(room.id)}> Join </Button>,
+                    })
+                }
                 return data;
             });
             return (
@@ -115,8 +129,10 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.deleteChatroom(id)),
         onCreateChatting: (chatroomId, user) =>
             dispatch(actionCreators.createChatting(chatroomId, user)),
+        onDeleteChatting: () =>
+            dispatch(actionCreators.deleteChatting()),
     }   
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChatroomList);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChatroomList));

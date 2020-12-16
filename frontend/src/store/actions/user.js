@@ -41,7 +41,7 @@ export const getUserList = () => {
     return dispatch => {
         return axios.get('/api/user/')
         .then(res => {
-            dispatch(dispatch(getUserList_(res.data)))
+            dispatch(getUserList_(res.data))
         })
     }
 }
