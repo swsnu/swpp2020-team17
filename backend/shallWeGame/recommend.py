@@ -141,16 +141,16 @@ class Recommend:
                 tagged.append(self.process(content))
 
             res = self.test(tag_id, tagged)    # 5 recommended post ids
-            recommendation = [content[0] for content in res]
+            recommendation = [int(content[0]/2) for content in res]
 
         # HS starts from 0  // 2
         # LoL starts from 1421  // 1
         # MP starts from 2401  // 3
-        
-        # if tag_id == 1:
-        #     recommendation = list(map(lambda x: x+1421, recommendation))
-        # if tag_id == 3:
-        #     recommendation = list(map(lambda x: x+2401, recommendation))
+
+        if tag_id == 1:
+            recommendation = list(map(lambda x: x+1421, recommendation))
+        if tag_id == 3:
+            recommendation = list(map(lambda x: x+2401, recommendation))
 
         return recommendation
 
