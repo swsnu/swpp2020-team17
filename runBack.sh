@@ -3,7 +3,6 @@ DB_FILE=./backend/db.sqlite3
 if [ -f "$DB_FILE" ]; then
     pwd
     echo $DB_FILE
-    rm $DB_FILE
     rm -rf ./backend/__pycache__
     rm -rf ./shallWeGame/__pycache__
 fi

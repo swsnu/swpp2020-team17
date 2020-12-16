@@ -268,6 +268,7 @@ class Post extends Component {
         this.props.onGetUserList();
         this.props.onGetPostList();
         this.props.onGetTagList();
+        this.props.onRecommendPostList();
     }
 
     // state = {
@@ -491,28 +492,15 @@ class Post extends Component {
         let tagList = [];
         let tagToggle = [];
         let activePostList = [];
-        let menuItems = this.props.storedUserList.map(user => {
-            let menu = user.tagList.map(tagId => {
-                return (
-                    <Menu.Item onClick={() => this.onClickShallWe(user, tagId)}>
-                        <a>
-                            {tagId===1 ? "LOL": tagId===2 ? "HearthStone": "MapleStory"}
-                        </a>
-                    </Menu.Item>
-                );
-            });
-            return {
-                id: user.id,
-                menu: menu,
-            };
-        });
+
         // FIXME: Infinite scroll to be implemented
         console.log(this.props.storedPostList);
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
             tagList = this.props.storedTagList;
             if (isRecommend) {
-                postList = this.props.storedPostList.filter(post => post.author !== user.id && !user.friendList.includes(post.author));
+                // postList = this.props.storedPostList.filter(post => post.author !== user.id && !user.friendList.includes(post.author));
+                postList = this.props.storedRecommendPostList;
             } else {
                 postList = this.props.storedPostList.filter(post => user.friendList.includes(post.author));
             }
@@ -533,7 +521,7 @@ class Post extends Component {
             // postList = this.props.storedPostList;
             activePostList = postList.filter(post => {
                 return this.state.selectedTagList.includes(post.tag);
-            });
+            }).slice(-15);
         }
         if (this.state.commentingPostId && !this.props.storedCommentList) this.props.onGetCommentList(this.state.commentingPostId);
         return (
@@ -684,6 +672,7 @@ const mapStateToProps = (state) => {
         storedCommentList: state.cm.selectedCommentList,
         storedUserList: state.ur.userList,
         storedUser: state.ur.selectedUser,
+        storedRecommendPostList: state.ps.recommendPostList,
     }
 }
 
@@ -713,6 +702,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.deleteComment(comment)),
         onSendShallWe: (newChatroom, sendingUser, receivingUser) => 
             dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
+        onRecommendPostList: () =>
+            dispatch(actionCreators.recommendPostList()),
     }
 }
 

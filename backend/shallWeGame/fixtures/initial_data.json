@@ -1,4 +1,5 @@
-[{
+[
+    {
         "model": "shallWeGame.Tag",
         "pk": 1,
         "fields": {
@@ -24,112 +25,46 @@
     },
     {
         "model": "shallWeGame.DiscordUser",
-        "pk": 4,
+        "pk": 1,
         "fields": {
-            "avatar": "https://icon2.cleanpng.com/20180320/sqe/kisspng-twitch-computer-icons-streaming-media-youtube-live-tv-twitch-icon-5ab19172461392.001176751521586546287.jpg",
-            "email": "lol@lol.com",
-            "username": "Song1",
-            "login": true,
-            "tag_list": ["1", "2"]
-        }
-    },
-    {
-        "model": "shallWeGame.DiscordUser",
-        "pk": 5,
-        "fields": {
-            "avatar": null,
-            "email": "lol@lol.com",
-            "username": "Lee1",
+            "avatar": "https://static.hollywoodreporter.com/sites/default/files/2019/03/avatar-publicity_still-h_2019-compressed.jpg",
+            "email": "apdlf577@hanmail.net",
+            "username": "오리",
             "login": false,
             "tag_list": ["1"]
         }
     },
     {
-        "model": "shallWeGame.Post",
-        "pk": 6,
+        "model": "shallWeGame.DiscordUser",
+        "pk": 2,
         "fields": {
-            "image": "https://cdn.pixabay.com/photo/2012/04/18/23/22/joystick-38228_960_720.png",
-            "content": "aaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "author": "4",
-            "tag": "1"
+            "avatar": "https://mblogthumb-phinf.pstatic.net/MjAxODA5MTFfMjc4/MDAxNTM2NjcwNDA1NDEy.PBN07Ki5njzJlOTpYktlvY4H1h8ptz6WgjLGtwy-DgEg.7C0SLAExaGef19G8oFZK9TwIsbAEZBry99qLXWs7rVQg.JPEG.bucketakon/B0060D4CFU_BicentennialMan_UXDY1._V391275704_RI_SX940_.jpg?type=w800",
+            "email": "thdduddn9696@gmail.com",
+            "username": "yeongu",
+            "login": false,
+            "tag_list": ["2"]
         }
     },
     {
-        "model": "shallWeGame.Post",
-        "pk": 7,
+        "model": "shallWeGame.DiscordUser",
+        "pk": 3,
         "fields": {
-            "image": "https://cdn.pixabay.com/photo/2015/10/11/12/48/chess-982260_960_720.jpg",
-            "content": "bbbbbbbbbbbbbbbbbbbbbbbbbbb",
-            "author": "5",
-            "tag": "2"
+            "avatar": "https://lh3.googleusercontent.com/proxy/szYjFhKQZ5rXjxobEWNsiNVLInsPmeG7HOoXLnsOIFtdYwF28M7y_tWecjakP7uGLuBSmP1nw2FR_DsNWeApqAR49cOuK23X3ouK-dil3YkOqpDAPghRw1GlW3sKFz1HXIfo47y3zcuwUs3sxFBriUmSNxHIEpYPP4cXfJNqPkiyROq0ZtOofJzcKQ",
+            "email": "gotjs3841@gmail.com",
+            "username": "haessun",
+            "login": false,
+            "tag_list": ["3"]
         }
     },
     {
-        "model": "shallWeGame.Post",
-        "pk": 8,
+        "model": "shallWeGame.DiscordUser",
+        "pk": 4,
         "fields": {
-            "image": "https://cdn.pixabay.com/photo/2016/04/16/09/03/video-game-1332694_960_720.png",
-            "content": "cccccccccccccccccccccccccccc",
-            "author": "4",
-            "tag": "1"
-        }
-    },
-    {
-        "model": "shallWeGame.Post",
-        "pk": 9,
-        "fields": {
-            "image": "https://cdn.pixabay.com/photo/2017/08/28/16/17/super-mario-2690254_960_720.jpg",
-            "content": "dddddddddddddddddddddddddddd",
-            "author": "5",
-            "tag": "2"
-        }
-    },
-    {
-        "model": "shallWeGame.Post",
-        "pk": 10,
-        "fields": {
-            "image": "https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3750&q=80",
-            "content": "eeeeeeeeeeeeeeeeeeeeeeeeeeee",
-            "author": "5",
-            "tag": "1"
-        }
-    },
-    {
-        "model": "shallWeGame.Comment",
-        "pk": 11,
-        "fields": {
-            "post": "6",
-            "content": "comment of aaaa",
-            "author": "4"
-        }
-    },
-    {
-        "model": "shallWeGame.Comment",
-        "pk": 12,
-        "fields": {
-            "post": "7",
-            "content": "comment of bbbb",
-            "author": "5"
-        }
-    },
-    {
-        "model": "shallWeGame.Chatroom",
-        "pk": 13,
-        "fields": {
-            "is_global": true,
-            "title": "test title 1",
-            "tag": "1",
-            "max_personnel": "10"
-        }
-    },
-    {
-        "model": "shallWeGame.Chatroom",
-        "pk": 14,
-        "fields": {
-            "is_global": true,
-            "title": "test title 2",
-            "tag": "2",
-            "max_personnel": "10"
+            "avatar": null,
+            "email": "gotjs3841@gmail.com",
+            "username": "Dongju",
+            "login": false,
+            "tag_list": ["1"]
         }
     }
 ]

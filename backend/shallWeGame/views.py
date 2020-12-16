@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from .models import DiscordUser, Post, Comment, Tag, Chatroom
+from .recommend import Recommend
+import random
 
 AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=782980326459965490&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
 
@@ -93,7 +95,7 @@ def current_user(request):  # get current user information
                      "avatar": user.avatar, "chatroom": chatroom, "friendList": friend_list,
                      "postList": post_list, "shallWeRoomList": shallwe_room_list,
                      "watchedPostList": watched_post_list, "tagList": tag_list}
-    print(response_dict)
+    # print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
 
 def user_list(request):
@@ -199,7 +201,9 @@ def post_list(request):
             {"id": post.id, "image": post.image, "content": post.content, "author": post.author_id,
              "authorName": post.author.username,
              "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": len(post.liking_user_list.all()),
-             "likingUserList": [user.id for user in post.liking_user_list.all()]} for post in Post.objects.all()]
+             "likingUserList": [user.id for user in post.liking_user_list.all()]
+            } for post in Post.objects.all()]
+        random.shuffle(post_response_list)
         return JsonResponse(post_response_list, safe=False)
     # request.method == 'POST'
     if request.method == 'POST':
@@ -222,6 +226,57 @@ def post_list(request):
                         }
     print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
+
+@login_required(login_url='/api/login/')
+def recommend_post(request):
+    # like
+    # write
+    # watched
+    user = request.user
+    watched = user.watched_post_list.all().values()
+    wrote = user.post_list.all().values()
+    like = user.liking_post_list.all().values()
+
+    post_list = []
+
+    for post in watched:
+        post_list.append(post)
+    for post in wrote:
+        post_list.append(post)
+    for post in like:
+        post_list.append(post)
+
+    # HS starts from 0  // 2
+    # LoL starts from 1400  // 1
+    # MP starts from 2359  // 3
+
+    Lo = []
+    HS = []
+    MP = []
+
+    for post in post_list:
+        if post.tag.id == 1:
+            Lo.append(post.content)
+        elif post.tag.id == 2:
+            HS.append(post.content)
+        elif post.tag.id == 3:
+            MP.append(post.content)
+
+    rec = []
+    rec += Recommend.recommend_with(1, Lo)
+    rec += Recommend.recommend_with(2, HS)
+    rec += Recommend.recommend_with(3, MP)
+    print(rec)
+    post_response_list = []
+
+    for index in rec:
+        post = Post.objects.get(id=index)
+        post_response_list.append({"id": post.id, "image": post.image, "content": post.content, "author": post.author_id,
+                "authorName": post.author.username,
+                "authorAvatar": post.author.avatar, "tag": post.tag_id, "likeNum": len(post.liking_user_list.all()),
+                "likingUserList": [user.id for user in post.liking_user_list.all()]})
+    random.shuffle(post_response_list)
+    return JsonResponse(post_response_list, safe=False)
 
 
 @login_required(login_url='/api/login/')
@@ -460,7 +515,7 @@ def chatroom_info(request, chatroom_id=0):
             for member_id in chatroom_member_list])
         member_list = [member['id'] for member in chatroom.member_list.all().values()]
         response_dict = {"id": chatroom.id, "isGlobal": chatroom.is_global, "title": chatroom.title,
-                         "memberList": member_list, "tag": chatroom.tag, 
+                         "memberList": member_list, "tag": chatroom.tag,
                          "maxPersonnel": chatroom.max_personnel, "discordLink": chatroom.discord_link}
         return HttpResponse(content=json.dumps(response_dict), status=200)
     # request.method == 'DELETE'
