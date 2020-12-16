@@ -522,6 +522,7 @@ class Post extends Component {
             activePostList = postList.filter(post => {
                 return this.state.selectedTagList.includes(post.tag);
             }).slice(-15);
+            console.log(activePostList);
         }
         if (this.state.commentingPostId && !this.props.storedCommentList) this.props.onGetCommentList(this.state.commentingPostId);
         return (
@@ -566,34 +567,18 @@ class Post extends Component {
                                         </AuthorItem>
                                         <ButtonItem>
                                         <CSRFToken />
-                                                <Dropdown 
-                                                    overlay={
-                                                        <Menu>
-                                                            {menuItems.find(value => value.id === item.author) 
-                                                            && this.props.storedUserList.find(user => user.id===item.author).tagList.length > 0 ? 
-                                                                menuItems.find(value => value.id === item.author).menu
-                                                                : <Menu.Item>
-                                                                    <a>User Has No Game Tag</a>
-                                                                    <a>(Cannot Send ShallWe)</a>
-                                                                </Menu.Item>
-                                                            }
-                                                        </Menu>
-                                                    } 
-                                                    placement="bottomLeft" 
-                                                    arrow
-                                                >
-                                                    <Button
-                                                        type="primary"
-                                                        shape="round"
-                                                        disabled={this.props.storedCurrentUser.chatroom != -1
-                                                        || item.chatroom != -1 || item.login == false}
-                                                        /*onClick={() => this.onClickShallWe(item)}*/
-                                                        size="small"
-                                                        style={{ fontSize: 8, fontWeight: "bolder" }}
-                                                    >
-                                                        Shall We
-                                                    </Button>
-                                                </Dropdown>
+                                            <Button
+                                                type="primary"
+                                                shape="round"
+                                                disabled={this.props.storedCurrentUser.chatroom != -1
+                                                || this.props.storedUserList.find(user => user.id===item.author).chatroom != -1 
+                                                || this.props.storedUserList.find(user => user.id===item.author).login == false}
+                                                onClick={() => this.onClickShallWe(this.props.storedUserList.find(user => user.id===item.author), item.tag)}
+                                                size="small"
+                                                style={{ fontSize: 8, fontWeight: "bolder" }}
+                                            >
+                                                Shall We
+                                            </Button>
                                         </ButtonItem>
                                         <GameTagItem>
                                             <GameTag
