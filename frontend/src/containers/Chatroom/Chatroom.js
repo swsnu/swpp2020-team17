@@ -8,6 +8,10 @@ import Chatting from '../../components/Chatting/Chatting';
 import Author from '../../components/Author/Author';
 import styled, { keyframes } from 'styled-components';
 import { Divider, List, Button, Space } from 'antd';
+import {
+    PlusOutlined,
+    MinusOutlined,
+} from '@ant-design/icons';
 
 const MyPageContainer = styled.div`
     display: flex;
@@ -106,7 +110,7 @@ const GridPostsWrapper = styled.div`
 
 
 class Chatroom extends Component {
-    componentDidMount() {    
+    componentDidMount() {
         this.props.onGetCurrentUser();
         this.props.onGetUserList();
         this.props.onGetChatroom(this.props.match.params.id);
@@ -125,9 +129,21 @@ class Chatroom extends Component {
         this.props.history.push('/lobby');
     }
 
+    onClickUserButton = (member_id) => {
+        let user = this.props.storedCurrentUser;
+        if (user.friendList.find(id => id === member_id) === undefined) {
+            user.friendList.push(member_id);
+        }
+        else user.friendList = user.friendList.filter(id => {
+            return id !== member_id
+        });
+        this.props.onPutUser(user);
+    }
+
     render() {
         let chatroom = this.props.storedSelectedChatroom;
         let userList = this.props.storedUserList;
+        let friendList = this.props.storedCurrentUser.friendList;
         let memberList = [];
         console.log(chatroom);
         console.log(userList);
@@ -155,20 +171,33 @@ class Chatroom extends Component {
                                     dataSource={memberList}
                                     renderItem={item => (
                                         <List.Item key={item.id}>
-                                                <FriendItemWrapper>
-                                                    <AuthorItem >
-                                                        <Author
-                                                            //FIXME: user로 넘기도록 수정해야함
-                                                            name={item.username}
-                                                            avatar={item.avatar}
-                                                            showOnline={item.login}
-                                                        />
-                                                    </AuthorItem>
-                                                    <SpaceBetweenItem />
-                                                    <ButtonItem>
-                                                        {item.id !== this.props.storedCurrentUser.id ? <Button>AddorDelete</Button> : null}
-                                                    </ButtonItem>
-                                                </FriendItemWrapper>
+                                            <FriendItemWrapper>
+                                                <AuthorItem >
+                                                    <Author
+                                                        //FIXME: user로 넘기도록 수정해야함
+                                                        name={item.username}
+                                                        avatar={item.avatar}
+                                                        showOnline={item.login}
+                                                    />
+                                                </AuthorItem>
+                                                <SpaceBetweenItem />
+                                                <ButtonItem>
+                                                    {
+                                                        <Button onClick={() => this.onClickUserButton(item.id)} >
+                                                            {item.id !== this.props.storedCurrentUser.id &&
+                                                                friendList.find(id => id === item.id) === undefined &&
+                                                                <PlusOutlined />}
+                                                        </Button>
+                                                    }
+                                                    {
+                                                        <Button onClick={() => this.onClickUserButton(item.id)} >
+                                                            {item.id !== this.props.storedCurrentUser.id &&
+                                                                friendList.find(id => id === item.id) !== undefined &&
+                                                                <MinusOutlined />}
+                                                        </Button>
+                                                    }
+                                                </ButtonItem>
+                                            </FriendItemWrapper>
                                         </List.Item>
                                     )}
                                 />
@@ -176,7 +205,7 @@ class Chatroom extends Component {
                         </MyPageLeftContainer>
                         <MyPageRightContainer>
                             <ProfileCardWrapper>
-                                <Chatting 
+                                <Chatting
                                     chatClient={this.props.storedSelectedChatUser}
                                     channel={this.props.storedSelectedChatChannel}
                                 />
@@ -201,20 +230,20 @@ class Chatroom extends Component {
                                 dataSource={memberList}
                                 renderItem={item => (
                                     <List.Item key={item.id}>
-                                            <FriendItemWrapper>
-                                                <AuthorItem >
-                                                    <Author
-                                                        //FIXME: user로 넘기도록 수정해야함
-                                                        name={item.username}
-                                                        avatar={item.avatar}
-                                                        showOnline={true}
-                                                    />
-                                                </AuthorItem>
-                                                <SpaceBetweenItem />
-                                                <ButtonItem>
-                                                    {item.id !== this.props.storedCurrentUser.id ? <Button>AddorDelete</Button> : null}
-                                                </ButtonItem>
-                                            </FriendItemWrapper>
+                                        <FriendItemWrapper>
+                                            <AuthorItem >
+                                                <Author
+                                                    //FIXME: user로 넘기도록 수정해야함
+                                                    name={item.username}
+                                                    avatar={item.avatar}
+                                                    showOnline={true}
+                                                />
+                                            </AuthorItem>
+                                            <SpaceBetweenItem />
+                                            <ButtonItem>
+                                                {item.id !== this.props.storedCurrentUser.id ? <Button>AddorDelete</Button> : null}
+                                            </ButtonItem>
+                                        </FriendItemWrapper>
                                     </List.Item>
                                 )}
                             />
@@ -243,11 +272,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onGetCurrentUser: () => 
+        onGetCurrentUser: () =>
             dispatch(actionCreators.getCurrentUser()),
         onGetUserList: () =>
             dispatch(actionCreators.getUserList()),
-        onPutUser: (user) => 
+        onPutUser: (user) =>
             dispatch(actionCreators.putUser(user)),
         onGetChatroom: (id) =>
             dispatch(actionCreators.getChatroom(id)),
