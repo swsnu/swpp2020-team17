@@ -14,39 +14,66 @@ function getBase64(img, callback) {
 };
 
 function beforeUpload(file) {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-        message.error('You can only upload JPG/PNG file!');
+    // const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    // if (!isJpgOrPng) {
+    //     message.error('You can only upload JPG/PNG file!');
+    // }
+    const isJpg = file.type === 'image/jpeg';
+    if (!isJpg) {
+        message.error('You can only upload JPG file!');
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
         message.error("Image is bigger than 2MB!");
     }
-    return isJpgOrPng && isLt2M;
+    return isJpg && isLt2M;
 };
+
+// function handleChange(file) {
+
+// }
 
 
 class CreateNewPost extends React.Component {
     state = {
         loading: false,
-        imageUrl: '',
+        // imageUrl: '',
+        file: '',
+        fileName: '',
     };
 
-    handleChange = info => {
-        if (info.file.status === 'uploading') {
-            this.setState({ loading: true });
-            return;
-        }
-        if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj, imageUrl =>
-                this.setState({
-                    imageUrl: imageUrl,
-                    loading: false,
-                }),
-            );
-        }
-    }
+    // handleChange = (info) => {
+    //     // const { onChange } = this.props;
+    //     // const currFile = fileList[0];
+    //     // //FIXME: 테스트 코드
+    //     // console.log("File list: ", fileList);
+    //     // console.log("Current file: ", currFile);
+    //     // console.log("File itself: ", currFile.originFileObj);
+    //     if (info.file.status === 'uploading') {
+    //         this.setState({ loading: true });
+    //         return;
+    //     }
+    //     if (info.file.status === 'done') {
+    //         // Get this url from response in real world.
+    //         getBase64(info.file.originFileObj, imageUrl => {
+    //             console.log("getBase64(info.file.ori~): ", imageUrl)
+    //             console.log("info.file.originFileObj: ", info.file.originFileObj)
+    //             this.setState({
+    //                 imageUrl: imageUrl,
+    //                 loading: false,
+    //                 // file: info.file.originFileObj
+    //                 file: imageUrl,
+    //             })
+    //         })
+    //     }
+    // }
+    
+    // handleData = file => {
+    //     this.setState({
+    //         // file: file.originFileObj
+    //         file: file
+    //     })
+    // }
 
     componentDidUpdate(prevProps, prevState) {
         if(prevProps.selectedPost !== this.props.selectedPost)
@@ -54,14 +81,28 @@ class CreateNewPost extends React.Component {
     }
 
     onFinish(values) {
-        values.image = this.state.imageUrl;
-        console.log(values);
-        this.props.createPost(values)
+        // values.image = this.state.imageUrl;
+        // console.log('File type is:', values);
+        this.props.createPost(values, this.state.file)
+    }
 
+    fileChange = e => {
+        if(e.target.files){
+        this.setState(
+          { file: e.target.files[0], fileName: e.target.files[0].name, upload: true},
+          () => { console.log( "File chosen --->", this.state.file, console.log("File name  --->", this.state.fileName))},
+          )
+          this.setState({ preview:  URL.createObjectURL( e.target.files[0])});
+
+          console.log("FILE UPLOAD DONE");
+        }
+        
+        else {
+        }
     }
 
     render() {
-        const { loading, imageUrl } = this.state;
+        const { loading, imageUrl} = this.state;
 
         const layout = {
             labelCol: {span: 5},
@@ -95,19 +136,24 @@ class CreateNewPost extends React.Component {
                     </select>
                 </Form.Item>
 
-                <Form.Item name='image' label='Image' rules={[{ required: false }]}>
+                {/* <Form.Item name='image' label='Image' rules={[{ required: true }]}>
                     <Upload
                         name="avatar"
                         listType="picture-card"
                         className="avatar-uploader"
                         showUploadList={false}
+                        // action="https://shallwe-bucket.s3.amazonaws.com/"
                         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                         beforeUpload={beforeUpload}
                         onChange={this.handleChange}
+                        // onChange={handleChange}
+                        // data={this.handleData}
                     >
                         {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                     </Upload>
-                </Form.Item>
+                </Form.Item> */}
+
+                <input type="file" id="file" onChange={this.fileChange}/>
 
                 <Form.Item name='content' label="Content" rules={[{ required: true }]}>
                     <Input.TextArea />
@@ -132,8 +178,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createPost: (post) =>
-            dispatch(actionCreators.createPost(post)),
+        createPost: (post, file) =>
+            dispatch(actionCreators.createPost(post, file)),
 
         getCurrentUser: () => {
             dispatch(actionCreators.getCurrentUser())

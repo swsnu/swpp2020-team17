@@ -42,10 +42,23 @@ const createPost_ = (post) => {
         post: post
     }
 }
-export const createPost = (post) => {
+
+export const createPost = (formData, file) => {
+    const s3prefix = 'https://shallwe-bucket.s3.amazonaws.com/'
     return dispatch => {
-        return axios.post('/api/post/', post)
-            .then(res => dispatch(createPost_(res.data)))
+        return axios.post('/api/post/', formData)
+            .then(res1 => {
+                //FIXME: file 없는 경우 배제.
+                // const response = await axios.put(res1.data.url, file, {
+                axios.put(res1.data.url, file, {
+                    headers: {
+                        'Content-Type': 'image/jpeg'
+                    }
+                })
+                res1.data.url = s3prefix + res1.data.key;
+                axios.post('/api/post/upload/' + res1.data.key, res1)
+                    .then(res2 => createPost_(res2.data))
+            })
     }
 }
 
