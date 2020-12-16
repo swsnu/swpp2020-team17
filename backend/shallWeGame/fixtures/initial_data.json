@@ -31,7 +31,7 @@
             "email": "apdlf577@hanmail.net",
             "username": "오리",
             "login": false,
-            "tag_list": ["1", "2", "3"]
+            "tag_list": ["1", "3"]
         }
     },
     {
@@ -50,6 +50,7 @@
         "pk": 3,
         "fields": {
             "avatar": "https://lh3.googleusercontent.com/proxy/szYjFhKQZ5rXjxobEWNsiNVLInsPmeG7HOoXLnsOIFtdYwF28M7y_tWecjakP7uGLuBSmP1nw2FR_DsNWeApqAR49cOuK23X3ouK-dil3YkOqpDAPghRw1GlW3sKFz1HXIfo47y3zcuwUs3sxFBriUmSNxHIEpYPP4cXfJNqPkiyROq0ZtOofJzcKQ",
+            "chatroom": 2,
             "email": "gotjs3841@gmail.com",
             "username": "haessun",
             "login": false,
@@ -61,6 +62,7 @@
         "pk": 4,
         "fields": {
             "avatar": null,
+            "chatroom": 1,
             "email": "gotjs3841@gmail.com",
             "username": "Dongju",
             "login": false,
@@ -81,7 +83,7 @@
         "model": "shallWeGame.Post",
         "pk": 2,
         "fields": {
-            "image": "https://upload3.inven.co.kr/upload/2020/12/16/bbs/i15260567337.jpg",
+            "image": "https://phinf.pstatic.net/tvcast/20170821_1/WlNMD_1503245006934567T1_JPEG/fa57269d-85c0-11e7-a93d-000000004708_03.jpg?type=f880_495",
             "content": "국내 최악의 원딜러ㄴㄴ    세계 최악의 원딜러 ㅇㅇ    뱅",
             "author": "1",
             "tag": "1"
@@ -91,7 +93,7 @@
         "model": "shallWeGame.Post",
         "pk": 3,
         "fields": {
-            "image": "http://www.inven.co.kr/common/image/viewer.php?loc=&file=https%3A%2F%2Fupload3.inven.co.kr%2Fupload%2F2020%2F12%2F15%2Fbbs%2Fi13581812113.jpg",
+            "image": "https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F990573385F3132F718",
             "content": "고것은 테오도르 에메랄드.    롤 이야기 : 말파이트는 돌멩이다",
             "author": "1",
             "tag": "1"
@@ -101,7 +103,7 @@
         "model": "shallWeGame.Post",
         "pk": 4,
         "fields": {
-            "image": "http://www.inven.co.kr/common/image/viewer.php?loc=&file=https%3A%2F%2Fupload3.inven.co.kr%2Fupload%2F2020%2F12%2F14%2Fbbs%2Fi15915880990.jpg",
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpY33NLLipvoI2sDb6mS-lbd3GJscmAFNexg&usqp=CAU",
             "content": "안녕하세요 약쟁이입니다. 최근 상위구간 영상보면서 포식자 쓰레쉬가 핫하더라고요. 요즘 메타가 로밍메타다 보니 그럴수있습니다. 하지만 q e 같은 논타겟으로 로밍가도 이득 챙기기는 은근 어렵더군요. 문득 생각이 든게 잠시만 딜도 쌔고 확정cc가 있는판테는? 판단은 여러분이 하시지만 일겜에서 한번 써보시는걸 권장드립니다. 앞으로도 좋은연구하도록 노력하겠습니다. 참고 포식자라칸도 해봤는데 나쁘지않습니다",
             "author": "1",
             "tag": "1"
@@ -111,18 +113,17 @@
         "model": "shallWeGame.Post",
         "pk": 5,
         "fields": {
-            "image": "http://www.inven.co.kr/common/image/viewer.php?loc=&file=https%3A%2F%2Fupload3.inven.co.kr%2Fupload%2F2020%2F12%2F14%2Fbbs%2Fi15915880990.jpg",
-            "content": "안녕하세요 약쟁이입니다. 최근 상위구간 영상보면서 포식자 쓰레쉬가 핫하더라고요. 요즘 메타가 로밍메타다 보니 그럴수있습니다. 하지만 q e 같은 논타겟으로 로밍가도 이득 챙기기는 은근 어렵더군요. 문득 생각이 든게 잠시만 딜도 쌔고 확정cc가 있는판테는? 판단은 여러분이 하시지만 일겜에서 한번 써보시는걸 권장드립니다. 앞으로도 좋은연구하도록 노력하겠습니다. 참고 포식자라칸도 해봤는데 나쁘지않습니다",
-            "author": "1",
-            "tag": "2"
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrnMVNIIQwdyslQ96MHEclc_-vULokfkbiVw&usqp=CAU",
+            "content": "루나서버가 아닌 타 서버에서도 사기치고 다니는 것 같습니다. 루나서버 닉네임은 광부직바이퍼, 어제 날짜로 150억대 ㅁㅌ거래 한다고 고확날리더군요. 은행은 케이뱅크로 확인되었습니다. 이름은 신X혁, 주민등록증 상으로는 인천광역시 남동구라고 적혀있고 98년생이네요(민증도용이 아니라면) 더치트에도 등록되어 있습니다. 핸드폰 끝자리 4615 입니다. 유저분들 ㅁㅌ거래시 주의하세요^^,, 제 17만원(50억)은 버렸다고 생각하겠습니다. (신고는 했습니다.)",
+            "author": "2",
+            "tag": "3"
         }
-    },
-    {
+    },    {
         "model": "shallWeGame.Post",
         "pk": 6,
         "fields": {
-            "image": "https://upload3.inven.co.kr/upload/2020/12/16/bbs/i13625458745.jpg",
-            "content": "루나서버가 아닌 타 서버에서도 사기치고 다니는 것 같습니다. 루나서버 닉네임은 광부직바이퍼, 어제 날짜로 150억대 ㅁㅌ거래 한다고 고확날리더군요. 은행은 케이뱅크로 확인되었습니다. 이름은 신X혁, 주민등록증 상으로는 인천광역시 남동구라고 적혀있고 98년생이네요(민증도용이 아니라면) 더치트에도 등록되어 있습니다. 핸드폰 끝자리 4615 입니다. 유저분들 ㅁㅌ거래시 주의하세요^^,, 제 17만원(50억)은 버렸다고 생각하겠습니다. (신고는 했습니다.)",
+            "image": "https://t1.daumcdn.net/cfile/tistory/99CF473A5AA747AE1C",
+            "content": "오목판 만들어야딩ㅋ",
             "author": "2",
             "tag": "3"
         }
@@ -130,62 +131,53 @@
         "model": "shallWeGame.Post",
         "pk": 7,
         "fields": {
-            "image": "https://upload3.inven.co.kr/upload/2020/12/16/bbs/i14412753972.jpg",
-            "content": "오목판 만들어야딩ㅋ",
-            "author": "2",
+            "image": "https://lh3.googleusercontent.com/proxy/2C_u-ik8ofONnws9lI6925kcBAVfOAXdVu8-yZLMO98VLz-3X2LOTYZ65L8TY1dTqGghFT8Cy8NMzCM2pUhqSmn-6ITOOqO6bIHWMHTvXiZjmOztMSXrqyga6AbXT_q_rDVVChgb1dXx_LySE0_EaDqkk-FO3XixbSioIxSTPleHzmGzTK-oa2GMVUoHDrgQI0FJFe3bgt_NH9sJVoOw5GbbjYfgn4Jg-K345RdXui3dU8yz6gOJXAg7lWbJyQZIKUXBMAgRC1CjBPMREyG8FHrRC5STpUfHySjjKBJrUFkiTONMN6ys4u6C8I-UmQQC_HUFm9E6wkATOsF58DRID7U",
+            "content": "이거 새벽에 1시까지 기다리면 출석되는거라고 해줘 ㅠㅠ 저거 라이딩 골든패스 살 가치 있음?",
+            "author": "4",
             "tag": "3"
         }
     },    {
         "model": "shallWeGame.Post",
         "pk": 8,
         "fields": {
-            "image": "https://upload3.inven.co.kr/upload/2020/12/16/bbs/i14298480242.jpg",
-            "content": "이거 새벽에 1시까지 기다리면 출석되는거라고 해줘 ㅠㅠ 저거 라이딩 골든패스 살 가치 있음?",
-            "author": "2",
-            "tag": "3"
-        }
-    },    {
-        "model": "shallWeGame.Post",
-        "pk": 9,
-        "fields": {
-            "image": "https://upload3.inven.co.kr/upload/2020/12/16/bbs/i15003873044.png",
+            "image": "https://i.ytimg.com/vi/k2KP98F1Fyo/maxresdefault.jpg",
             "content": "거의 모든직업 캐릭터 200찍어서 유뇬 8100인데 원래 이렇게 현타가 심한게임이었나...",
-            "author": "2",
+            "author": "3",
             "tag": "3"
         }
     },
     {
         "model": "shallWeGame.Post",
-        "pk": 10,
+        "pk": 9,
         "fields": {
-            "image": "https://upload3.inven.co.kr/upload/2020/08/07/bbs/i15544504310.png",
+            "image": "https://static.inven.co.kr/column/2015/11/07/news/i11085281419.jpg",
             "content": "방금 악사랑 마법사한테 된통 맞고왔는데 제덱에 무슨 문제가 있나 궁금합니다",
             "author": "1",
             "tag": "2"
         }
     },    {
         "model": "shallWeGame.Post",
-        "pk": 11,
+        "pk": 10,
         "fields": {
-            "image": "https://upload3.inven.co.kr/upload/2020/12/16/bbs/i13475768658.jpg",
+            "image": "https://lh3.googleusercontent.com/proxy/gGf4wEJKbJeS0YbYqu7FH0wF-JevMHzt3alt7quUF08DOgG0C_QM6q2Wkw5K5Rf8NBePh3KBVox2R3wVuD3le2XP-OgzP_es-v5meE_41qkyfXtEEVCAj7Fz4nAyP1oWVsK4q_5LVaqbwwUC_Tm_vZAKQXNEOAjmH81d4ylCvpMp7fTcr-RyxpPv9g0wZyVQ8pDQSwnRnYr8rnYlEJKAGNK1Z5qAqczXDzVJltG4yTiJDYqDLnKFveWAgmVhRy8ylhmv7zzTiiFUIeW6lDFu1nsllJ7wtTpicg7pzMmeAYd4NSI0eSaMBOoNSsuixA",
             "content": "용들이 천보받고 한다는짓이 엘리스트레이에 다꼬라박기 ㅋㅋㅋ",
             "author": "2",
             "tag": "2"
         }
     },    {
         "model": "shallWeGame.Post",
-        "pk": 12,
+        "pk": 11,
         "fields": {
-            "image": "https://upload3.inven.co.kr/upload/2020/12/16/bbs/i15706483928.png",
+            "image": "https://static.inven.co.kr/column/2020/10/27/news/i14523223386.jpg",
             "content": "4턴마다 주는 다크문축제 카드가 영웅티어 차이를 많이 좁혀주는듯함. 마지막 축제카드로 10/10 질풍 천보나와서 맥스나한테 줌",
             "author": "1",
             "tag": "2"
         }
     },    {
         "model": "shallWeGame.Post",
-        "pk": 13,
+        "pk": 12,
         "fields": {
-            "image": "https://upload3.inven.co.kr/upload/2020/12/14/bbs/i13687154722.png",
+            "image": "https://static.inven.co.kr/column/2017/08/09/news/i16572355922.jpg",
             "content": "업적 이거 하나 남았는데 진짜 매칭 유도 밖에 답 없나요?",
             "author": "2",
             "tag": "2"
