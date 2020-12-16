@@ -1,3 +1,4 @@
+Cython==0.29.21
 appdirs==1.4.4
 asgiref==3.2.10
 astroid==2.4.2
@@ -39,8 +40,6 @@ typing-extensions==3.7.4.3
 urllib3==1.25.11
 uWSGI==2.0.19.1
 wrapt==1.12.1
-Cython==0.29.21
 kss==1.3.1
 gensim==3.8.3
 pandas==1.1.4
-
