@@ -1,7 +1,0 @@
-backend/backend/__pycache__/
-backend/shallWeGame/__pychache__/
-backend.zip
-*.pyc
-backend/.config_secret/
-backend/backend/.env
-node_modules
