@@ -1,6 +1,6 @@
 import React, { Component, useState } from "react";
 // import { ConnectedRouter } from "connected-react-router";
-import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+import { Redirect, Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import { connect } from 'react-redux';
 import * as actionCreators from './store/actions/index';
 import ApplicationRoutes from "./config/ApplicationRoutes";
@@ -9,7 +9,7 @@ import { ConnectedRouter } from "connected-react-router";
 
 class App extends Component {
   state = {
-    userLogined: null
+    userLogined: false
   }
 
   componentDidMount() {
@@ -19,17 +19,22 @@ class App extends Component {
       console.log(this.props.storedCurrentUser);
       this.setState({userLogined: false});
     }
-    else {
-      console.log("ERROR2:");
-      console.log(this.props.storedCurrentUser);
+    // else {
+    //   console.log("ERROR2:");
+    //   console.log(this.props.storedCurrentUser);
+    // }
+    else if (!this.props.storedCurrentUser.login) {
+      console.log("ERROR2:")
+      this.setState({userLogined: false});
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.storedCurrentUser !== prevProps.storedCurrentUser) {
-      this.setState({
-        userLogined: true
-      });
+      if(this.props.storedCurrentUser.login)
+        this.setState({
+          userLogined: true
+        });
     }
   }
 
@@ -65,26 +70,31 @@ class App extends Component {
   // }
 
   render() {
+    console.log(this.state.userLogined)
     if (this.state.userLogined) {
       return (
-        <Router>
+        <ConnectedRouter history={this.props.history}>
             <Switch>
               <div className="App">
-                <ApplicationRoutes handleLogout={this.handleLogout} />
+                {/* <ApplicationRoutes handleLogout={this.handleLogout} history={this.props.history} /> */}
+                <ApplicationRoutes history={this.props.history} handleLogout={this.handleLogout}/>
               </div>
             </Switch>
-          </Router>
+          </ConnectedRouter>
       );
     }
-    return (
-      <Router>
-        <Switch>
+    else
+      return (
+        <ConnectedRouter history={this.props.history}>
           <div className="App">
-            <LoginPage />
-          </div> 
-        </Switch>
-      </Router>
-    );
+            <Switch>
+              {/* <LoginPage /> */}
+              <Route path='/login' component={LoginPage} />
+              <Redirect from='/' to='/login' />
+            </Switch>
+          </div>
+        </ConnectedRouter>
+      );
   }
 }
 
@@ -96,9 +106,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onGetCurrentUser: () => 
+        onGetCurrentUser: () =>
             dispatch(actionCreators.getCurrentUser()),
-        onPutUser: (user) => 
+        onPutUser: (user) =>
             dispatch(actionCreators.putUser(user)),
     }
 }
@@ -113,7 +123,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 
 
-//   // const login = 
+//   // const login =
 //   componentDidMount() {
 
 //   }

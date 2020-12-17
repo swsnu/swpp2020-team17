@@ -12,6 +12,8 @@ const reducer = (state = {
             return {...state, userList: action.users};
         case actionTypes.GetCurrentUser:
             return { ...state, currentUser: action.currentUser }
+        case actionTypes.Logout:
+            return { ...state, currentUser: action.currentUser }
         case actionTypes.GetUser:
             return { ...state, selectedUser: action.user }
         case actionTypes.PutUser:

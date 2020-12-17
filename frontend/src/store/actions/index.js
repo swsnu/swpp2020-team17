@@ -4,6 +4,7 @@ export {
     getCurrentUser,
     getUser,
     putUser,
+    logout
 } from './user';
 
 export {

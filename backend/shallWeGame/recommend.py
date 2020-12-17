@@ -131,7 +131,7 @@ class Recommend:
         elif tag_id == 2:
             max_id = 1421
         elif tag_id == 3:
-            max_id = 868
+            max_id = 869
 
         if len(interest_contents) is 0:
             recommendation = [int(random.random() * max_id) for i in range(5)]  # random recommendation
@@ -153,10 +153,3 @@ class Recommend:
             recommendation = list(map(lambda x: x+2401, recommendation))
 
         return recommendation
-
-    # if __name__ == '__main__':
-    #     contents = [
-    #         "이게 세릴라 신파자 둘 시너지가 ㄹㅇ 미친또라이급이라 탱커고 뭐고 다 녹여버려서 탱커들이 좋다가도 30분넘어서면 예전느낌이 하나도 없고 걍 개물렁하다고할까 피오라로 히드라 디바인 마나무네 스테락 세릴다 5코어 가면 상대가 뭔방어구를 들었는지는 하나도 중요하지 않아지는듯..기본 깡 방관%50퍼 고뎀 퍼뎀 뭐 온갖 괴랄한거 다 붙어서 이건 오른 할아비가 와도 포탑끼고 있어도 걍 녹아뿌림 치감? 60퍼되는 상태까지 가지도 않고 거의 풀피로 죠져짐",
-    #         "사실 일라오이는 저티어에서 주로 나오는 챔프다 보니까 대 일라오이전의 80%정도는 궁든 일라오이한테 달려드는 우리편 개백정을 말릴수 있느냐 없느냐로 결판남"
-    #     ]
-    #     recommend_with(1, contents)

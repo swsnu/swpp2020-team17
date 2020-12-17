@@ -23,7 +23,6 @@ const csrftoken = getCookie('csrftoken');
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
-
 export const login = () => {
     return dispatch => {
         return axios.get('https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redirect_uri=https%3A%2F%2Fshallwega.me%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify');
@@ -92,5 +91,21 @@ export const putUser = (user) => {
     }
 }
 
+
+const logout_= (currentUser) => {
+    return {
+        type: actionTypes.Logout,
+        currentUser: currentUser,
+    }
+}
+
+export const logout = () => {       // read user info from /api/user/
+    return dispatch => {
+        return axios.get('/api/logout/')
+        .then(res => {
+            return dispatch(logout_(res.data))
+        })
+    }
+}
 
 

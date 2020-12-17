@@ -15,6 +15,8 @@ import CSRFToken from '../../csrftoken'
 import GameTag from '../../components/GameTag/GameTag'
 // import CommentList from './CommentList';
 
+import {Redirect} from 'react-router-dom';
+
 const PostPageWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -62,7 +64,7 @@ display: flex;
 justify-self: center; */
 /*Responsive Styles*/
 /* Smartphones (portrait) ---------------- */
-@media only screen 
+@media only screen
 and (max-width : 320px)
 {
 /* Add Your CSS Styling Here */
@@ -70,7 +72,7 @@ align-items: center;
 }
 
 /* Smartphones (landscape) ---------------- */
-@media only screen 
+@media only screen
 and (min-width : 321px)
 and (max-width : 767px)
 {
@@ -79,9 +81,9 @@ align-items: center;
 }
 
 /* Tablets (portrait) -------------------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
 and (orientation : portrait)
 {
 /* Add Your CSS Styling Here */
@@ -89,19 +91,19 @@ align-items: center;
 }
 
 /* Tablets (landscape) ------------------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
 and (orientation : landscape)
-{   
+{
 /* Add Your CSS Styling Here */
     width: 90%;
 align-items: center;
 }
 /* Old Desktops and laptops ------------------ */
 
-@media only screen 
-and (min-width : 1025px) 
+@media only screen
+and (min-width : 1025px)
 {
 /* Add Your CSS Styling Here */
     width: 80%;
@@ -109,8 +111,8 @@ align-items: center;
 }
 
 /* Desktops ------------------ */
-@media only screen 
-and (min-width : 1201px) 
+@media only screen
+and (min-width : 1201px)
 {
 /* Add Your CSS Styling Here */
     width: 70%;
@@ -247,42 +249,11 @@ const NarrowContentsContainer = styled.div`
     flex-basis: 70%;
     word-break: break-word;
     word-wrap: normal;
+    overflow-y: auto;
+    height: 100px;
     margin-top: 10px;
     margin-left: 25px;
     margin-right: 25px;
-    // old end
-
-    // new start
-    /* overflow: hidden;
-    display: block;
-    position: relative;
-    line-height: 1.2em;
-    max-height: 3.6em; */
-
-    /* :after {
-        content: "";
-        text-align: right;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 50%;
-        height: 1.2em;
-        background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
-    } */
-    // new end
-
-    // new start
-    /* background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, white 50%);
-    content: '\200C';
-    display: block;
-    position: absolute;
-    right: 0;
-    top: 4.5em;
-    width: 25%;
-    text-align: center; */
-    // new end
-
-    /* flex-grow:2; */
     /* word-wrap: "true"; */
     /* display: inline-flex; */
     /* flex-basis: 70%; */
@@ -373,10 +344,10 @@ class Post extends Component {
 
     async onClickShallWe(receivingUser, tagId) {
         let newChatroom = {
-            isGlobal: false, 
-            title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
-            tag: tagId,     //tag가 없는디 어떡하지 
-            maxPersonnel: 2, 
+            isGlobal: false,
+            title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username,
+            tag: tagId,     //tag가 없는디 어떡하지
+            maxPersonnel: 2,
             discordLink: null,
         }
         console.log(receivingUser);
@@ -550,6 +521,25 @@ class Post extends Component {
         }
     }
 
+    returnOnlineUser = (toFind) => {
+        let toReturn = this.props.storedUserList.find(user => user.id===toFind).login
+        if (toReturn == undefined) return false;
+        else return toReturn
+    }
+
+    returnDisabled = (toFind) => {
+        let first = this.props.storedCurrentUser.chatroom != -1
+        // let second = this.props.storedUserList.find(user => user.id===item.author).chatroom != -1
+        let findUser = this.props.storedUserList.find(user => user.id===toFind)
+        if (findUser == undefined) {
+            console.log(toFind)
+         }
+        let second = findUser.chatroom != -1
+        // let third = this.props.storedUserList.find(user => user.id===toFind).login == false
+        let third = findUser.login == false
+        return (first || second || third)
+    }
+
     render() {
         let { postList, isRecommend } = this.state;
         let user = null;
@@ -559,8 +549,15 @@ class Post extends Component {
 
         // FIXME: Infinite scroll to be implemented
         console.log(this.props.storedPostList);
+
+        if (this.props.storedUserList==undefined || this.props.storedUserList.undefined) this.props.onGetUserList();
+        if (this.props.storedCurrentUser==undefined) this.props.onGetCurrentUser();
+        else console.log(this.props.storedCurrentUser)
+
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
+            if(!user.login) return <Redirect to='/login'/>
+
             tagList = this.props.storedTagList;
             if (isRecommend) {
                 // postList = this.props.storedPostList.filter(post => post.author !== user.id && !user.friendList.includes(post.author));
@@ -569,7 +566,7 @@ class Post extends Component {
                 postList = this.props.storedPostList.filter(post => user.friendList.includes(post.author));
             }
             console.log(postList);
-            
+
             tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
                 return (
                     <GameTag
@@ -597,13 +594,13 @@ class Post extends Component {
                         {tagToggle.length > 0 ? tagToggle: "Add your Tag!"}
                     </GameTagWrapper>
                     <RecommendToggleWrapper>
-                        {tagToggle.length > 0 ? 
+                        {tagToggle.length > 0 ?
                             <Switch checkedChildren="Recommend" unCheckedChildren="Friend's Posts" defaultChecked onChange={this.onToggleRecommend}/>
                             : null
                         }
                     </RecommendToggleWrapper>
                 </LineWrapper>
-                
+
                 <PostListWrapper>
                     {/*
                 //FIXME: Infinite scroll to be implemented
@@ -626,7 +623,7 @@ class Post extends Component {
                                                 //FIXME: user로 넘기도록 수정해야함
                                                 name={item.authorName}
                                                 avatar={item.authorAvatar}
-                                                showOnline={this.props.storedUserList.find(user => user.id===item.author).login}
+                                                showOnline={() => this.returnOnlineUser(item.author)}
                                             />
                                         </AuthorItem>
                                         <ButtonItem>
@@ -634,9 +631,10 @@ class Post extends Component {
                                             <Button
                                                 type="primary"
                                                 shape="round"
-                                                disabled={this.props.storedCurrentUser.chatroom != -1
-                                                || this.props.storedUserList.find(user => user.id===item.author).chatroom != -1 
-                                                || this.props.storedUserList.find(user => user.id===item.author).login == false}
+                                                // disabled={this.props.storedCurrentUser.chatroom != -1
+                                                // || this.props.storedUserList.find(user => user.id===item.author).chatroom != -1
+                                                // || this.props.storedUserList.find(user => user.id===item.author).login == false}
+                                                disabled={() => this.returnDisabled(item.author)}
                                                 onClick={() => this.onClickShallWe(this.props.storedUserList.find(user => user.id===item.author), item.tag)}
                                                 size="small"
                                                 style={{ fontSize: 8, fontWeight: "bolder" }}
@@ -685,7 +683,7 @@ class Post extends Component {
                                                 </Space>
                                             </div>
                                         </IconContainer>
-                                        <CommentView 
+                                        <CommentView
                                             commentingPostId={this.state.commentingPostId}
                                             currPost={item}
                                             userList={this.props.storedUserList}
@@ -741,15 +739,15 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getTagList()),
         onGetCommentList: (id) =>
             dispatch(actionCreators.getCommentList(id)),
-        onGetPost: (id) => 
+        onGetPost: (id) =>
             dispatch(actionCreators.getPost(id)),
         onGetUserList: () =>
             dispatch(actionCreators.getUserList()),
-        onCreateComment: (postId, comment) => 
+        onCreateComment: (postId, comment) =>
             dispatch(actionCreators.createComment(postId, comment)),
-        onDeleteComment: (comment) => 
+        onDeleteComment: (comment) =>
             dispatch(actionCreators.deleteComment(comment)),
-        onSendShallWe: (newChatroom, sendingUser, receivingUser) => 
+        onSendShallWe: (newChatroom, sendingUser, receivingUser) =>
             dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
         onRecommendPostList: () =>
             dispatch(actionCreators.recommendPostList()),
