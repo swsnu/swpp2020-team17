@@ -29,8 +29,4 @@ matrix:
         - pip install -r requirements.txt
       script:
         - python manage.py migrate --run-syncdb
-        - pylint **/*.py --load-plugins pylint_django
-        - coverage run --source='./shallWeGame' manage.py test
-        - coverage report
-        - coverage xml
-        - cd ..
+        - pylint **/*.py --disable='shallWeGame.tests' --load-plugins pylint_django
