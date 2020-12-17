@@ -1,6 +1,6 @@
 import * as actionTypes from '../actions/actionTypes';
 import { StreamChat } from 'stream-chat';
-const chatClient = new StreamChat('dc8cfsjehcsx');
+const chatClient = new StreamChat('uj4pbgxc8kna');
 
 const reducer = (state = {
     chatroomList: [],
