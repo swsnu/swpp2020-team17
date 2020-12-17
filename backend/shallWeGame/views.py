@@ -1,6 +1,4 @@
 # views.py
-####
-###
 import json
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, \
@@ -8,13 +6,16 @@ from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, \
 from django.shortcuts import redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 import requests
 from .models import DiscordUser, Post, Comment, Tag, Chatroom
 from .recommend import Recommend
 import random
+import boto3
+from botocore.config import Config
+import os
 
-AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=782980326459965490&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
+AUTH_URL_DISCORD = 'https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redirect_uri=https%3A%2F%2Fshallwega.me%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify'
 
 def discord_login(request):
     '''Redirect to Auth Page'''
@@ -24,6 +25,7 @@ def discord_login(request):
 def discord_login_redirect(request):
     '''Redirect when Logged In'''
     code = request.GET.get('code')
+    print(code)
     user = exchange_code(code)
     try:
         discord_user = DiscordUser.objects.get(username=user['username'])
@@ -41,16 +43,16 @@ def discord_login_redirect(request):
         )
         discord_user.save()
     login(request, discord_user)
-    return redirect("http://localhost:3000/")
+    return redirect("https://shallwega.me/")
 
 def exchange_code(code: str):
     '''Exchange Code with Discord API'''
     data = {
-        "client_id": "782980326459965490",
-        "client_secret": "wmTVf-X76Zsk_9uNuTiBHrSYtY6Xbe11",
+        "client_id": "773940751608053771",
+        "client_secret": "0eOaEEJQAxUPa2Hr7WGwD0qkbPkDI53z",
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "http://localhost:8000/api/login/redirect",
+        "redirect_uri": "https://shallwega.me/api/login/redirect",
         "scope": "identify",
         "auth_url": "https://discordapp.com/api/oauth2/authorize",
     }
@@ -60,7 +62,7 @@ def exchange_code(code: str):
     response = requests.post('https://discord.com/api/v6/oauth2/token', data=data, headers=headers)
     credentials = response.json()
     access_token = credentials['access_token']
-    response = requests.get("http://discord.com/api/v6/users/@me", headers={
+    response = requests.get("https://discord.com/api/v6/users/@me", headers={
         'Authorization': 'Bearer %s' % access_token,
         "Content-Type": 'application/json'
     })
@@ -204,7 +206,8 @@ def user_info(request, user_id=0):
 ######################
 # post
 ######################
-@login_required(login_url='/api/login/')
+# @login_required(login_url='/api/login/')
+@csrf_exempt
 def post_list(request):
     '''Get Post List and Post New Post'''
     # non-allowed requests returns 405
@@ -220,27 +223,85 @@ def post_list(request):
             } for post in Post.objects.all()]
         random.shuffle(post_response_list)
         return JsonResponse(post_response_list, safe=False)
-    # request.method == 'POST'
+
     if request.method == 'POST':
         try:
-            req_data = json.loads(request.body.decode())
-            post_image = req_data['image']
+            req_data_origin = json.loads(request.body.decode())
+            req_data = req_data_origin['formData']
+            file_type = req_data_origin['fileType']
+            print("[DEBUG] req_data: ", req_data)
+            print("[DEBUG] file_type: ", file_type)
+            # post_image = req_data['image']
             post_content = req_data['content']
             post_tag = req_data['tag']
         except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
         post_author = request.user
         tag = Tag.objects.get(name=post_tag)
-        post = Post(image=post_image, content=post_content, author=post_author, tag=tag)
+        post = Post(image='', content=post_content, author=post_author, tag=tag) # Now, post.image is empty
+        post.save() # Now, we have post.id
+
+        key = post.id
+        print("[DEBUG] key: ", key)
+        #FIXME: start
+        access_key=os.getenv('AWS_ACCESS_KEY_ID')
+        secret_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+        session = boto3.Session(aws_access_key_id=access_key, aws_secret_access_key=secret_key, region_name='us-east-1')
+        s3 = session.client('s3', config=boto3.session.Config(s3={'addressing_style': 'path'}, signature_version='s3v4'), region_name = 'us-east-1')
+        #FIXME: end
+
+        url = s3.generate_presigned_url(
+            ClientMethod='put_object',
+            Params={
+                'Bucket': 'shallwe-bucket',
+                'Key': 'images/' + str(key) + '.' + file_type
+            },
+            ExpiresIn=604800
+        )
+        print("[DEBUG] url: ", url)
+        print("[DEBUG] presigned url's key: ", ('images/' + str(key) + '.' + file_type))
+        data = {'key': key, 'url': url}
+        return JsonResponse(data, status=200)
+
+#FIXME: start
+# param; data{key, url}, file
+# @login_required(login_url='/api/login/')
+@csrf_exempt
+def post_upload(request, post_id=0):
+    print("Entered @post_upload!")
+    if request.method == 'POST':
+        req_data = json.loads(request.body.decode())['data']
+        try:
+            key = req_data['key']
+            print("[DEBUG] key: ", key)
+            url = req_data['url']
+            print("[DEBUG] url: ", url)
+        except(KeyError, JSONDecodeError) as e:
+            return HttpResponseBadRequest()
+        try:
+            post = Post.objects.get(id=key)
+        except Post.DoesNotExist:
+            return HttpResponseNotFound()
+        print("[DEBUG] post: ", post)
+        post.image = url # Assign url to post.image
+        print("[DEBUG] post after assigning url : ", post)
+        response_dict = {
+            "id": post.id,
+            "image": post.image,
+            "content": post.content,
+            "author": post.author_id,
+            "authorName": post.author.username,
+            "authorAvatar": post.author.avatar,
+            "tag": post.tag.id,
+            "likeNum": len(post.liking_user_list.all()),
+            # "likingUserList": [user.id for user in post.liking_user_list.all()]
+        }
+        print(response_dict)
         post.save()
-        response_dict = {"id": post.id, "image": post.image, "content": post.content,
-                        "author": post_author.id, "authorName": post_author.username,
-                        "authorAvatar": post_author.avatar, "tag": post.tag.id,
-                        "likeNum": len(post.liking_user_list.all()),
-                        # "likingUserList": [post_author]
-                        }
-    print(response_dict)
-    return HttpResponse(content=json.dumps(response_dict), status=201)
+        return HttpResponse(content=json.dumps(response_dict), status=201)
+    else:
+        return HttpResponseNotFound()
+    #FIXME: end
 
 @login_required(login_url='/api/login/')
 def recommend_post(request):
@@ -313,12 +374,13 @@ def post_info(request, post_id=0):
                                    post.liking_user_list.all().values()]
         liking_user_response_list = []
         for liking_user in liking_user_object_list:
-            liking_user_response_list.append(liking_user['id'])
+            liking_user_response_list.append(liking_user.id)
         return JsonResponse(
             {"id": post.id, "image": post.image, "content": post.content, "author": post.author_id,
              "authorName": post.author.username,
              "authorAvatar": post.author.avatar, "tag": post.tag.id, "likeNum": len(post.liking_user_list.all()),
              "likingUserList": [user.id for user in post.liking_user_list.all()]})
+
     if request.method == 'PUT':
         post = Post.objects.get(id=post_id)
         try:
@@ -377,8 +439,6 @@ def comment_list(request, post_id=0):
                         "author": comment.author.id}
     return HttpResponse(content=json.dumps(response_dict), status=200)
 
-
-
 @login_required(login_url='/api/login/')
 def comment_info(request, comment_id=0):
     '''Get Comment Info, Put Comment, and Delete Comment'''
@@ -390,7 +450,6 @@ def comment_info(request, comment_id=0):
         comment = Comment.objects.get(id=comment_id)
     except Comment.DoesNotExist:
         return HttpResponseNotFound()
-
     if request.method == 'GET':
         comment = Comment.objects.get(id=comment_id)
         return JsonResponse(

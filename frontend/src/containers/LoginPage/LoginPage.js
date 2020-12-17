@@ -16,7 +16,7 @@ const Positioner = styled.div`
 
 class LoginPage extends Component {
     onClickLogin = () => {
-        window.location = ('https://discord.com/api/oauth2/authorize?client_id=782980326459965490&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify')
+        window.location = ('https://discord.com/api/oauth2/authorize?client_id=773940751608053771&redirect_uri=https%3A%2F%2Fshallwega.me%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify')
         this.props.onLogin();
     }
 
@@ -127,7 +127,7 @@ export default connect(null, mapDispatchToProps)(LoginPage);
 //             <div className="block__body">
 //                 {/* <CSRFToken /> */}
 //                 <a
-//                     href="https://discord.com/api/oauth2/authorize?client_id=771395876442734603&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify"
+//                     href="https://discord.com/oauth2/authorize?client_id=773940751608053771&redirect_uri=https%3A%2F%2Fshallwega.me%2Fapi%2Flogin%2Fredirect&response_type=code&scope=identify"
 //                     className="login_button"
 //                 >
 //                     Login with Discord

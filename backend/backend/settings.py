@@ -11,24 +11,64 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import json
+import sys
+# import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# ROOT_DIR = os.path.dirname(BASE_DIR)
+ROOT_DIR = BASE_DIR
 
+# env = environ.Env(
+#     DEBUG=(bool, False),
+#     DJANGO_SECRET_KEY=(str, 'SECRET_KEY'),
+#     AWS_ACCESS_KEY_ID=(str, None),
+#     AWS_SECRET_ACCESS_KEY=(str, None)
+# )
+# environ.Env.read_env()
+
+# AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_QUERYSTRING_AUTH = False
+AUTH_USER_MODEL = 'shallWeGame.DiscordUser'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'e*90s1khk_s)stmhzl9sz(!27pssafv(kyg@h&%h*&w9l2(we#'
+# sys.path.append('shall')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# Edit before run
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ec2-54-236-84-205.compute-1.amazonaws.com', '54.236.84.205', 'shallwega.me', 'www.shallwega.me', 'localhost', 'localhost:8000']
 
 AUTHENTICATION_BACKENDS = [
     'shallWeGame.auth.DiscordAuthenticationBackend'
+]
+
+# S3 Storage
+DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
+STATICFILES_STORAGE = 'config.storages.StaticStorage'
+MEDIAFILES_LOCATION = 'media'
+STATICFILES_LOCATION = 'static'
+
+# AWS Access : LeeDJ
+# CONFIG_SECRET_DIR = os.path.join(ROOT_DIR, '.config_secret')
+# CONFIG_SETTINGS_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_common.json')
+# config_secret = json.loads(open(CONFIG_SETTINGS_COMMON_FILE).read())
+# AWS_STORAGE_BUCKET_NAME = config_secret['default']['aws_s3_bucket_name']
+# # AWS_ACCESS_KEY_ID = config_secret['default']['access_key_id']
+# # AWS_SECRET_ACCESS_KEY = config_secret['default']['secret_access_key']
+AWS_STORAGE_BUCKET_NAME = 'shallwe-bucket'
+
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+	STATIC_DIR,
 ]
 
 # Application definition
@@ -41,10 +81,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+	'storages',
+    'corsheaders'
 ]
-
-STATIC_URL = '/static/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -54,7 +93,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -126,3 +165,36 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+##CORS
+CORS_ORIGIN_ALLOW_ALL=True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'Access-Control-Allow-Origin'
+)
+
+CORS_ORIGIN_WHITELIST = (
+    'https://shallwega.me',
+    'https://www.shallwega.me',
+    'http://localhost:8000',
+    'https://shallwe-bucket.s3.amazonaws.com'
+)

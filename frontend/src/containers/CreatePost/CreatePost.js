@@ -25,28 +25,75 @@ function beforeUpload(file) {
     return isJpgOrPng && isLt2M;
 };
 
-
 class CreateNewPost extends React.Component {
     state = {
         loading: false,
         imageUrl: '',
+        file: '',
+        fileType: '',
+        // upload: '',
+        preview: '',
     };
 
-    handleChange = info => {
+    handleChange = (info) => {
+        // const { onChange } = this.props;
+        // const currFile = fileList[0];
+        // //FIXME: 테스트 코드
+        // console.log("File list: ", fileList);
+        // console.log("Current file: ", currFile);
+        // console.log("File itself: ", currFile.originFileObj);
         if (info.file.status === 'uploading') {
             this.setState({ loading: true });
             return;
         }
         if (info.file.status === 'done') {
             // Get this url from response in real world.
-            getBase64(info.file.originFileObj, imageUrl =>
+            getBase64(info.file.originFileObj, imageUrl => {
+                console.log("getBase64(info.file.ori~): ", imageUrl)
+                console.log("info.file.originFileObj: ", info.file.originFileObj)
                 this.setState({
                     imageUrl: imageUrl,
                     loading: false,
-                }),
-            );
+                    file: info.file.originFileObj,
+                    fileType: info.file.type.split('/')[1],
+                    // file: imageUrl,
+                })
+            })
         }
     }
+    
+    // handleData = file => {
+    //     this.setState({
+    //         // file: file.originFileObj
+    //         file: file
+    //     })
+    // }
+
+    // beforeUpload(file) {
+    //     const isJpg = file.type === 'image/jpeg';
+    //     const isPng = file.type === 'image/png';
+
+    //     if (isJpg) {
+    //         this.setState({
+    //             fileType: 'jpeg'
+    //         })
+    //         console.log("[DEBUG] filetype is jpeg");
+    //     } else if (isPng) {
+    //         this.setState({
+    //             fileType: 'png'
+    //         })
+    //         console.log("[DEBUG] filetype is png");
+    //     } else {
+    //         message.error('You can only upload JPG/PNG file!');
+    //     }
+
+    //     const isLt2M = file.size / 1024 / 1024 < 2;
+    //     if (!isLt2M) {
+    //         message.error("Image is bigger than 2MB!");
+    //     }
+
+    //     return (isJpg || isPng) && isLt2M;
+    // };
 
     componentDidUpdate(prevProps, prevState) {
         if(prevProps.selectedPost !== this.props.selectedPost)
@@ -54,14 +101,27 @@ class CreateNewPost extends React.Component {
     }
 
     onFinish(values) {
-        values.image = this.state.imageUrl;
-        console.log(values);
-        this.props.createPost(values)
-
+        // values.image = this.state.imageUrl;
+        // console.log('File type is:', values);
+        console.log('[DEBUG] values: ', values);
+        console.log('[DEBUG] this.state.file: ', this.state.file);
+        console.log('[DEBUG] this.state.fileType: ', this.state.fileType);
+        this.props.createPost(values, this.state.file, this.state.fileType)
     }
 
+    // fileChange = e => {
+    //     if(e.target.files){
+    //         this.setState({
+    //             file: e.target.files[0],
+    //             fileType: e.target.files[0].type.split('/')[1],
+    //             upload: true,
+    //             preview: URL.createObjectURL(e.target.files[0])
+    //         })
+    //     }
+    // }
+
     render() {
-        const { loading, imageUrl } = this.state;
+        const { loading, imageUrl} = this.state;
 
         const layout = {
             labelCol: {span: 5},
@@ -101,13 +161,19 @@ class CreateNewPost extends React.Component {
                         listType="picture-card"
                         className="avatar-uploader"
                         showUploadList={false}
+                        // action="https://shallwe-bucket.s3.amazonaws.com/"
                         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                         beforeUpload={beforeUpload}
                         onChange={this.handleChange}
+                        // onChange={handleChange}
+                        // data={this.handleData}
                     >
                         {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                     </Upload>
                 </Form.Item>
+
+                {/* Preview 만들어야해!
+                <input type="file" id="file" onChange={this.fileChange}/> */}
 
                 <Form.Item name='content' label="Content" rules={[{ required: true }]}>
                     <Input.TextArea />
@@ -132,9 +198,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createPost: (post) =>
-            dispatch(actionCreators.createPost(post)),
-
+        createPost: (post, file, fileType) =>
+            dispatch(actionCreators.createPost(post, file, fileType)),
         getCurrentUser: () => {
             dispatch(actionCreators.getCurrentUser())
         },
