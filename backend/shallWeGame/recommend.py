@@ -1,21 +1,22 @@
-import kss
+"""recommend.py"""
 import os
-import csv
-import pandas as pd
+import random
+import kss
 from gensim.models import doc2vec
 from gensim.models.doc2vec import TaggedDocument
-import time
 from gensim.models import Phrases
 from gensim.models.phrases import Phraser
 import gensim
-import random
+
+'''Recommend'''
 class Recommend:
 
     def __init__(self, ref=1):
+    #init
         self.ref = ref
 
     def process(self, docs):
-        # sentence_tokenized_text = docs
+        '''process'''
 
         sentence_tokenized_text = []
 
@@ -23,16 +24,15 @@ class Recommend:
         for sent in kss.split_sentences(line):
             sentence_tokenized_text.append(sent.strip())
 
-        # print(sentence_tokenized_text)
-
-        # tokenize
-        # for row in docs:
-        #     sentence_tokenized_text.append(row[1])
-
-        punct = "/-'?!.,#$%\'()*+-/:;<=>@[\\]^_`{|}~" + '""“”’' + '∞θ÷α•à−β∅³π‘₹´°£€\×™√²—–&'
-        punct_mapping = {"‘": "'", "₹": "e", "´": "'", "°": "", "€": "e", "™": "tm", "√": " sqrt ", "×": "x", "²": "2", "—": "-", "–": "-", "’": "'", "_": "-", "`": "'", '“': '"', '”': '"', '“': '"', "£": "e", '∞': 'infinity', 'θ': 'theta', '÷': '/', 'α': 'alpha', '•': '.', 'à': 'a', '−': '-', 'β': 'beta', '∅': '', '³': '3', 'π': 'pi', }
+        punct = "/-'?!.,#$%\'()*+-/:;<=>@[\\]^_`{|}~" + '""“”’' + '∞θ÷α•à−β∅³π‘₹´°£€×™√²—–&'
+        punct_mapping = {"‘": "'", "₹": "e", "´": "'", "°": "", "€": "e", "™": "tm", "√": " sqrt ",
+                         "×": "x", "²": "2", "—": "-", "–": "-", "’": "'", "_": "-", "`": "'",
+                         '“': '"', '”': '"', '“': '"', "£": "e", '∞': 'infinity', 'θ': 'theta',
+                         '÷': '/', 'α': 'alpha', '•': '.', 'à': 'a', '−': '-', 'β': 'beta', '∅': '',
+                         '³': '3', 'π': 'pi', }
 
         def clean_punc(text, punct, mapping):
+            '''clean_punc'''
             for p in mapping:
                 text = text.replace(p, mapping[p])
 
@@ -49,24 +49,25 @@ class Recommend:
         for sent in sentence_tokenized_text:
             cleaned_corpus.append(clean_punc(sent, punct, punct_mapping))
 
-        # print(cleaned_corpus)
-
         import re
+
         def clean_text(texts):
+            '''clean_text'''
             corpus = []
             for i in range(0, len(texts)):
-                review = re.sub(r'[@%\\*=()/~#&\+á?\xc3\xa1\-\|\.\:\;\!\-\,\_\~\$\'\"]', '',str(texts[i])) #remove punctuation
-                review = re.sub(r'\d+','', review)# remove number
-                review = review.lower() #lower case
-                review = re.sub(r'\s+', ' ', review) #remove extra space
-                review = re.sub(r'<[^>]+>','',review) #remove Html tags
-                review = re.sub(r'\s+', ' ', review) #remove spaces
-                review = re.sub(r"^\s+", '', review) #remove space from start
-                review = re.sub(r'\s+$', '', review) #remove space from the end
+                review = re.sub(r'[@%\\*=()/~#&\+á?\xc3\xa1\-\|\.\:\;\!\-\,\_\~\$\'\"]', '',
+                                str(texts[i]))  # remove punctuation
+                review = re.sub(r'\d+', '', review)  # remove number
+                review = review.lower()  # lower case
+                review = re.sub(r'\s+', ' ', review)  # remove extra space
+                review = re.sub(r'<[^>]+>', '', review)  # remove Html tags
+                review = re.sub(r'\s+', ' ', review)  # remove spaces
+                review = re.sub(r"^\s+", '', review)  # remove space from start
+                review = re.sub(r'\s+$', '', review)  # remove space from the end
 
-                review = re.sub(r'\[[^)]*\]', '',review)
-                review = re.sub(r'\([^)]*\)', '',review)
-                review = re.sub(r'\<[^)]*\>', '',review)
+                review = re.sub(r'\[[^)]*\]', '', review)
+                review = re.sub(r'\([^)]*\)', '', review)
+                review = re.sub(r'\<[^)]*\>', '', review)
 
                 review = re.sub(r'[\<\>\(\)\[\]]', '', review)
 
@@ -76,11 +77,10 @@ class Recommend:
         basic_preprocessed_corpus = clean_text(cleaned_corpus)
         basic_preprocessed_corpus = clean_text(basic_preprocessed_corpus)
 
-
         ### 불필요한 공백 및 특수문자 제거, 괄호와 그 안에 있는 내용 제거, 숫자 제거, 영문 제거 완료 ###
 
         token_ = [doc.split(" ") for doc in basic_preprocessed_corpus]
-        bigram = Phrases(token_, min_count=1, threshold=2,delimiter=b' ')
+        bigram = Phrases(token_, min_count=1, threshold=2, delimiter=b' ')
 
         bigram_phraser = Phraser(bigram)
 
@@ -104,8 +104,9 @@ class Recommend:
         # print(ret)
         return ret
 
+    """test"""
     def test(self, tag_id, tagged):
-        path = os.path.dirname( os.path.abspath( __file__ ))
+        path = os.path.dirname(os.path.abspath(__file__))
         model_name = ''
         if tag_id == 1:
             model_name = 'model_Lo'
@@ -113,18 +114,16 @@ class Recommend:
             model_name = 'model_HS'
         elif tag_id == 3:
             model_name = 'model_MP'
-        model = doc2vec.Doc2Vec.load(path + '/' +model_name)
+        model = doc2vec.Doc2Vec.load(path + '/' + model_name)
 
         vec = [model.infer_vector(content[0]) for content in tagged]
 
         answer = model.docvecs.most_similar(vec, topn=5)
         return answer
 
-    ## @params interest_contents n(maximum) number of contents of certain tag that user watched, liked, and wrote
-    ## @ret    recommendation    5 number of post ids
-
+    """recommend_with"""
     def recommend_with(self, tag_id, interest_contents):
-        recommendation = []     # list of post ids recommended
+        recommendation = []  # list of post ids recommended
         max_id = 1
         if tag_id == 1:
             max_id = 980
@@ -134,22 +133,23 @@ class Recommend:
             max_id = 869
 
         if len(interest_contents) is 0:
-            recommendation = [int(random.random() * max_id) for i in range(5)]  # random recommendation
+            recommendation = [int(random.random() * max_id) for i in
+                              range(5)]  # random recommendation
         else:
             tagged = []
             for content in interest_contents:
                 tagged.append(self.process(content))
 
-            res = self.test(tag_id, tagged)    # 5 recommended post ids
-            recommendation = [int(content[0]/2) for content in res]
+            res = self.test(tag_id, tagged)  # 5 recommended post ids
+            recommendation = [int(content[0] / 2) for content in res]
 
         # HS starts from 0  // 2
         # LoL starts from 1421  // 1
         # MP starts from 2401  // 3
 
         if tag_id == 1:
-            recommendation = list(map(lambda x: x+1421, recommendation))
+            recommendation = list(map(lambda x: x + 1421, recommendation))
         if tag_id == 3:
-            recommendation = list(map(lambda x: x+2401, recommendation))
+            recommendation = list(map(lambda x: x + 2401, recommendation))
 
         return recommendation
