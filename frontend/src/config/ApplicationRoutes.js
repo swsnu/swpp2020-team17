@@ -40,22 +40,47 @@ const ApplicationRoutes = props => {
         event.preventDefault();
         collapse ? setCollapse(false) : setCollapse(true);
     }
+
+    const returnSideNav = (width) => {
+      if (width < 320) {
+        return (
+          <Header>
+            <SideNav handleLogout={props.handleLogout} mode="horizontal"/>
+          </Header>
+        )
+      } else {
+        return (
+          <Sider trigger={null} collapsible collapsed={collapse} width="150">
+            <SideNav handleLogout={props.handleLogout} mode="inline"/>
+          </Sider>
+        )
+      }
+    }
+  
+    const returnInnerHeader = (width) => {
+      if (width < 320) {
+        return null;
+      } else {
+        return (
+          <Header className="siteLayoutBackground" style={{padding: 0, background: "#001529"}}>
+            {React.createElement(collapse ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                className: 'trigger',
+                onClick: handleToggle,
+                style: {color: "#fff"}
+            })}
+          </Header>
+        )
+      }
+    };
+
   return (
     <div className="ApplicationRoutes">
       <ConnectedRouter history={props.history} >
         <Switch>
             <Layout>
-              <Sider trigger={null} collapsible collapsed={collapse} width="150">
-                <SideNav handleLogout={props.handleLogout} />
-              </Sider>
+              {returnSideNav(window.innerWidth)}
               <Layout>
-                <Header className="siteLayoutBackground" style={{padding: 0, background: "#001529"}}>
-                          {React.createElement(collapse ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                              className: 'trigger',
-                              onClick: handleToggle,
-                              style: {color: "#fff"}
-                          })}
-                </Header>
+                {returnInnerHeader(window.innerWidth)}
                   <Content style={{margin: '24px 16px', padding: 24, minHeight: "calc(100vh - 114px)", background: "#fff"}}>
                     {/* <Switch> */}
                         {/* <Route path='/login' component={Login} /> */}

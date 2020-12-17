@@ -223,6 +223,8 @@ const NarrowContentsContainer = styled.div`
     flex-basis: 70%;
     word-break: break-all;
     word-wrap: normal;
+    overflow-y: auto;
+    height: 100px;
     /* word-wrap: "true"; */
     /* display: inline-flex; */
     /* flex-basis: 70%; */

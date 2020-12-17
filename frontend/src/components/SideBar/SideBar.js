@@ -43,8 +43,8 @@ class SideNav extends Component {
         }
         return (
             <div className="SideBar">
-                <div style={{ height: "32px", background: "rgba(255, 255, 255, 0.2)", margin: "16px"}}></div>
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+                <div style={{ background: "rgba(255, 255, 255, 0.2)" }}></div>
+                <Menu theme="dark" mode={this.props.mode} defaultSelectedKeys={['1']}>
                     <Menu.Item id="post-menu" key="1" onClick={this.handlePostClick}>
                         <FormOutlined />
                         <span> Posts </span>
