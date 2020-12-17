@@ -87,7 +87,7 @@ const mockStore = getMockStore(stubInitialState);
 
 describe('<PostInUserPage />', () => {
     let postInUserPage, spyGetCurrentUser, spyGetUserList, spyGetPost, spyPutPost, spyDeletePost,
-        onGetCommentList, onCreateComment, onDeleteComment, onSendShallWe;
+        spyGetCommentList, spyCreateComment, spyDeleteComment, spySendShallWe;
 
     afterEach(() => {
         jest.clearAllMocks();
@@ -113,43 +113,48 @@ describe('<PostInUserPage />', () => {
             .mockImplementation(() => { return dispatch => {}; });
         spyDeletePost = jest.spyOn(postActionCreators, 'deletePost')
             .mockImplementation(() => { return dispatch => {}; });           
-        onGetCommentList = jest.spyOn(commentActionCreators, 'getCommentList')
+        spyGetCommentList = jest.spyOn(commentActionCreators, 'getCommentList')
             .mockImplementation(() => { return dispatch => {}; });
-        onCreateComment = jest.spyOn(commentActionCreators, 'createComment')
+        spyCreateComment = jest.spyOn(commentActionCreators, 'createComment')
             .mockImplementation(() => { return dispatch => {}; });
-        onDeleteComment = jest.spyOn(commentActionCreators, 'deleteComment')
+        spyDeleteComment = jest.spyOn(commentActionCreators, 'deleteComment')
             .mockImplementation(() => { return dispatch => {}; });
-        onSendShallWe = jest.spyOn(chatroomActionCreators, 'sendShallWe')
+        spySendShallWe = jest.spyOn(chatroomActionCreators, 'sendShallWe')
             .mockImplementation(() => { return dispatch => {}; });
     })
 
     it('should render without errors', () => {
         const component = mount(postInUserPage);
         const wrapper = component.find(".PostInUserPage");
+        //wrapper.simulate('click');
         expect(wrapper.length).toBe(1);
     });
 
     it('should handle back button', () => {
         const component = mount(postInUserPage);
         const wrapper = component.find(".back-button button");
+        //wrapper.simulate('click');
         expect(wrapper.length).toBe(1);
     });
 
     it('should handle delete button', () => {
         const component = mount(postInUserPage);
         const wrapper = component.find(".delete-button button");
+        //wrapper.simulate('click');
         expect(wrapper.length).toBe(1);
     });
 
     it('should create comment', () => {
         const component = mount(postInUserPage);
-        const wrapper = component.find(".spyCreateComment")
+        const wrapper = component.find(".spyCreateComment");
+        //wrapper.simulate('click');
         expect(wrapper.length).toBe(1);
     });
 
     it('should delete comment', () => {
         const component = mount(postInUserPage);
-        const wrapper = component.find(".spyDeleteComment")
+        const wrapper = component.find(".spyDeleteComment");
+        //wrapper.simulate('click');
         expect(wrapper.length).toBe(1);
     });
 
