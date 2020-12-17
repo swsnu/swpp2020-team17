@@ -25,6 +25,7 @@ matrix:
         - cd backend
       install:
         - source ~/virtualenv/python3.7/bin/activate
+        - pip install Cython
         - pip install -r requirements.txt
       script:
         - python manage.py migrate --run-syncdb
