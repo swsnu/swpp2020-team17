@@ -488,6 +488,25 @@ class Post extends Component {
         }
     }
 
+    returnOnlineUser = (toFind) => {
+        let toReturn = this.props.storedUserList.find(user => user.id===toFind).login
+        if (toReturn == undefined) return false;
+        else return toReturn
+    }
+
+    returnDisabled = (toFind) => {
+        let first = this.props.storedCurrentUser.chatroom != -1
+        // let second = this.props.storedUserList.find(user => user.id===item.author).chatroom != -1
+        let findUser = this.props.storedUserList.find(user => user.id===toFind)
+        if (findUser == undefined) {
+            console.log(toFind)
+         }
+        let second = findUser.chatroom != -1
+        // let third = this.props.storedUserList.find(user => user.id===toFind).login == false
+        let third = findUser.login == false
+        return (first || second || third)
+    }
+
     render() {
         let { postList, isRecommend } = this.state;
         let user = null;
@@ -497,6 +516,11 @@ class Post extends Component {
 
         // FIXME: Infinite scroll to be implemented
         console.log(this.props.storedPostList);
+
+        if (this.props.storedUserList==undefined || this.props.storedUserList.undefined) this.props.onGetUserList();
+        if (this.props.storedCurrentUser==undefined) this.props.onGetCurrentUser();
+        else console.log(this.props.storedCurrentUser)
+
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
             if(!user.login) return <Redirect to='/login'/>
@@ -566,7 +590,7 @@ class Post extends Component {
                                                 //FIXME: user로 넘기도록 수정해야함
                                                 name={item.authorName}
                                                 avatar={item.authorAvatar}
-                                                showOnline={this.props.storedUserList.find(user => user.id===item.author).login}
+                                                showOnline={() => this.returnOnlineUser(item.author)}
                                             />
                                         </AuthorItem>
                                         <ButtonItem>
@@ -574,9 +598,10 @@ class Post extends Component {
                                             <Button
                                                 type="primary"
                                                 shape="round"
-                                                disabled={this.props.storedCurrentUser.chatroom != -1
-                                                || this.props.storedUserList.find(user => user.id===item.author).chatroom != -1
-                                                || this.props.storedUserList.find(user => user.id===item.author).login == false}
+                                                // disabled={this.props.storedCurrentUser.chatroom != -1
+                                                // || this.props.storedUserList.find(user => user.id===item.author).chatroom != -1
+                                                // || this.props.storedUserList.find(user => user.id===item.author).login == false}
+                                                disabled={() => this.returnDisabled(item.author)}
                                                 onClick={() => this.onClickShallWe(this.props.storedUserList.find(user => user.id===item.author), item.tag)}
                                                 size="small"
                                                 style={{ fontSize: 8, fontWeight: "bolder" }}
