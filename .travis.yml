@@ -15,7 +15,8 @@ matrix:
         - yarn install
       script:
         - ./node_modules/.bin/eslint src/
-        - cd .. && sonar-scanner
+        - cd ..
+        - sonar-scanner
 
     - language: python
       python: '3.7'
@@ -24,7 +25,12 @@ matrix:
       before_install:
         - cd backend
       install:
+        - pip install Cython
         - pip install -r requirements.txt
       script:
         - python manage.py migrate --run-syncdb
-        - pylint **/*.py --disable='shallWeGame.tests' --load-plugins pylint_django
+        - pylint **/*.py --load-plugins pylint_django
+        - coverage run --source='./shallWeGame' manage.py test
+        - coverage report
+        - coverage xml
+        - cd ..
