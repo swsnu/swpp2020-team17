@@ -3,6 +3,7 @@ import { shallow, mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { connectRouter, ConnectedRouter } from 'connected-react-router';
 import { Route, Redirect, Switch } from 'react-router-dom';
+import { Table, Row, Col, Button, Typography } from 'antd';
 
 import ChatroomList from './ChatroomList';
 import { getMockStore } from '../../test-utils/mocks'
@@ -14,16 +15,19 @@ import * as chatActionCreators from '../../store/actions/chatroom';
 jest.mock('antd', () => {
     return jest.fn(props => {
         return (
-            <div className="spyantd" onClick={jest.fn()}/>
+            <div className="spyantd" onClick={jest.fn()} />
         )
     });
 });
 
 const propsList = [
     {
-        id: 1, 
-        title: 'chatroom1', 
-        tag: 1, 
+        discordLink: "not yet",
+        id: 1,
+        isGlobal: true,
+        maxPersonnel: 10,
+        title: 'chatroom1',
+        tag: 1,
         memberList: [1, 2],
     },
 ]
@@ -31,28 +35,28 @@ const propsList = [
 const stubInitialState = {
     chatroomList: [
         {
-            id: 1, 
-            title: 'chatroom1', 
-            tag: 1, 
+            id: 1,
+            title: 'chatroom1',
+            tag: 1,
             memberList: [1, 2],
         },
         {
-            id: 1, 
-            title: 'chatroom2', 
-            tag: 2, 
+            id: 1,
+            title: 'chatroom2',
+            tag: 2,
             memberList: [3],
         },
     ],
     currentUser: {
-        id: 1, 
+        id: 1,
         username: 'User1',
         login: true,
-        avatar: null, 
-        chatroom: -1, 
+        avatar: null,
+        chatroom: -1,
         friendList: [2],
         postList: [1, 5],
-        shallWeRoomList: [1, 2], 
-        watchedPostList: [1, 2, 3], 
+        shallWeRoomList: [1, 2],
+        watchedPostList: [1, 2, 3],
         tagList: [1]
     },
 }
@@ -60,43 +64,42 @@ const stubInitialState = {
 const mockStore = getMockStore(stubInitialState);
 
 describe('<ChatroomList />', () => {
-    let chatroomList, spyGetCurrentUser, spyPutUser, spyGetChatroomList, spyDeleteChatroom, spyCreateChatting;
+    let chatroomList, spyGetCurrentUser, spyPutUser, spyGetChatroomList, spyDeleteChatroom, spyCreateChatting, spyDeleteChatting;
     afterEach(() => {
         jest.clearAllMocks();
     });
 
     beforeEach(() => {
-       chatroomList = (
+        chatroomList = (
             <Provider store={mockStore}>
-              <ConnectedRouter history={history}>
-              <Switch>
-                <Route path='/' exact component={(props) => 
-                    <ChatroomList {...props} 
-                        isShallWe={true}
-                        list={propsList}
-                    />} 
-                />
-              </Switch>
-              </ConnectedRouter>
+                <ConnectedRouter history={history}>
+                        <ChatroomList
+                            isShallWe={true}
+                            list={propsList}
+                        />
+                </ConnectedRouter>
             </Provider>
         );
         spyGetCurrentUser = jest.spyOn(userActionCreators, 'getCurrentUser')
-            .mockImplementation(() => { return dispatch => {}; });
+            .mockImplementation(() => { return dispatch => { }; }); 
         spyPutUser = jest.spyOn(userActionCreators, 'putUser')
-            .mockImplementation(() => { return dispatch => {}; });
+            .mockImplementation(() => { return dispatch => { }; });
         spyGetChatroomList = jest.spyOn(chatActionCreators, 'getChatroomList')
-            .mockImplementation(() => { return dispatch => {}; }); 
+            .mockImplementation(() => { return dispatch => { }; });
         spyDeleteChatroom = jest.spyOn(chatActionCreators, 'deleteChatroom')
-            .mockImplementation(() => { return dispatch => {}; });
+            .mockImplementation(() => { return dispatch => { }; });
         spyCreateChatting = jest.spyOn(chatActionCreators, 'createChatting')
-            .mockImplementation(() => { return dispatch => {}; });
+            .mockImplementation(() => { return dispatch => { }; });
+        spyDeleteChatting = jest.spyOn(chatActionCreators, 'deleteChatting')
+            .mockImplementation(() => { return dispatch => { }; });
     })
 
-    // it('should render without errors', () => {
-    //     const component = mount(chatroomList);
-    //     let wrapper = component.find(".ChatroomList");
-    //     expect(wrapper.length).toBe(1);
-    // });
+    it('should render without errors', () => {
+        const component = mount(chatroomList);
+        let wrapper = component.find(".ChatroomList");
+        console.log(component)
+        expect(wrapper.length).toBe(1);
+    });
 });
 
 // import React from 'react';
