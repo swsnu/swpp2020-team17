@@ -23,9 +23,9 @@ const PostPageWrapper = styled.div`
     /* overflow: auto; */
     /* padding: 8px 24px; */
     height: 100%;
-
 `;
 
+//TODO: 가운데 공백 둬서 꽉차게
 const LineWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
@@ -58,12 +58,17 @@ const LoadingWrapper = styled.div`
 `;
 
 const PostListWrapper = styled.div`
+align-self: center;
+display: flex;
+/* justify-items: center;
+justify-self: center; */
 /*Responsive Styles*/
 /* Smartphones (portrait) ---------------- */
 @media only screen
 and (max-width : 320px)
 {
 /* Add Your CSS Styling Here */
+align-items: center;
 }
 
 /* Smartphones (landscape) ---------------- */
@@ -72,6 +77,7 @@ and (min-width : 321px)
 and (max-width : 767px)
 {
 /* Add Your CSS Styling Here */
+align-items: center;
 }
 
 /* Tablets (portrait) -------------------- */
@@ -81,6 +87,7 @@ and (max-device-width : 1024px)
 and (orientation : portrait)
 {
 /* Add Your CSS Styling Here */
+align-items: center;
 }
 
 /* Tablets (landscape) ------------------- */
@@ -91,7 +98,7 @@ and (orientation : landscape)
 {
 /* Add Your CSS Styling Here */
     width: 90%;
-    align-self: center;
+align-items: center;
 }
 /* Old Desktops and laptops ------------------ */
 
@@ -100,7 +107,7 @@ and (min-width : 1025px)
 {
 /* Add Your CSS Styling Here */
     width: 80%;
-    align-self: center;
+align-items: center;
 }
 
 /* Desktops ------------------ */
@@ -109,7 +116,7 @@ and (min-width : 1201px)
 {
 /* Add Your CSS Styling Here */
     width: 70%;
-    align-self: center;
+align-items: center;
 }
 `;
 
@@ -120,6 +127,7 @@ const PostContainer = styled.div`
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.2);
     padding: 10px;
     border-radius: 15px;
+    width: 100%;
     /* flex-wrap: wrap; */
     /* justify-content: space-between; */
     /* border: 1px solid #005691; */
@@ -184,7 +192,7 @@ const WidePostWrapper = styled.div`
 `;
 
 const WideContentsContainer = styled.div`
-    /* flex-grow:2; */
+    // old start
     flex-wrap: wrap;
     flex-basis: 100%;
     word-break: break-all;
@@ -193,16 +201,34 @@ const WideContentsContainer = styled.div`
     margin-left: 5px;
     margin-right: 5px;
     margin-bottom: 10px;
+    // old end
+
+    // new start
+    // new end
+
+    // new start
+    /* max-height: 6em;
+    overflow: hidden;
+    position: relative;
+    display: block;
+    line-height: 1.5em;
+    outline: solid 1px red;
+    background-color: white; */
+    // new end
+
+    // old * 2
+    /* flex-grow:2; */
     /* word-wrap: "true"; */
     /* display: inline-flex; */
     /* flex-basis: 70%; */
 `;
+
 const WideImageContainer = styled.div`
     /* flex-grow:1; */
     flex-basis:1000%;
     min-height: 1px;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 40px;
+    margin-right: 40px;
     /* flex: auto; */
     /* width: 30%; */
 `;
@@ -218,13 +244,16 @@ const NarrowPostWrapper = styled.div`
 `;
 
 const NarrowContentsContainer = styled.div`
-    /* flex-grow:2; */
-    flex-wrap: wrap;
+    // old start
+    /* flex-wrap: wrap */
     flex-basis: 70%;
-    word-break: break-all;
+    word-break: break-word;
     word-wrap: normal;
     overflow-y: auto;
     height: 100px;
+    margin-top: 10px;
+    margin-left: 25px;
+    margin-right: 25px;
     /* word-wrap: "true"; */
     /* display: inline-flex; */
     /* flex-basis: 70%; */
@@ -467,7 +496,9 @@ class Post extends Component {
             return (
                 <NarrowPostWrapper>
                     <NarrowContentsContainer style={{ width: "100%" }}>
-                        {post.content}
+                        <div class="content">
+                            {post.content}
+                        </div>
                     </NarrowContentsContainer>
                     <NarrowImageContainer>
                         <img src={post.image} style={{ width: "100%" }} />
