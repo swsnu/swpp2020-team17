@@ -1,0 +1,70 @@
+[
+    {
+        "model": "shallWeGame.Tag",
+        "pk": 1,
+        "fields": {
+            "name": "LOL",
+            "image": null
+        }
+    },
+    {
+        "model": "shallWeGame.Tag",
+        "pk": 2,
+        "fields": {
+            "name": "HearthStone",
+            "image": null
+        }
+    },
+    {
+        "model": "shallWeGame.Tag",
+        "pk": 3,
+        "fields": {
+            "name": "MapleStory",
+            "image": null
+        }
+    },
+    {
+        "model": "shallWeGame.DiscordUser",
+        "pk": 1,
+        "fields": {
+            "avatar": "https://static.hollywoodreporter.com/sites/default/files/2019/03/avatar-publicity_still-h_2019-compressed.jpg",
+            "email": "apdlf577@hanmail.net",
+            "username": "오리",
+            "login": false,
+            "tag_list": ["1"]
+        }
+    },
+    {
+        "model": "shallWeGame.DiscordUser",
+        "pk": 2,
+        "fields": {
+            "avatar": "https://mblogthumb-phinf.pstatic.net/MjAxODA5MTFfMjc4/MDAxNTM2NjcwNDA1NDEy.PBN07Ki5njzJlOTpYktlvY4H1h8ptz6WgjLGtwy-DgEg.7C0SLAExaGef19G8oFZK9TwIsbAEZBry99qLXWs7rVQg.JPEG.bucketakon/B0060D4CFU_BicentennialMan_UXDY1._V391275704_RI_SX940_.jpg?type=w800",
+            "email": "thdduddn9696@gmail.com",
+            "username": "yeongu",
+            "login": false,
+            "tag_list": ["2"]
+        }
+    },
+    {
+        "model": "shallWeGame.DiscordUser",
+        "pk": 3,
+        "fields": {
+            "avatar": "https://lh3.googleusercontent.com/proxy/szYjFhKQZ5rXjxobEWNsiNVLInsPmeG7HOoXLnsOIFtdYwF28M7y_tWecjakP7uGLuBSmP1nw2FR_DsNWeApqAR49cOuK23X3ouK-dil3YkOqpDAPghRw1GlW3sKFz1HXIfo47y3zcuwUs3sxFBriUmSNxHIEpYPP4cXfJNqPkiyROq0ZtOofJzcKQ",
+            "email": "gotjs3841@gmail.com",
+            "username": "haessun",
+            "login": false,
+            "tag_list": ["3"]
+        }
+    },
+    {
+        "model": "shallWeGame.DiscordUser",
+        "pk": 4,
+        "fields": {
+            "avatar": null,
+            "email": "gotjs3841@naver.com",
+            "username": "HaesSun",
+            "login": false,
+            "tag_list": ["1"]
+        }
+    }
+]
