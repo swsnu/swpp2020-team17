@@ -50,7 +50,7 @@ class SideNav extends Component {
                     </Menu.Item>
 
                     <Menu.Item id="lobby-menu" className="lobby-menu" key="2" onClick={this.handleLobbyClick}>
-                        <AliwangwangOutlined />:w::
+                        <AliwangwangOutlined />
                         <span> Lobby </span>
                     </Menu.Item>
 
