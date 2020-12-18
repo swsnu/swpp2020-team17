@@ -15,8 +15,6 @@ matrix:
         - yarn install
       script:
         - ./node_modules/.bin/eslint src/
-        - cd ..
-        - sonar-scanner
 
     - language: python
       python: '3.7'
