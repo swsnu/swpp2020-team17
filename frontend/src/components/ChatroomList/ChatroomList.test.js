@@ -101,6 +101,7 @@ describe('<ChatroomList />', () => {
         let wrapper = component.find(".ChatroomList");
         expect(wrapper.length).toBe(1);
     });
+    
 
     it('should render without errors when isShallWe=false', () => {
         chatroomList = (

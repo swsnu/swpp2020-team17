@@ -43,6 +43,7 @@ class ChatroomList extends Component {
         this.props.history.push('/chatroom/' + id);
     }
     
+    
     onClickSorry = (id) => {
         this.props.onDeleteChatroom(id);
     }
