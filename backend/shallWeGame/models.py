@@ -10,20 +10,20 @@ class DiscordUser(AbstractBaseUser):
     objects = DiscordUserOAuth2Manager()
 
     id = models.AutoField(primary_key=True)  # AutoField?
-    is_superuser = models.IntegerField(default=False)
+    # is_superuser = models.IntegerField(default=False)
     first_name = models.CharField(max_length=30, default='')
     last_name = models.CharField(max_length=30, default='')
     email = models.EmailField(max_length=75)
-    is_staff = models.IntegerField(default=False)
-    is_active = models.IntegerField(default=False)
-    date_joined = models.DateTimeField(default=None, null=True)
-    def has_perm(self):
-        '''has_perm'''
-        return self.is_superuser
+    # is_staff = models.IntegerField(default=False)
+    # is_active = models.BooleanField(default=False)
+    # date_joined = models.DateTimeField(default=None, null=True)
+    # def has_perm(self):
+    #     '''has_perm'''
+    #     return self.is_superuser
 
-    def has_module_perms(self):
-        '''has_module_perms'''
-        return self.is_superuser
+    # def has_module_perms(self):
+    #     '''has_module_perms'''
+    #     return self.is_superuser
 
     # id = models.BigIntegerField(primary_key=True)
     username = models.CharField(max_length=100)
@@ -61,8 +61,6 @@ class DiscordUser(AbstractBaseUser):
         related_name='shallwe_receiver',
         db_table='shallwe_room'
     )
-
-    is_authenticated = True
 
 class Tag(models.Model):
     '''Tag'''

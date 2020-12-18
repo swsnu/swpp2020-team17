@@ -87,14 +87,14 @@ def discord_logout(request):
 
     chatroom = user.chatroom.id if user.chatroom is not None else -1
     friend_list = [friend['id'] for friend in user.friend_list.all().values()]
-    post_list = [post['id'] for post in user.post_list.all().values()]
+    post_lists = [post['id'] for post in user.post_list.all().values()]
     shallwe_room_list = [room['id'] for room in user.shallwe_room.all().values()]
     watched_post_list = [post['id'] for post in user.watched_post_list.all().values()]
-    tag_list = [tag['id'] for tag in user.tag_list.all().values()]
+    tag_lists = [tag['id'] for tag in user.tag_list.all().values()]
     response_dict = {"id": user.id, "username": user.username, "login": user.login,
                      "avatar": user.avatar, "chatroom": chatroom, "friendList": friend_list,
-                     "postList": post_list, "shallWeRoomList": shallwe_room_list,
-                     "watchedPostList": watched_post_list, "tagList": tag_list}
+                     "postList": post_lists, "shallWeRoomList": shallwe_room_list,
+                     "watchedPostList": watched_post_list, "tagList": tag_lists}
     # print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
 
@@ -108,14 +108,14 @@ def current_user(request):  # get current user information
 
     chatroom = user.chatroom.id if user.chatroom is not None else -1
     friend_list = [friend['id'] for friend in user.friend_list.all().values()]
-    post_list = [post['id'] for post in user.post_list.all().values()]
+    post_lists = [post['id'] for post in user.post_list.all().values()]
     shallwe_room_list = [room['id'] for room in user.shallwe_room.all().values()]
     watched_post_list = [post['id'] for post in user.watched_post_list.all().values()]
-    tag_list = [tag['id'] for tag in user.tag_list.all().values()]
+    tag_lists = [tag['id'] for tag in user.tag_list.all().values()]
     response_dict = {"id": user.id, "username": user.username, "login": user.login,
                      "avatar": user.avatar, "chatroom": chatroom, "friendList": friend_list,
-                     "postList": post_list, "shallWeRoomList": shallwe_room_list,
-                     "watchedPostList": watched_post_list, "tagList": tag_list}
+                     "postList": post_lists, "shallWeRoomList": shallwe_room_list,
+                     "watchedPostList": watched_post_list, "tagList": tag_lists}
     # print(response_dict)
     return HttpResponse(content=json.dumps(response_dict), status=201)
 
@@ -126,20 +126,21 @@ def user_list(request):
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
 
-    user_object_list = [user for user in DiscordUser.objects.all()]
+    # users = [user for user in DiscordUser.objects.all()]
+    users = DiscordUser.objects.all()
     user_response_list = []
-    for user in user_object_list:
+    for user in users:
         chatroom = user.chatroom.id if user.chatroom is not None else -1
         friend_list = [friend['id'] for friend in user.friend_list.all().values()]
-        post_list = [post['id'] for post in user.post_list.all().values()]
+        post_lists = [post['id'] for post in user.post_list.all().values()]
         shallwe_room_list = [room['id'] for room in user.shallwe_room.all().values()]
         watched_post_list = [post['id'] for post in user.watched_post_list.all().values()]
-        tag_list = [tag['id'] for tag in user.tag_list.all().values()]
+        tag_lists = [tag['id'] for tag in user.tag_list.all().values()]
         user_response_list.append({"id": user.id, "username": user.username, "login": user.login,
                                    "avatar": user.avatar, "chatroom": chatroom,
                                    "friendList": friend_list,
-                                   "postList": post_list, "shallWeRoomList": shallwe_room_list,
-                                   "watchedPostList": watched_post_list, "tagList": tag_list})
+                                   "postList": post_lists, "shallWeRoomList": shallwe_room_list,
+                                   "watchedPostList": watched_post_list, "tagList": tag_lists})
     # print(user_response_list)
     return JsonResponse(user_response_list, safe=False)
 
@@ -158,15 +159,20 @@ def user_info(request, user_id=0):
     if request.method == 'GET':
         print(user.username)
         chatroom = user.chatroom.id if user.chatroom is not None else -1
-        friend_list = [friend['id'] for friend in user.friend_list.all().values()]
-        post_list = [post['id'] for post in user.post_list.all().values()]
-        shallwe_room_list = [room['id'] for room in user.shallwe_room.all().values()]
-        watched_post_list = [post['id'] for post in user.watched_post_list.all().values()]
-        tag_list = [tag['id'] for tag in user.tag_list.all().values()]
+        # friend_list = [friend['id'] for friend in user.friend_list.all().values()]
+        # post_lists = [post['id'] for post in user.post_list.all().values()]
+        # shallwe_room_list = [room['id'] for room in user.shallwe_room.all().values()]
+        # watched_post_list = [post['id'] for post in user.watched_post_list.all().values()]
+        # tag_lists = [tag['id'] for tag in user.tag_list.all().values()]
         response_dict = {"id": user.id, "username": user.username, "login": user.login,
-                         "avatar": user.avatar, "chatroom": chatroom, "friendList": friend_list,
-                         "postList": post_list, "shallWeRoomList": shallwe_room_list,
-                         "watchedPostList": watched_post_list, "tagList": tag_list}
+                         "avatar": user.avatar, "chatroom": chatroom,
+                         "friendList": [friend['id'] for friend in user.friend_list.all().values()],
+                         "postList": [post['id'] for post in user.post_list.all().values()],
+                         "shallWeRoomList":
+                             [room['id'] for room in user.shallwe_room.all().values()],
+                         "watchedPostList":
+                             [post['id'] for post in user.watched_post_list.all().values()],
+                         "tagList": [tag['id'] for tag in user.tag_list.all().values()]}
         return HttpResponse(content=json.dumps(response_dict), status=201)
 
     if request.method == 'PUT':
@@ -205,8 +211,8 @@ def user_info(request, user_id=0):
             [Post.objects.get(id=post_id) for post_id in user_watched_post_list])
         user.tag_list.set([Tag.objects.get(id=tag_id) for tag_id in user_tag_list])
         user.save()
-        return HttpResponse(status=200)
-
+    return HttpResponse(status=200)
+    # return
 
 ######################
 # post
@@ -253,6 +259,7 @@ def post_list(request):
 
 @login_required(login_url='/api/login/')
 def recommend_post(request):
+    '''recommend_post'''
     # like
     # write
     # watched
@@ -261,36 +268,36 @@ def recommend_post(request):
     wrote = user.post_list.all().values()
     like = user.liking_post_list.all().values()
 
-    post_list = []
+    post_lists = []
 
     for post in watched:
-        post_list.append(post)
+        post_lists.append(post)
     for post in wrote:
-        post_list.append(post)
+        post_lists.append(post)
     for post in like:
-        post_list.append(post)
+        post_lists.append(post)
 
     # HS starts from 0  // 2
     # LoL starts from 1400  // 1
     # MP starts from 2359  // 3
 
-    Lo = []
-    HS = []
-    MP = []
+    l_o = []
+    h_s = []
+    m_p = []
 
-    for post in post_list:
+    for post in post_lists:
         if post['tag_id'] == 1:
-            Lo.append(post['content'])
+            l_o.append(post['content'])
         elif post['tag_id'] == 2:
-            HS.append(post['content'])
+            h_s.append(post['content'])
         elif post['tag_id'] == 3:
-            MP.append(post['content'])
+            m_p.append(post['content'])
 
     rec = []
     recom = Recommend()
-    rec += recom.recommend_with(1, Lo)
-    rec += recom.recommend_with(2, HS)
-    rec += recom.recommend_with(3, MP)
+    rec += recom.recommend_with(1, l_o)
+    rec += recom.recommend_with(2, h_s)
+    rec += recom.recommend_with(3, m_p)
     print(rec)
     post_response_list = []
 
@@ -320,8 +327,9 @@ def post_info(request, post_id=0):
 
     if request.method == 'GET':
         post = Post.objects.get(id=post_id)
-        liking_user_object_list = [liking_user for liking_user in
-                                   post.liking_user_list.all().values()]
+        # liking_user_object_list = [liking_user for liking_user in
+        #                            post.liking_user_list.all().values()]
+        liking_user_object_list = post.liking_user_list.all().values()
         liking_user_response_list = []
         for liking_user in liking_user_object_list:
             liking_user_response_list.append(liking_user['id'])
@@ -354,9 +362,12 @@ def post_info(request, post_id=0):
     post = Post.objects.get(id=post_id)
     # non-author returns 403
     if post.author != request.user:
-        return HttpResponse(status=403)
-    post.delete()
-    return HttpResponse(status=200)
+        status = 403
+        # return HttpResponse(status=403)
+    else:
+        post.delete()
+        status = 200
+    return HttpResponse(status=status)
 
 
 ######################
@@ -410,7 +421,7 @@ def comment_info(request, comment_id=0):
         comment = Comment.objects.get(id=comment_id)
         return JsonResponse(
             {"post": comment.post.id, "content": comment.content, "author": comment.author.id})
-    elif request.method == 'PUT':
+    if request.method == 'PUT':
         comment = Comment.objects.get(id=comment_id)
         # non-author returns 403
         if comment.author != request.user:
@@ -428,9 +439,12 @@ def comment_info(request, comment_id=0):
     comment = Comment.objects.get(id=comment_id)
     # non-author returns 403
     if comment.author != request.user:
-        return HttpResponse(status=403)
-    comment.delete()
-    return HttpResponse(status=200)
+        status = 403
+        # return HttpResponse(status=403)
+    else:
+        comment.delete()
+        status = 200
+    return HttpResponse(status=status)
 
 
 ######################
@@ -443,7 +457,8 @@ def tag_list(request):
         return HttpResponseNotAllowed(['GET'])
 
     # request.method == 'GET'
-    tag_object_list = [tag for tag in Tag.objects.all().values()]
+    # tag_object_list = [tag for tag in Tag.objects.all().values()]
+    tag_object_list = Tag.objects.all().values()
     tag_response_list = []
     for tag in tag_object_list:
         tag_response_list.append({"id": tag['id'], "image": tag['image'], "name": tag['name']})
@@ -478,7 +493,8 @@ def chatroom_list(request):
         return HttpResponseNotAllowed(['GET', 'POST'])
 
     if request.method == 'GET':
-        chatroom_object_list = [chatroom for chatroom in Chatroom.objects.all()]
+        # chatroom_object_list = [chatroom for chatroom in Chatroom.objects.all()]
+        chatroom_object_list = Chatroom.objects.all()
         chatroom_response_list = []
         for chatroom in chatroom_object_list:
             member_list = [member['id'] for member in chatroom.member_list.all().values()]

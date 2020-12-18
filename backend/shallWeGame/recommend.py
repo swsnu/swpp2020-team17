@@ -1,15 +1,15 @@
 """recommend.py"""
 import os
 import random
+import re
 import kss
 from gensim.models import doc2vec
 from gensim.models.doc2vec import TaggedDocument
 from gensim.models import Phrases
 from gensim.models.phrases import Phraser
-import gensim
 
-'''Recommend'''
 class Recommend:
+    '''Recommend'''
 
     def __init__(self, ref=1):
     #init
@@ -19,7 +19,7 @@ class Recommend:
         '''process'''
 
         sentence_tokenized_text = []
-
+        line = str(self.ref)
         line = docs.strip()
         for sent in kss.split_sentences(line):
             sentence_tokenized_text.append(sent.strip())
@@ -27,21 +27,21 @@ class Recommend:
         punct = "/-'?!.,#$%\'()*+-/:;<=>@[\\]^_`{|}~" + '""“”’' + '∞θ÷α•à−β∅³π‘₹´°£€×™√²—–&'
         punct_mapping = {"‘": "'", "₹": "e", "´": "'", "°": "", "€": "e", "™": "tm", "√": " sqrt ",
                          "×": "x", "²": "2", "—": "-", "–": "-", "’": "'", "_": "-", "`": "'",
-                         '“': '"', '”': '"', '“': '"', "£": "e", '∞': 'infinity', 'θ': 'theta',
+                         '“': '"', '”': '"', "£": "e", '∞': 'infinity', 'θ': 'theta',
                          '÷': '/', 'α': 'alpha', '•': '.', 'à': 'a', '−': '-', 'β': 'beta', '∅': '',
                          '³': '3', 'π': 'pi', }
 
         def clean_punc(text, punct, mapping):
             '''clean_punc'''
-            for p in mapping:
-                text = text.replace(p, mapping[p])
+            for punc in mapping:
+                text = text.replace(punc, mapping[punc])
 
-            for p in punct:
-                text = text.replace(p, f' {p} ')
+            for punc in punct:
+                text = text.replace(punc, f' {punc} ')
 
             specials = {'\u200b': ' ', '…': ' ... ', '\ufeff': '', 'करना': '', 'है': ''}
-            for s in specials:
-                text = text.replace(s, specials[s])
+            for spec in specials:
+                text = text.replace(spec, specials[spec])
 
             return text.strip()
 
@@ -49,14 +49,14 @@ class Recommend:
         for sent in sentence_tokenized_text:
             cleaned_corpus.append(clean_punc(sent, punct, punct_mapping))
 
-        import re
-
         def clean_text(texts):
             '''clean_text'''
             corpus = []
-            for i in range(0, len(texts)):
+            # for i in range(0, len(texts)):
+            for i, text in enumerate(texts):
+                review = str(i)
                 review = re.sub(r'[@%\\*=()/~#&\+á?\xc3\xa1\-\|\.\:\;\!\-\,\_\~\$\'\"]', '',
-                                str(texts[i]))  # remove punctuation
+                                str(text))  # remove punctuation
                 review = re.sub(r'\d+', '', review)  # remove number
                 review = review.lower()  # lower case
                 review = re.sub(r'\s+', ' ', review)  # remove extra space
@@ -80,32 +80,25 @@ class Recommend:
         ### 불필요한 공백 및 특수문자 제거, 괄호와 그 안에 있는 내용 제거, 숫자 제거, 영문 제거 완료 ###
 
         token_ = [doc.split(" ") for doc in basic_preprocessed_corpus]
-        bigram = Phrases(token_, min_count=1, threshold=2, delimiter=b' ')
+        # bigram = Phrases(token_, min_count=1, threshold=2, delimiter=b' ')
 
-        bigram_phraser = Phraser(bigram)
+        # bigram_phraser = Phraser(bigram)
+        bigram_phraser = Phraser(Phrases(token_, min_count=1, threshold=2, delimiter=b' '))
 
         bigram_token = []
         for sent in token_:
             bigram_token.append(bigram_phraser[sent])
 
-        dictionary = gensim.corpora.Dictionary(bigram_token)
-
-        # 지금 이걸 쓰는 곳이 없음
-        corpus = [dictionary.doc2bow(text) for text in bigram_token]
-
         if len(bigram_token) > 0:
-            ret = TaggedDocument(words=bigram_token[0], tags=[10000])
-        else:
-            ret = TaggedDocument(words=[], tags=[10000])
-        # if len(bigram_token) > 0:
-        #     ret = bigram_token[0]
-        # else:
-        #     ret = []
-        # print(ret)
-        return ret
+            return TaggedDocument(words=bigram_token[0], tags=[10000])
 
-    """test"""
+        return TaggedDocument(words=[], tags=[10000])
+
+        # return ret
+
     def test(self, tag_id, tagged):
+        """test"""
+        path = str(self.ref)
         path = os.path.dirname(os.path.abspath(__file__))
         model_name = ''
         if tag_id == 1:
@@ -121,8 +114,9 @@ class Recommend:
         answer = model.docvecs.most_similar(vec, topn=5)
         return answer
 
-    """recommend_with"""
+
     def recommend_with(self, tag_id, interest_contents):
+        """recommend_with"""
         recommendation = []  # list of post ids recommended
         max_id = 1
         if tag_id == 1:
@@ -132,7 +126,7 @@ class Recommend:
         elif tag_id == 3:
             max_id = 869
 
-        if len(interest_contents) is 0:
+        if len(interest_contents) == 0:
             recommendation = [int(random.random() * max_id) for i in
                               range(5)]  # random recommendation
         else:
