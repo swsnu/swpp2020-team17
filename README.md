@@ -5,26 +5,22 @@
 
 
 # Frontend
-<pre><code>
-sh runFront.sh
+<pre><code>sh runFront.sh
 </code></pre>
 
 # Backend
-<pre><code>
-sh runBack.sh
+<pre><code>sh runBack.sh
 </code></pre>
 
 # Testing
 After activating venv,
 1. Test frontend
-<pre><code>
-cd frontend   
+<pre><code>cd frontend   
 yarn add coverage
 yarn test --coverage --watchAll=false
 </code></pre>
 
 2. Test backend
-<pre><code>
-pip install coveralls
+<pre><code>pip install coveralls
 coverage run --source='.' manage.py test
 </code></pre>
