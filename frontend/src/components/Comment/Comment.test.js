@@ -1,8 +1,41 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import Comment from './Comment';
 
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
+    useHistory: () => ({
+        push: jest.fn(),
+    }),
+}));
+
+Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+
 describe('<Comment />', () => {
+    const fakeCurrentUser = {
+        id: 1, 
+        username: 'User1',
+        login: true,
+        avatar: null, 
+        chatroom: -1, 
+        friendList: [],
+        postList: [1, 5],
+        shallWeRoomList: [1, 2], 
+        watchedPostList: [1, 2, 3], 
+        tagList: [5]
+    }
     const fakeCurrPost = {
         id: 1,
         image: null, 
@@ -11,7 +44,20 @@ describe('<Comment />', () => {
         tag: 1
     };
     const fakeCommentingPostId = 1;
-    const fakeCommentList = [];
+    const fakeCommentList = [
+        {
+            author: 1,
+            image: null,
+            content: 'Comment Content 1',
+            post: 1,
+        },
+        {
+            author: 2,
+            image: null,
+            content: 'Comment Content 2',
+            post: 1,
+        },
+    ];
     const fakeOnEnterComment = jest.fn();
     const fakeReturnDeleteButton = jest.fn();
     const fakeUserList = [
@@ -62,5 +108,22 @@ describe('<Comment />', () => {
                                     returnDeleteButton={fakeReturnDeleteButton} />);
         const wrapper = component.find('.Comment');
         expect(wrapper.length).toBe(1);
+    });
+
+    it('should redirect when avatar is clicked', () => {
+        let component = mount(<Comment 
+                                    currPost={fakeCurrPost} 
+                                    commentingPostId={fakeCommentingPostId}
+                                    commentList={fakeCommentList}
+                                    onEnterComment={fakeOnEnterComment}
+                                    userList={fakeUserList}
+                                    returnDeleteButton={fakeReturnDeleteButton}
+                                    currentUser={fakeCurrentUser} />);
+        let wrapper = component.find('.avatar');
+        wrapper.at(0).simulate('click');
+        wrapper.at(1).simulate('click');
+        wrapper.at(2).simulate('click');
+        wrapper.at(3).simulate('click');
+        expect(wrapper.length).toBe(4);
     });
 })

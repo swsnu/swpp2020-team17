@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { List, Divider, Space, Button, Comment } from 'antd';
+import { Divider, Space, Button } from 'antd';
 import { MessageTwoTone, HeartTwoTone, DeleteOutlined, RollbackOutlined } from '@ant-design/icons';
 import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
@@ -158,10 +158,6 @@ const GameTagItem = styled.div`
     margin-right: 0px;
 `;
 
-const PostBodyContainer = styled.div`
-    // empty container for handle click body
-`;
-
 const WidePostWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -223,13 +219,13 @@ class PostInUserPage extends Component {
     }
 
     returnLike = (post) => {
-        console.log(post.likingUserList);
+        //console.log(post.likingUserList);
         if (post.likingUserList.includes(this.props.storedCurrentUser.id)) return "#eb2f96";
         else return "#808080";
     }
     
     handleLikeClicked = (post) => {
-        console.log(post);
+        //console.log(post);
         let currentUser = this.props.storedCurrentUser;
         if (post.likingUserList.includes(currentUser.id)) {
             post.likingUserList = post.likingUserList.filter(id => id !== currentUser.id);
@@ -246,7 +242,9 @@ class PostInUserPage extends Component {
     returnDeleteButton = (comment) => {
         if (this.props.storedCurrentUser.id === comment.author) {
             return (
-                <DeleteOutlined onClick={() => this.clickDeleteComment(comment)} style={{ cursor: "pointer" }} />
+                <DeleteOutlined 
+                    onClick={() => this.clickDeleteComment(comment)} style={{ cursor: "pointer" }} 
+                />
             );
         } else {
             return null;
@@ -254,7 +252,7 @@ class PostInUserPage extends Component {
     }
 
     onEnterComment = (value) => {
-        console.log("New comment: ", value);
+        //console.log("New comment: ", value);
         this.props.onCreateComment(this.props.match.params.id, { content: value });
     }
 
@@ -276,20 +274,19 @@ class PostInUserPage extends Component {
             maxPersonnel: 2, 
             discordLink: null,
         }
-        console.log(receivingUser);
+        //console.log(receivingUser);
         let sendingUser = this.props.storedCurrentUser;
         await this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
-        if(sendingUser.chatroom != -1) {
+        if(sendingUser.chatroom !== -1) {
             this.props.history.push('/chatroom/' + sendingUser.chatroom);
         }
-        // current user의 chatroom 바꾸고 redirect?
-        // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
     }
 
     render() {
-        console.log(this.props.match.params.id);
-        console.log(this.props.storedSelectedPost);
+        //console.log(this.props.match.params.id);
+        //console.log(this.props.storedSelectedPost);
         let { post } = this.state;
+        //console.log(post);
         let item, author;
         if (this.props.storedSelectedPost) {
             item = this.props.storedSelectedPost;
@@ -299,17 +296,24 @@ class PostInUserPage extends Component {
 
         if (item && author && item.likingUserList) {
             return (
+                <div className="PostInUserPage">
                 <PostPageWrapper>
                     <LineWrapper>
                         <BackWrapper>
-                            <Button onClick={() => this.handleBackButton(item.author)}> 
+                            <Button 
+                                className="back-button"
+                                onClick={() => this.handleBackButton(item.author)}
+                            > 
                                 <RollbackOutlined />
                                 Back 
                             </Button>
                         </BackWrapper>
                         <DeleteWrapper>
                             {item.author === this.props.storedCurrentUser.id ?
-                                <Button onClick={() => this.handleDeleteButton(item)}> 
+                                <Button 
+                                    className="delete-button"
+                                    onClick={() => this.handleDeleteButton(item)}
+                                > 
                                     <DeleteOutlined />
                                     Delete 
                                 </Button>
@@ -332,12 +336,15 @@ class PostInUserPage extends Component {
                                     />
                                 </AuthorItem>
                                 <ButtonItem>
+                                    {console.log(item.author)}
+                                    {console.log(this.props.storedCurrentUser.id)}
                                     {item.author !== this.props.storedCurrentUser.id ?
                                         <Button
+                                            className="shallWe-button"
                                             type="primary"
                                             shape="round"
                                             onClick={() => this.onClickShallWe(this.props.storedUserList.find(user => user.id === item.author), item.tag)}
-                                            disabled={this.props.storedCurrentUser.chatroom != -1 || author.chatroom != -1 || !author.login}
+                                            disabled={this.props.storedCurrentUser.chatroom !== -1 || author.chatroom !== -1 || !author.login}
                                             style={{ fontSize: 12, fontWeight: "bolder" }}
                                         >
                                             Shall We
@@ -372,6 +379,7 @@ class PostInUserPage extends Component {
                                     <div>
                                         <Space>
                                             <HeartTwoTone
+                                                className="like-toggle"
                                                 onClick={() => this.handleLikeClicked(item)}
                                                 twoToneColor={this.returnLike(item)}
                                             />
@@ -401,11 +409,11 @@ class PostInUserPage extends Component {
                         </PostContainer>
                     </PostListWrapper>
                 </PostPageWrapper>
+                </div>
             )
         } else {
             return (
-                <div>
-                </div>
+                <div className="PostInUserPage" />
             )
         }
         
@@ -441,8 +449,6 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.deleteComment(comment)),
         onSendShallWe: (newChatroom, sendingUser, receivingUser) =>
             dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
-        onGetTagList: () =>
-            dispatch(actionCreators.getTagList()),
     }
 }
 

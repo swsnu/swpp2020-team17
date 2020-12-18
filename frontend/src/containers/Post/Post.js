@@ -1,19 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-//FIXME: Infinite scroll to be implemented
-// import InfiniteScroll from 'react-infinite-scroller';
-import { List, Divider, Space, Button, Switch, Menu, Dropdown } from 'antd';
-//FIXME: Infinite scroll to be implemented
-// import { Spin, message } from 'antd';
+import { List, Divider, Space, Button, Switch } from 'antd';
 import { MessageTwoTone, HeartTwoTone, DeleteOutlined } from '@ant-design/icons';
 import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
-import Author from '../../components/Author/Author'
-import CommentView from '../../components/Comment/Comment';
 import CSRFToken from '../../csrftoken'
 /* Components */
-import GameTag from '../../components/GameTag/GameTag'
-// import CommentList from './CommentList';
+import GameTag from '../../components/GameTag/GameTag';
+import Author from '../../components/Author/Author';
+import CommentView from '../../components/Comment/Comment';
 
 import {Redirect} from 'react-router-dom';
 
@@ -48,13 +43,6 @@ const RecommendToggleWrapper = styled.div`
     margin-left: auto;
     margin-right: 0;
     justify-content: flex-end;
-`;
-
-const LoadingWrapper = styled.div`
-    position: absolute;
-    bottom: 40px;
-    width: 100%;
-    text-align: center;
 `;
 
 const PostListWrapper = styled.div`
@@ -151,7 +139,6 @@ const ButtonItem = styled.div`
     `}
 `;
 
-// FIXME: 애니메이션 작동 안됨.
 const buttonShake = keyframes`
     0%{
         transform: translate(0);
@@ -293,9 +280,6 @@ class Post extends Component {
             commentingPostId: null,
             likingPostId: null,
             isRecommend: true,
-        //FIXME: Infinite scroll to be implemented
-        // loading: false,
-        // hasMore: true,
         }
         this.props.onGetCurrentUser();
         this.props.onGetUserList();
@@ -304,22 +288,7 @@ class Post extends Component {
         this.props.onRecommendPostList();
     }
 
-    // state = {
-    //     selectedTagList: [],
-    //     activePostList: [], // under selected tag
-    //     //FIXME: Infinite scroll to be implemented
-    //     // loading: false,
-    //     // hasMore: true,
-    // }
-
     componentDidMount() {
-        //FIXME: Infinite scroll to be implemented
-        // }
-        // this.fetchData(res => {
-        //     this.setState({
-        //         postList: res.results,
-        //     });
-        // });
         if (this.props.storedCurrentUser) {
             this.setState({
                 selectedTagList: this.props.storedCurrentUser.tagList,
@@ -329,7 +298,7 @@ class Post extends Component {
     }
     onToggleRecommend = (checked) => {
         this.setState({ isRecommend: checked });
-        console.log(`switch to ${checked}`);
+        //console.log(`switch to ${checked}`);
     }
 
     onToggleTag = (tag_id) => {
@@ -338,26 +307,25 @@ class Post extends Component {
         const nextSelectedTags = checked ?
             (selectedTagList.filter(id => id !== tag_id)) :
             ([...selectedTagList, tag_id]);
-        console.log('You are interested in: ', nextSelectedTags);
+        //console.log('You are interested in: ', nextSelectedTags);
         this.setState({ selectedTagList: nextSelectedTags });
     }
 
     async onClickShallWe(receivingUser, tagId) {
+        //console.log("shallWe");
         let newChatroom = {
             isGlobal: false,
             title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username,
-            tag: tagId,     //tag가 없는디 어떡하지
+            tag: tagId,   
             maxPersonnel: 2,
             discordLink: null,
         }
-        console.log(receivingUser);
+        //console.log(receivingUser);
         let sendingUser = this.props.storedCurrentUser;
         await this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
-        if(sendingUser.chatroom != -1) {
+        if(sendingUser.chatroom !== -1) {
             this.props.history.push('/chatroom/' + sendingUser.chatroom);
         }
-        // current user의 chatroom 바꾸고 redirect?
-        // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
     }
 
     handleBodyClicked = async (postId) => {
@@ -418,69 +386,15 @@ class Post extends Component {
                 commentingPostId: postId,
             });
         }
-        // this.setState({ commentList: this.props.storedCommentList });
     }
 
-    //FIXME: backend에서 코멘트 수정된 뒤 추가.
-    // const showCommentList = () => {
-    //     if (showComment) {
-    //         return (
-    //             <CommentList />
-    //         )
-    //     } else {
-    //         return ({});
-    //     }
-    // }
-
-
-    //FIXME: Infinite scroll to be implemented
-    // handleInfiniteOnLoad = () => {
-    //     let { activePostList } = this.state;
-    //     this.setState({
-    //         loading: true,
-    //     });
-
-    //     if (activePostList.length > 3) { // 길이 관련 손봐야함.
-    //         message.warning('모든 포스트를 다 읽었습니다.');
-    //         this.setState({
-    //             hasMore: false,
-    //             loading: false,
-    //         });
-    //         return;
-    //     }
-
-    //FIXME: Infinite scroll to be implemented
-    //     this.fetchData(posts => {
-    //         activePostList = activePostList.concat(posts);
-    //         this.setState({
-    //             activePostList,
-    //             loading: false,
-    //         });
-    //     });
-    // };
-
-    //FIXME: Infinite scroll to be implemented
-    // fetchData = callback => {
-    //     reqwest({
-    //         url: 'http://localhost:3000/api/post',
-    //         type: 'json',
-    //         method: 'get',
-    //         contentType: 'application/json',
-    //         success: res => {
-    //             // console.log(res)
-    //             callback(res);
-    //         },
-    //     });
-    // };
-
     onEnterComment = (value) => {
-        console.log("New comment: ", value);
+        //console.log("New comment: ", value);
         this.props.onCreateComment(this.state.commentingPostId, { content: value });
     }
 
     returnBodyFormat = (post, isWideFormat) => {
         if (isWideFormat) {
-            // console.log("Wide post")
             return (
                 <WidePostWrapper>
                     <WideImageContainer>
@@ -492,16 +406,15 @@ class Post extends Component {
                 </WidePostWrapper>
             );
         } else {
-            // console.log("Narow post")
             return (
                 <NarrowPostWrapper>
                     <NarrowContentsContainer style={{ width: "100%" }}>
-                        <div class="content">
+                        <div className="content">
                             {post.content}
                         </div>
                     </NarrowContentsContainer>
                     <NarrowImageContainer>
-                        <img src={post.image} style={{ width: "100%" }} />
+                        <img src={post.image} style={{ width: "100%" }} alt="profile"/>
                     </NarrowImageContainer>
                 </NarrowPostWrapper>
             );
@@ -514,7 +427,11 @@ class Post extends Component {
     returnDeleteButton = (comment) => {
         if (this.props.storedCurrentUser.id === comment.author) {
             return (
-                <DeleteOutlined onClick={() => this.clickDeleteComment(comment)} size="large" style={{ cursor: "pointer" }} />
+                <DeleteOutlined 
+                    className="delete-button"
+                    onClick={() => this.clickDeleteComment(comment)} 
+                    size="large" style={{ cursor: "pointer" }} 
+                />
             );
         } else {
             return null;
@@ -528,27 +445,23 @@ class Post extends Component {
     }
 
     returnDisabled = (toFind) => {
-        let first = this.props.storedCurrentUser.chatroom != -1
-        // let second = this.props.storedUserList.find(user => user.id===item.author).chatroom != -1
+        let first = this.props.storedCurrentUser.chatroom !== -1
         let findUser = this.props.storedUserList.find(user => user.id===toFind)
-        if (findUser == undefined) {
-            console.log(toFind)
+        if (findUser === undefined) {
+            //console.log(toFind)
          }
-        let second = findUser.chatroom != -1
-        // let third = this.props.storedUserList.find(user => user.id===toFind).login == false
-        let third = findUser.login == false
+        let second = findUser.chatroom !== -1
+        let third = findUser.login === false
         return (first || second || third)
     }
 
     render() {
         let { postList, isRecommend } = this.state;
         let user = null;
-        let tagList = [];
         let tagToggle = [];
         let activePostList = [];
 
-        // FIXME: Infinite scroll to be implemented
-        console.log(this.props.storedPostList);
+        //console.log(this.props.storedPostList);
 
         if (this.props.storedUserList==undefined || this.props.storedUserList.undefined) this.props.onGetUserList();
         if (this.props.storedCurrentUser==undefined) this.props.onGetCurrentUser();
@@ -557,15 +470,12 @@ class Post extends Component {
         if (this.props.storedCurrentUser && this.props.storedPostList && this.props.storedTagList) {
             user = this.props.storedCurrentUser;
             if(!user.login) return <Redirect to='/login'/>
-
-            tagList = this.props.storedTagList;
             if (isRecommend) {
-                // postList = this.props.storedPostList.filter(post => post.author !== user.id && !user.friendList.includes(post.author));
                 postList = this.props.storedRecommendPostList;
             } else {
                 postList = this.props.storedPostList.filter(post => user.friendList.includes(post.author));
             }
-            console.log(postList);
+            //console.log(postList);
 
             tagToggle = this.props.storedCurrentUser.tagList.map(tag_id => {
                 return (
@@ -578,15 +488,14 @@ class Post extends Component {
                 );
             });
 
-            // FIXME: Infinite scroll to be implemented
-            // postList = this.props.storedPostList;
             activePostList = postList.filter(post => {
                 return this.state.selectedTagList.includes(post.tag);
             }).slice(-15);
-            console.log(activePostList);
+            //console.log(activePostList);
         }
         if (this.state.commentingPostId && !this.props.storedCommentList) this.props.onGetCommentList(this.state.commentingPostId);
         return (
+            <div className="Post">
             <PostPageWrapper>
                 <LineWrapper>
                     <GameTagWrapper>
@@ -602,25 +511,18 @@ class Post extends Component {
                 </LineWrapper>
 
                 <PostListWrapper>
-                    {/*
-                //FIXME: Infinite scroll to be implemented
-                <InfiniteScroll
-                    initialLoad={false}
-                    pageStart={0}
-                    loadMore={this.handleInfiniteOnLoad}
-                    hasMore={!this.state.loading && this.state.hasMore}
-                    useWindow={false}
-                >
-                */}
                     <List
                         dataSource={activePostList}
                         renderItem={item => (
                             <List.Item key={item.id}>
                                 <PostContainer>
                                     <PostHeaderContainer>
-                                        <AuthorItem onClick={() => this.props.history.push("/page/" + item.author)} style={{ cursor: "pointer" }} >
+                                        <AuthorItem 
+                                            className="avatar-redirect"
+                                            onClick={() => this.props.history.push("/page/" + item.author)} 
+                                            style={{ cursor: "pointer" }} 
+                                        >
                                             <Author
-                                                //FIXME: user로 넘기도록 수정해야함
                                                 name={item.authorName}
                                                 avatar={item.authorAvatar}
                                                 showOnline={() => this.returnOnlineUser(item.author)}
@@ -629,11 +531,9 @@ class Post extends Component {
                                         <ButtonItem>
                                         <CSRFToken />
                                             <Button
+                                                className="shallWe-button"
                                                 type="primary"
                                                 shape="round"
-                                                // disabled={this.props.storedCurrentUser.chatroom != -1
-                                                // || this.props.storedUserList.find(user => user.id===item.author).chatroom != -1
-                                                // || this.props.storedUserList.find(user => user.id===item.author).login == false}
                                                 disabled={() => this.returnDisabled(item.author)}
                                                 onClick={() => this.onClickShallWe(this.props.storedUserList.find(user => user.id===item.author), item.tag)}
                                                 size="small"
@@ -653,7 +553,10 @@ class Post extends Component {
 
                                     <Divider style={{ marginTop: 0, marginBottom: 10 }} />
 
-                                    <PostBodyContainer onClick={() => this.handleBodyClicked(item.id)}>
+                                    <PostBodyContainer 
+                                        className="click-post"
+                                        onClick={() => this.handleBodyClicked(item.id)}
+                                    >
                                         {this.returnBodyFormat(item, item.id===this.state.clickedPostId)}
 
                                     </PostBodyContainer>
@@ -665,6 +568,7 @@ class Post extends Component {
                                             <div>
                                                 <Space>
                                                     <HeartTwoTone
+                                                        className="toggle-like"
                                                         onClick={() => this.handleLikeClicked(item)}
                                                         twoToneColor={this.returnLike(item)}
                                                     />
@@ -678,6 +582,7 @@ class Post extends Component {
                                             <div>
                                                 <Space>
                                                     <MessageTwoTone
+                                                        className="click-comment"
                                                         onClick={() => this.handleCommentClicked(item.id)}
                                                     />
                                                 </Space>
@@ -697,15 +602,10 @@ class Post extends Component {
                             </List.Item>
                         )}
                     >
-                        {/* {this.state.loading && this.state.hasMore && (
-                            <LoadingWrapper>
-                                <Spin />
-                            </LoadingWrapper>
-                        )} */}
                     </List>
-                    {/* </InfiniteScroll> */}
                 </PostListWrapper>
             </PostPageWrapper>
+            </div>
         )
     }
 }
@@ -718,7 +618,6 @@ const mapStateToProps = (state) => {
         storedSelectedPost: state.ps.selectedPost,
         storedCommentList: state.cm.selectedCommentList,
         storedUserList: state.ur.userList,
-        storedUser: state.ur.selectedUser,
         storedRecommendPostList: state.ps.recommendPostList,
     }
 }
@@ -727,8 +626,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onGetCurrentUser: () =>
             dispatch(actionCreators.getCurrentUser()),
-        onGetUser: (id) =>
-            dispatch(actionCreators.getUser(id)),
         onPutUser: (user) =>
             dispatch(actionCreators.putUser(user)),
         onGetPostList: () =>
@@ -739,8 +636,6 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getTagList()),
         onGetCommentList: (id) =>
             dispatch(actionCreators.getCommentList(id)),
-        onGetPost: (id) =>
-            dispatch(actionCreators.getPost(id)),
         onGetUserList: () =>
             dispatch(actionCreators.getUserList()),
         onCreateComment: (postId, comment) =>
