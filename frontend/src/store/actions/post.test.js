@@ -64,7 +64,7 @@ describe('ActionCreators', () => {
         store.dispatch(actionCreators.createPost(stubPost1)).then(() => {
             const newState = store.getState();
             expect(newState.ps.selectedPost).toBe(stubPost1);
-            expect(spy).toHaveBeenCalledTimes(1);
+            expect(spy).toHaveBeenCalledTimes(2);
             done();
         });
     });
