@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import * as actionCreators from '../../store/actions/index';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import CSRFToken from '../../csrftoken'
-import { Redirect } from 'react-router-dom';
 import Chatting from '../../components/Chatting/Chatting';
 import Author from '../../components/Author/Author';
 import styled, { keyframes } from 'styled-components';
@@ -101,14 +98,6 @@ const MyPageRightContainer = styled.div`
     /* justify-content: space-between; */
     /* cursor: pointer; */
 `;
-
-const GridPostsWrapper = styled.div`
-    /* flex-basis: 80%; */
-    flex-basis: 100%;
-    box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
-`;
-
-
 class Chatroom extends Component {
     componentDidMount() {
         this.props.onGetCurrentUser();
@@ -119,8 +108,8 @@ class Chatroom extends Component {
     onClickBacktoLobby = () => {
         let user = this.props.storedCurrentUser;
         let chatroom = this.props.storedSelectedChatroom;
-        console.log(chatroom.memberList);
-        if (chatroom.memberList.length <= 1) {
+        //console.log(chatroom.memberList);
+        if (chatroom.memberList && chatroom.memberList.length <= 1) {
             this.props.onDeleteChatroom(chatroom.id);
             this.props.onDeleteChatting();
         }
@@ -130,6 +119,7 @@ class Chatroom extends Component {
     }
 
     onClickUserButton = (member_id) => {
+        console.log("toggle-friend");
         let user = this.props.storedCurrentUser;
         if (user.friendList.find(id => id === member_id) === undefined) {
             user.friendList.push(member_id);
@@ -146,22 +136,25 @@ class Chatroom extends Component {
         let friendList = this.props.storedCurrentUser.friendList;
         let memberList = [];
         console.log(chatroom);
-        console.log(userList);
-        if (chatroom) console.log(chatroom.memberList);
+        //console.log(userList);
+        //if (chatroom) console.log(chatroom.memberList);
         if (chatroom && chatroom.memberList && userList) {
             memberList = chatroom.memberList.map(member_id => {
                 return userList.find(user => user.id === member_id);
             });
         }
-        console.log(this.props.storedSelectedChatUser);
-        console.log(this.props.storedSelectedChatChannel);
+        //console.log(this.props.storedSelectedChatUser);
+        //console.log(this.props.storedSelectedChatChannel);
         if (this.props.storedSelectedChatUser && this.props.storedSelectedChatChannel) {
             return (
                 <div className="Chatroom">
                     <MyPageContainer>
                         <MyPageLeftContainer >
                             <ProfileCardWrapper>
-                                <Button onClick={() => this.onClickBacktoLobby()}> Back to Lobby </Button>
+                                <Button 
+                                    className="back-to-lobby"
+                                    onClick={() => this.onClickBacktoLobby()}
+                                > Back to Lobby </Button>
                             </ProfileCardWrapper>
                             <FriendListWrapper>
                                 <Divider orientation="center" style={{ marginTop: 0 }}>
@@ -183,14 +176,20 @@ class Chatroom extends Component {
                                                 <SpaceBetweenItem />
                                                 <ButtonItem>
                                                     {
-                                                        <Button onClick={() => this.onClickUserButton(item.id)} >
+                                                        <Button 
+                                                            className="add-friend"
+                                                            onClick={() => this.onClickUserButton(item.id)} 
+                                                        >
                                                             {item.id !== this.props.storedCurrentUser.id &&
                                                                 friendList.find(id => id === item.id) === undefined &&
                                                                 <PlusOutlined />}
                                                         </Button>
                                                     }
                                                     {
-                                                        <Button onClick={() => this.onClickUserButton(item.id)} >
+                                                        <Button 
+                                                            className="delete-friend"
+                                                            onClick={() => this.onClickUserButton(item.id)} 
+                                                        >
                                                             {item.id !== this.props.storedCurrentUser.id &&
                                                                 friendList.find(id => id === item.id) !== undefined &&
                                                                 <MinusOutlined />}
@@ -216,46 +215,7 @@ class Chatroom extends Component {
             )
         }
         return (
-            <div className="Chatroom">
-                <MyPageContainer>
-                    <MyPageLeftContainer >
-                        <ProfileCardWrapper>
-                            <Button onClick={() => this.onClickBacktoLobby()}> Back to Lobby </Button>
-                        </ProfileCardWrapper>
-                        <FriendListWrapper>
-                            <Divider orientation="center" style={{ marginTop: 0 }}>
-                                Members in chatroom {this.props.match.params.id}
-                            </Divider>
-                            <List
-                                dataSource={memberList}
-                                renderItem={item => (
-                                    <List.Item key={item.id}>
-                                        <FriendItemWrapper>
-                                            <AuthorItem >
-                                                <Author
-                                                    //FIXME: user로 넘기도록 수정해야함
-                                                    name={item.username}
-                                                    avatar={item.avatar}
-                                                    showOnline={true}
-                                                />
-                                            </AuthorItem>
-                                            <SpaceBetweenItem />
-                                            <ButtonItem>
-                                                {item.id !== this.props.storedCurrentUser.id ? <Button>AddorDelete</Button> : null}
-                                            </ButtonItem>
-                                        </FriendItemWrapper>
-                                    </List.Item>
-                                )}
-                            />
-                        </FriendListWrapper>
-                    </MyPageLeftContainer>
-                    <MyPageRightContainer>
-                        <ProfileCardWrapper>
-                            Chatting Empty
-                        </ProfileCardWrapper>
-                    </MyPageRightContainer>
-                </MyPageContainer>
-            </div>
+            <div className="Chatroom" />
         );
     }
 }

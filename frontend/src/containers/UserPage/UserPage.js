@@ -6,7 +6,7 @@ import { Divider, Menu, Dropdown } from 'antd';
 import Author from '../../components/Author/Author';
 import GridPost from '../../components/PostInGrid/UserPagePostInGrid';
 
-import { Table, Row, Col, Button, Typography, Tag } from 'antd';
+import { Button } from 'antd';
 import GameTag from '../../components/GameTag/GameTag';
 import {
     UserAddOutlined,
@@ -90,8 +90,6 @@ class UserPage extends Component {
     constructor(props) {
         super(props);
     }
-
-    // FIXME: User model 수정되면 currentUser 말고 user를 prop으로 받도록 수정 요함.
     state = {
         selectedTagList: [],
         addOrDelete: null,
@@ -108,10 +106,6 @@ class UserPage extends Component {
             });
             console.log('done');
         }
-    }
-
-    onClickPost() {
-        //- PostInGrid popup (PostInGrid 구현 후 작성)
     }
 
     onClickCreatePost() {
@@ -153,7 +147,7 @@ class UserPage extends Component {
         };
         let sendingUser = this.props.storedCurrentUser;
         await this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
-        if(sendingUser.chatroom != -1) {
+        if(sendingUser.chatroom !== -1) {
             this.props.history.push('/chatroom/' + sendingUser.chatroom);
         }
     }
@@ -187,7 +181,7 @@ class UserPage extends Component {
 
         let menu = tagList.map(tagId => {
             return (
-                <Menu.Item onClick={() => this.onClickShallWe(tagId)}>
+                <Menu.Item key={tagId} onClick={() => this.onClickShallWe(tagId)}>
                     <a>
                         {tagId===1 ? "LOL": tagId===2 ? "HearthStone": "MapleStory"}
                     </a>
@@ -196,11 +190,15 @@ class UserPage extends Component {
         });
         if (currentUser && selectedUser) {
             return(
+                <div className="UserPage">
                 <UserPageContainer>
                     <FirstRowContainer>
                         <ProfileCardWrapper>
                             {userProfile}
-                            <Button onClick={() => this.onToggleFriend()}>
+                            <Button 
+                                className="toggle-friend"
+                                onClick={() => this.onToggleFriend()}
+                            >
                                 {this.state.addOrDelete === 'Add'? <UserAddOutlined /> : <UserDeleteOutlined />}
                                 {this.state.addOrDelete}
                             </Button>
@@ -222,9 +220,8 @@ class UserPage extends Component {
                             >
                                 <Button
                                     type="primary"
-                                    disabled={currentUser.chatroom != -1
-                                    || selectedUser.chatroom != -1 || selectedUser.login == false}
-                                    /*onClick={() => this.onClickShallWe(item)}*/
+                                    disabled={currentUser.chatroom !== -1
+                                    || selectedUser.chatroom !== -1 || selectedUser.login == false}
                                 >
                                     Shall We
                                 </Button>
@@ -249,28 +246,15 @@ class UserPage extends Component {
                         </GridPostsWrapper>
                     </ThirdRowContainer>
                 </UserPageContainer>
+                </div>
             );
         } else {
             return (
-                <div>
+                <div className="UserPage">
                     Loading
                 </div>
             );
         }
-        
-        // return(
-
-        //     <div>
-        //             <div className="leftArea">
-        //             <div className="profileArea">profile{ /* <Profile /> */ }</div>
-                
-        //         <div className="friendsArea">friends{ /* <Friends /> */ }</div>
-        //         </div>
-        //         <div className="tagArea">tag{ /* <Tag onClick={() => this.onClickTag/> */ }</div>
-        //         <button className="createPost" onClick={() => this.onClickCreatePost}>create post</button>
-        //         <div className="postArea" onClick={() => this.onClickPost}>posts { /* <PostInGrid /> */ } </div>
-        //     </div>
-        // )
     }
 
 }

@@ -7,7 +7,6 @@ import {
     FormOutlined,
     LogoutOutlined,
 } from '@ant-design/icons';
-import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
 import {withRouter} from 'react-router';
@@ -45,27 +44,26 @@ class SideNav extends Component {
             <div className="SideBar">
                 <div style={{ background: "rgba(255, 255, 255, 0.2)" }}></div>
                 <Menu theme="dark" mode={this.props.mode} defaultSelectedKeys={['1']}>
-                    <Menu.Item id="post-menu" key="1" onClick={this.handlePostClick}>
+                    <Menu.Item id="post-menu" className="post-menu" key="1" onClick={this.handlePostClick}>
                         <FormOutlined />
                         <span> Posts </span>
                     </Menu.Item>
 
-                    <Menu.Item id="lobby-menu" key="2" onClick={this.handleLobbyClick}>
+                    <Menu.Item id="lobby-menu" className="lobby-menu" key="2" onClick={this.handleLobbyClick}>
                         <AliwangwangOutlined />
                         <span> Lobby </span>
                     </Menu.Item>
 
-                    <Menu.Item id="search-menu" key="3" onClick={this.handleSearchClick}>
+                    <Menu.Item id="search-menu" className="search-menu" key="3" onClick={this.handleSearchClick}>
                         <SearchOutlined />
                         <span> Search </span>
                     </Menu.Item>
 
-                    <Menu.Item id="my-page-menu" key="4" onClick={this.handleMyPageClick}>
+                    <Menu.Item id="my-page-menu" className="my-page-menu" key="4" onClick={this.handleMyPageClick}>
                         <UserOutlined />
                         <span> MyPage </span>
                     </Menu.Item>
-                    <Menu.Item id="logout-menu" key="5" onClick={this.props.handleLogout}>
-                    {/* <Menu.Item id="logout-menu" key="5" onClick={this.handleLogout}> */}
+                    <Menu.Item id="logout-menu" className="logout-menu" key="5" onClick={this.props.handleLogout}>
                         <LogoutOutlined />
                         <span> Logout </span>
                     </Menu.Item>

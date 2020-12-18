@@ -66,7 +66,10 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
       "!src/index.js",
-      "!src/serviceWorker.js"
+      "!src/serviceWorker.js",
+      "!src/App.js",
+      "!src/config/ApplicationRoutes.js",
+      "!src/csrftoken.js"
     ]
   },
   "devDependencies": {

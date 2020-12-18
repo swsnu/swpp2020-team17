@@ -35,13 +35,8 @@ class CreateNewPost extends React.Component {
         preview: '',
     };
 
-    handleChange = (info) => {
-        // const { onChange } = this.props;
-        // const currFile = fileList[0];
-        // //FIXME: 테스트 코드
-        // console.log("File list: ", fileList);
-        // console.log("Current file: ", currFile);
-        // console.log("File itself: ", currFile.originFileObj);
+    handleChange = info => {
+        console.log(info);
         if (info.file.status === 'uploading') {
             this.setState({ loading: true });
             return;
@@ -61,39 +56,6 @@ class CreateNewPost extends React.Component {
             })
         }
     }
-    
-    // handleData = file => {
-    //     this.setState({
-    //         // file: file.originFileObj
-    //         file: file
-    //     })
-    // }
-
-    // beforeUpload(file) {
-    //     const isJpg = file.type === 'image/jpeg';
-    //     const isPng = file.type === 'image/png';
-
-    //     if (isJpg) {
-    //         this.setState({
-    //             fileType: 'jpeg'
-    //         })
-    //         console.log("[DEBUG] filetype is jpeg");
-    //     } else if (isPng) {
-    //         this.setState({
-    //             fileType: 'png'
-    //         })
-    //         console.log("[DEBUG] filetype is png");
-    //     } else {
-    //         message.error('You can only upload JPG/PNG file!');
-    //     }
-
-    //     const isLt2M = file.size / 1024 / 1024 < 2;
-    //     if (!isLt2M) {
-    //         message.error("Image is bigger than 2MB!");
-    //     }
-
-    //     return (isJpg || isPng) && isLt2M;
-    // };
 
     componentDidUpdate(prevProps, prevState) {
         if(prevProps.selectedPost !== this.props.selectedPost)
@@ -101,24 +63,11 @@ class CreateNewPost extends React.Component {
     }
 
     onFinish(values) {
-        // values.image = this.state.imageUrl;
-        // console.log('File type is:', values);
         console.log('[DEBUG] values: ', values);
         console.log('[DEBUG] this.state.file: ', this.state.file);
         console.log('[DEBUG] this.state.fileType: ', this.state.fileType);
         this.props.createPost(values, this.state.file, this.state.fileType)
     }
-
-    // fileChange = e => {
-    //     if(e.target.files){
-    //         this.setState({
-    //             file: e.target.files[0],
-    //             fileType: e.target.files[0].type.split('/')[1],
-    //             upload: true,
-    //             preview: URL.createObjectURL(e.target.files[0])
-    //         })
-    //     }
-    // }
 
     render() {
         const { loading, imageUrl} = this.state;
@@ -140,6 +89,7 @@ class CreateNewPost extends React.Component {
         };
 
         return (
+            <div className="CreatePost">
             <Form
                 {...layout}
                 name="nest-messages"
@@ -161,19 +111,15 @@ class CreateNewPost extends React.Component {
                         listType="picture-card"
                         className="avatar-uploader"
                         showUploadList={false}
-                        // action="https://shallwe-bucket.s3.amazonaws.com/"
                         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                         beforeUpload={beforeUpload}
                         onChange={this.handleChange}
-                        // onChange={handleChange}
-                        // data={this.handleData}
+
                     >
                         {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                     </Upload>
                 </Form.Item>
 
-                {/* Preview 만들어야해!
-                <input type="file" id="file" onChange={this.fileChange}/> */}
 
                 <Form.Item name='content' label="Content" rules={[{ required: true }]}>
                     <Input.TextArea />
@@ -185,12 +131,12 @@ class CreateNewPost extends React.Component {
                     </Button>
                 </Form.Item>
             </Form>
+            </div>
         );
     }
 }
 
 const mapStateToProps = (state) => ({
-    postList: state.ps.postList,
     currentUser: state.ur.currentUser,
     selectedPost: state.ps.selectedPost,
     tagList: state.tg.tagList,

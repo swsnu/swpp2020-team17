@@ -122,5 +122,21 @@ describe('ActionCreators', () => {
             done();
         });
     })
-  
+
+    it('recommendPostList should recommend posts correctly', (done) => {
+        const spy = jest.spyOn(axios, 'get')
+        .mockImplementation(url => {
+            return new Promise((resolve, reject) => {
+                const result = {
+                status: 200,
+                data: stubPost1
+                };
+                resolve(result);
+            });
+        })
+        store.dispatch(actionCreators.recommendPostList()).then(() => {
+            expect(spy).toHaveBeenCalledTimes(1);
+            done();
+        });
+    })
 })

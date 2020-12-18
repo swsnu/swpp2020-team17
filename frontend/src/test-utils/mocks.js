@@ -46,16 +46,28 @@ const getMockPostReducer = jest.fn(
     }
 );
 
+const getMockCommentReducer = jest.fn(
+  initialState => (state = initialState, action) => {
+    switch (action.type) {
+      default:
+        break;
+      }
+      return state;
+  }
+);
+
 export const getMockStore = (initialState) => {
   const mockUserReducer = getMockUserReducer(initialState);
   const mockChatroomReducer = getMockChatroomReducer(initialState);
   const mockTagReducer = getMockTagReducer(initialState);
   const mockPostReducer = getMockPostReducer(initialState);
+  const mockCommentReducer = getMockCommentReducer(initialState);
   const rootReducer = combineReducers({
     ur: mockUserReducer,
     chat: mockChatroomReducer,
     tg: mockTagReducer,
     ps: mockPostReducer,
+    cm: mockCommentReducer,
     router: connectRouter(history),
   });
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
