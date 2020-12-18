@@ -1,9 +1,0 @@
-backend/backend/__pycache__/
-backend/shallWeGame/__pychache__/
-backend.zip
-*.pyc
-backend/.config_secret/
-<<<<<<< HEAD
-backend/backend/.env
-=======
->>>>>>> master
