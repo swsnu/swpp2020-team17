@@ -1,8 +1,8 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { connectRouter, ConnectedRouter } from 'connected-react-router';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router';
+import { Route, Switch } from 'react-router-dom';
 
 import Chatroom from './Chatroom';
 import { getMockStore } from '../../test-utils/mocks'
@@ -11,81 +11,101 @@ import { history } from '../../store/store'
 import * as userActionCreators from '../../store/actions/user';
 import * as chatActionCreators from '../../store/actions/chatroom';
 
-jest.mock('antd', () => {
+jest.mock('../../components/Chatting/Chatting', () => {
     return jest.fn(props => {
         return (
-            <div className="spyantd" onClick={jest.fn()}/>
+            <div className="spyChatting" />
         )
-    });
-});
+    })
+})
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('styled-components'),
-    styled: () => ({
-        text: jest.fn(),
-    }),
-}));
-
-jest.mock('styled-components', () => {
+jest.mock('../../components/Author/Author', () => {
     return jest.fn(props => {
         return (
-            <div className="spyStyle" onClick={jest.fn()}/>
+            <div className="spyAuthor" />
         )
-    });
-});
-
-const propsList = [
-    {
-        id: 1, 
-        title: 'chatroom1', 
-        tag: 1, 
-        memberList: [1, 2],
-    },
-]
+    })
+})
 
 const stubInitialState = {
-    chatroomList: [
-        {
-            id: 1, 
-            title: 'chatroom1', 
-            tag: 1, 
-            memberList: [1, 2],
-        },
-        {
-            id: 1, 
-            title: 'chatroom2', 
-            tag: 2, 
-            memberList: [3],
-        },
-    ],
     currentUser: {
         id: 1, 
         username: 'User1',
         login: true,
         avatar: null, 
-        chatroom: -1, 
+        chatroom: 1, 
         friendList: [2],
         postList: [1, 5],
         shallWeRoomList: [1, 2], 
         watchedPostList: [1, 2, 3], 
         tagList: [1]
     },
+    userList: [
+        {
+            id: 1, 
+            username: 'User1',
+            login: true,
+            avatar: null, 
+            chatroom: 1, 
+            friendList: [],
+            postList: [1, 5],
+            shallWeRoomList: [1, 2], 
+            watchedPostList: [1, 2, 3], 
+            tagList: [1]
+        },
+        {
+            id: 2, 
+            username: 'User2',
+            login: true,
+            avatar: null, 
+            chatroom: 1, 
+            friendList: [],
+            postList: [1, 5],
+            shallWeRoomList: [1, 2], 
+            watchedPostList: [1, 2, 3], 
+            tagList: [1]
+        },
+    ],
+    selectedChatroom: {
+        id: 1, 
+        title: 'chatroom1', 
+        tag: 1, 
+        memberList: [1, 2],
+    },
+    selectedChatUser: {test: 'test'},
+    selectedChatChannel: {test: 'test'},
 }
+
+Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
 
 const mockStore = getMockStore(stubInitialState);
 
 describe('<Chatroom />', () => {
-    let chatroomList, spyGetUserList, spyGetCurrentUser, spyPutUser, spyGetChatroomList, spyDeleteChatroom, spyCreateChatting;
+    let chatroom, spyGetUserList, spyGetCurrentUser, spyPutUser, 
+        spyGetChatroomList, spyDeleteChatroom, spyDeleteChatting;
+    
     afterEach(() => {
         jest.clearAllMocks();
     });
 
     beforeEach(() => {
-       chatroom = (
+        chatroom = (
             <Provider store={mockStore}>
               <ConnectedRouter history={history}>
               <Switch>
-                <Route path='/' exact component={Chatroom} />
+                <Route path='/' exact component={(props) => <Chatroom {...props} match={{params: {id: 1}, isExact: true, path: "", url: ""}} />} /> />
               </Switch>
               </ConnectedRouter>
             </Provider>
@@ -104,9 +124,83 @@ describe('<Chatroom />', () => {
             .mockImplementation(() => { return dispatch => {}; });
     })
 
-    // it('should render without errors', () => {
+    it('should render without errors', () => {
+        const component = mount(chatroom);
+        const wrapper = component.find(".Chatroom");
+        expect(wrapper.length).toBe(1);
+    });
+
+    it('should redirect back to lobby', () => {
+        const component = mount(chatroom);
+        const wrapper = component.find(".back-to-lobby");
+        wrapper.at(0).simulate('click');
+        expect(wrapper.at(1).length).toBe(1);
+    });
+
+    //// Not Working Well
+    // it('should toggle friend', () => {
     //     const component = mount(chatroom);
-    //     let wrapper = component.find(".Chatroom");
-    //     expect(wrapper.length).toBe(1);
+    //     // add friend
+    //     let wrapper = component.find(".add-friend");
+    //     wrapper.simulate('click');
+    //     expect(wrapper.at(1).length).toBe(1);
+    //     //delete friend
+    //     wrapper = component.find(".delete-friend");
+    //     wrapper.simulate('click');
+    //     expect(wrapper.at(1).length).toBe(1);
     // });
+
+    //// Not Working Well
+    // it('should delete chatroom', () => {
+    //     const stubInitialState = {
+    //         currentUser: {
+    //             id: 1, 
+    //             username: 'User1',
+    //             login: true,
+    //             avatar: null, 
+    //             chatroom: 1, 
+    //             friendList: [2],
+    //             postList: [1, 5],
+    //             shallWeRoomList: [1, 2], 
+    //             watchedPostList: [1, 2, 3], 
+    //             tagList: [1]
+    //         },
+    //         userList: [
+    //             {
+    //                 id: 1, 
+    //                 username: 'User1',
+    //                 login: true,
+    //                 avatar: null, 
+    //                 chatroom: -1, 
+    //                 friendList: [],
+    //                 postList: [1, 5],
+    //                 shallWeRoomList: [1, 2], 
+    //                 watchedPostList: [1, 2, 3], 
+    //                 tagList: [1]
+    //             },
+    //         ],
+    //         selectedChatroom: {
+    //             id: 1, 
+    //             title: 'chatroom1', 
+    //             tag: 1, 
+    //             memberList: [1],
+    //         },
+    //         selectedChatUser: {test: 'test'},
+    //         selectedChatChannel: {test: 'test'},
+    //     }
+    //     const mockStore = getMockStore(stubInitialState);
+    //     chatroom = (
+    //         <Provider store={mockStore}>
+    //           <ConnectedRouter history={history}>
+    //           <Switch>
+    //             <Route path='/' exact component={(props) => <Chatroom {...props} match={{params: {id: 1}, isExact: true, path: "", url: ""}} />} /> />
+    //           </Switch>
+    //           </ConnectedRouter>
+    //         </Provider>
+    //     );
+    //     const component = mount(chatroom);
+    //     const wrapper = component.find(".back-to-lobby");
+    //     wrapper.at(0).simulate('click');
+    //     expect(wrapper.length).toBe(1);
+    // })
 });
