@@ -1,7 +1,13 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import SearchedUser from './SearchedUser';
-import { Avatar } from 'antd';
+
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
+    useHistory: () => ({
+        push: jest.fn(),
+    }),
+}));
 
 describe('<SearchedUser />', () => {
     it('should render without errors', () => {
@@ -16,10 +22,37 @@ describe('<SearchedUser />', () => {
         expect(wrapper.length).toBe(1);
     });
 
-    // it('should redirect when avatar is clicked', () => {
-    //     const component = shallow(<SearchedUser avatar={'https://icon2.cleanpng.com/20180320/sqe/kisspng-twitch-computer-icons-streaming-media-youtube-live-tv-twitch-icon-5ab19172461392.001176751521586546287.jpg'} />);
-    //     const wrapper = component.find('.SearchedUser .left .Avatar');
-    //     wrapper.simulate('click');
-    //     expect(wrapper.length).toBe(1);
-    // });
+    it('should redirect when avatar is clicked', () => {
+        let component = shallow(<SearchedUser />);
+        let wrapper = component.find('.avatar');
+        wrapper.simulate('click');
+        expect(wrapper.length).toBe(1);
+
+        // when avatar=null
+        component = shallow(<SearchedUser avatar={null} />);
+        wrapper = component.find('.avatar');
+        wrapper.simulate('click');
+        expect(wrapper.length).toBe(1);
+    });
+
+    it('should add or delete user', () => {
+        let component = shallow(<SearchedUser onButtonClick={jest.fn()} addOrDelete={'Delete'}/>);
+        let wrapper = component.find('.addordelete-button');
+        wrapper.simulate('click');
+        expect(wrapper.length).toBe(1);
+        component = shallow(<SearchedUser onButtonClick={jest.fn()} addOrDelete={'Add'}/>);
+        wrapper = component.find('.addordelete-button');
+        wrapper.simulate('click');
+        expect(wrapper.length).toBe(1);
+
+        // when avatar=null
+        component = shallow(<SearchedUser avatar={null} onButtonClick={jest.fn()} addOrDelete={'Add'}/>);
+        wrapper = component.find('.addordelete-button');
+        wrapper.simulate('click');
+        expect(wrapper.length).toBe(1);
+        component = shallow(<SearchedUser avatar={null} onButtonClick={jest.fn()} addOrDelete={'Delete'}/>);
+        wrapper = component.find('.addordelete-button');
+        wrapper.simulate('click');
+        expect(wrapper.length).toBe(1);
+    })
 })

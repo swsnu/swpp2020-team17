@@ -16,13 +16,21 @@ const SearchedUser = props => {
         return (
             <div className='SearchedUser'>
                 <div className="left" >
-                    <Avatar onClick={() => history.push("/page/" + props.id)} size="large" icon={<UserOutlined /> } />
+                    <Avatar 
+                        className="avatar"
+                        onClick={() => history.push("/page/" + props.id)} 
+                        size="large" 
+                        icon={<UserOutlined /> } 
+                    />
                 </div>
                 <div className="middle">
                     {props.username}
                 </div>
                 <div className="right">
-                    <Button onClick={props.onButtonClick}>
+                    <Button 
+                        className="addordelete-button"
+                        onClick={props.onButtonClick}
+                    >
                         {props.addOrDelete==='Add'? <UserAddOutlined /> : <UserDeleteOutlined />}
                         {props.addOrDelete}
                     </Button>
@@ -33,13 +41,22 @@ const SearchedUser = props => {
         return (
             <div className='SearchedUser'>
                 <div className="left">
-                    <Avatar onClick={() => history.push("/page/" + props.id)} size="large" style={{ backgroundColor: '#1A516E' }} src={props.avatar} />
+                    <Avatar
+                        className="avatar" 
+                        onClick={() => history.push("/page/" + props.id)} 
+                        size="large" 
+                        style={{ backgroundColor: '#1A516E' }} 
+                        src={props.avatar} 
+                    />
                 </div>
                 <div className="middle">
                     {props.username}
                 </div>
                 <div className="right">
-                    <Button onClick={props.onButtonClick}>
+                    <Button 
+                        className="addordelete-button"
+                        onClick={props.onButtonClick}
+                    >
                         {props.addOrDelete==='Add'? <UserAddOutlined /> : <UserDeleteOutlined />}
                         {props.addOrDelete}
                     </Button>
