@@ -42,7 +42,7 @@ const stubInitialState = {
         postList: [1, 5],
         shallWeRoomList: [1], 
         watchedPostList: [1, 2, 3], 
-        tagList: [1]
+        tagList: [1, 2, 3]
     }
 }
 
@@ -101,7 +101,7 @@ describe('<RoomInfo />', () => {
     //     const spyHistoryPush = jest.spyOn(history, 'push')
     //         .mockImplementation(path => {});
     //     const component = mount(roomInfo);
-    //     const wrapper = component.find('#back-button');
+    //     const wrapper = component.find('.back-button');
     //     expect(wrapper.length).toBe(1);
     //     wrapper.at(0).simulate('click');
     //     expect(spyHistoryPush).toBeCalledTimes(1);
@@ -111,6 +111,7 @@ describe('<RoomInfo />', () => {
     //     const component = mount(roomInfo);
     //     const wrapper = component.find('.spyButton');
     //     expect(wrapper.length).toBe(4);
+
     // });
 
     it('should render submit form', () => {
@@ -119,6 +120,7 @@ describe('<RoomInfo />', () => {
         expect(wrapper.length).toBe(1);
         wrapper.simulate('click');
     });
+    
 
     // it('should redirect to lobby when chatroom=-1', () => {
     //     const spyHistoryPush = jest.spyOn(history, 'push')
