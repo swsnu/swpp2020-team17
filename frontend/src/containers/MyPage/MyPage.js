@@ -125,20 +125,6 @@ const PostInGridWrapper = styled.div`
     flex-basis: 70%;
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
 `;
-
-Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation(query => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(), // deprecated
-      removeListener: jest.fn(), // deprecated
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
 class MyPage extends Component {
     constructor(props) {
         super(props);
