@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
 import styled, { keyframes } from 'styled-components';
-import Post from '../../containers/Post/Post';
 import { Divider, List, Button, Space, Menu, Dropdown } from 'antd';
 import Profile from '../../components/Profile/Profile';
 import Author from '../../components/Author/Author';
-import { useHistory } from 'react-router';
 import PostInGrid from '../../components/PostInGrid/PostInGrid'
 import GameTag from '../../components/GameTag/GameTag';
 import CSRFToken from '../../csrftoken'
@@ -122,21 +120,11 @@ const MyPageRightContainer = styled.div`
     /* cursor: pointer; */
 `;
 
-// const CreateNewPostsWrapper = styled.div`
-//     flex-basis: 20%;
-// `;
-
 const PostInGridWrapper = styled.div`
     /* flex-basis: 80%; */
     flex-basis: 70%;
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
 `;
-
-// const MyPageFooterContainer = styled.div`
-//     display: flex;
-//     flex-direction: column;
-//     margin-top: 10px;
-// `;
 
 class MyPage extends Component {
     constructor(props) {
@@ -150,46 +138,7 @@ class MyPage extends Component {
         selectedTagList: [],
     };
 
-    // state= {
-        // ID: '',
-        // FriendIDList: [],
-        // RoomID: '',
-        // userName: '',
-        // profilePicture: '',
-        // postIDList: '',
-        // ShallWeRoomList: [],
-        // watchedPostedIDList: [],
-        // isOnline: false
-    // }
-
-    // componentDidMount() {
-    //     this.setState({
-    //         ID: this.props.user.ID,
-    //         FriendIDList: this.props.user.FriendIDList,
-    //         RoomID: this.props.user.RoomID,
-    //         userName: this.props.user.userName,
-    //         profilePicture: this.props.user.profilePicture,
-    //         postIDList: this.props.user.postIDList,
-    //         ShallWeRoomList: this.props.user.ShallWeRoomList,
-    //         watchedPostedIDList: this.props.user.watchedPostedIDList,
-    //         isOnline: true
-    //     })
-    // }
-
-    // componentDidUpdate(prevProps, prevState) {
-    //    // Friend의 온라인 상태 여부 확인 (Friend 구현 후 작성)
-    // }
-
-    // FIXME: User model 수정되면 currentUser 말고 user를 prop으로 받도록 수정 요함.
     componentDidMount() {
-        // if (this.props.storedCurrentUser === null) {
-        //     this.setState({
-        //         tagList: this.props.storeCurrentUser.tagList,
-        //         avatar: this.props.storeCurrentUser.avatar,
-        //         name: this.props.storeCurrentUser.username,
-        //         // showOnline: this.props.storeCurrentUser.login,
-        //     })
-        // }
         if (this.props.storedCurrentUser) {
             this.setState({ 
                 selectedTagList: this.props.storedCurrentUser.tagList,
@@ -199,21 +148,15 @@ class MyPage extends Component {
 
     }
 
-    // onClickTag() {
-    //     this.props.changeTagState();
-    // }
-
-    // //TODO:
     handleAuthorClicked = (id) => {
         this.props.history.push('/page/' + id);
     }
 
-    //TODO:
     async onClickShallWe(receivingUser, tagId) {
         let newChatroom = {
             isGlobal: false, 
             title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
-            tag: tagId,     //tag가 없는디 어떡하지 
+            tag: tagId,     //tag가 없는디 어떡하지  
             maxPersonnel: 2, 
             discordLink: null,
         }
@@ -243,10 +186,6 @@ class MyPage extends Component {
 
     render() {
         let test = this.props.storedSelectedChatroom;
-        // let name = this.props.storedCurrentUser.username;
-        // let avatar = this.props.storedCurrentUser.avatar;
-        // let tagList = this.props.storedCurrentUser.tagList;
-        // let friendList = this.props.storedCurrentUser.friendList;
         let user = this.props.storedCurrentUser;
         let userProfile = (user !== null)?
             (<Profile
@@ -257,8 +196,6 @@ class MyPage extends Component {
             />):
             (<p>Please login!</p>)
         ;
-        //FIXME: 더미로 테스트하다가 friend 추가 잘 되면, 바꿔놓기.
-        // let friendList = this.props.storedCurrentUser.friendList;
         let userList = this.props.storedUserList;
         let friendList = [];
         console.log(this.props.storedUserList);
@@ -292,25 +229,6 @@ class MyPage extends Component {
                 menu: menu,
             };
         });
-        // const menu = (
-        //     <Menu>
-        //       <Menu.Item onClick={() => this.onClickShallWe(friend, 1)}>
-        //         <a target="_blank">
-        //           LOL
-        //         </a>
-        //       </Menu.Item>
-        //       <Menu.Item onClick={() => this.onClickShallWe(friend, 2)}>
-        //         <a target="_blank">
-        //           HearthStone
-        //         </a>
-        //       </Menu.Item>
-        //       <Menu.Item onClick={() => this.onClickShallWe(friend, 3)}>
-        //         <a target="_blank">
-        //           MapleStory
-        //         </a>
-        //       </Menu.Item>
-        //     </Menu>
-        // );
 
         return(
             <MyPageContainer>
@@ -358,7 +276,6 @@ class MyPage extends Component {
                                                         shape="round"
                                                         disabled={this.props.storedCurrentUser.chatroom != -1
                                                         || item.chatroom != -1 || item.login == false}
-                                                        /*onClick={() => this.onClickShallWe(item)}*/
                                                         size="small"
                                                         style={{ fontSize: 8, fontWeight: "bolder" }}
                                                     >
@@ -394,19 +311,6 @@ class MyPage extends Component {
                 </MyPageRightContainer>
             </MyPageContainer>
         );
-        // return(
-
-        //     <div>
-        //             <div className="leftArea">
-        //             <div className="profileArea">profile{ /* <Profile /> */ }</div>
-                
-        //         <div className="friendsArea">friends{ /* <Friends /> */ }</div>
-        //         </div>
-        //         <div className="tagArea">tag{ /* <Tag onClick={() => this.onClickTag/> */ }</div>
-        //         <button className="createPost" onClick={() => this.onClickCreatePost}>create post</button>
-        //         <div className="postArea" onClick={() => this.onClickPost}>posts { /* <PostInGrid /> */ } </div>
-        //     </div>
-        // )
     }
 
 }
@@ -436,49 +340,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyPage);
-
-// const mapStateToProps = (state) => {
-//     return {
-//         storedCurrentUser: state.ur.currentUser,
-//         storedTagList: state.tg.tagList,
-//         // storedFriendList: 
-//     };
-// }
-
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         onGetCurrentUser: () => 
-//             dispatch(actionCreators.getCurrentUser()),
-//         onPutUser: (user) => 
-//             dispatch(actionCreators.putUser(user)),
-//         onGetChatroomList: () => 
-//             dispatch(actionCreators.getChatroomList()),
-//         onPutChatroom: (room) => 
-//             dispatch(actionCreators.putChatroom(room)),
-//         onDeleteChatroom: (id) => 
-//             dispatch(actionCreators.deleteChatroom(id)),
-//         onGetTagList: () => 
-//             dispatch(actionCreators.getTagList()),
-//     }
-// }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(Lobby);
-
-// export default MyPage;
-
-// const mapStateToProps = (state) => {
-//     return {
-//         user: state.ur.currentUser,
-//     }
-// }
-
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         //createPost: (id) => {
-//         //    return dispatch(actionCreators.createPost(id))
-//         //}
-
-//     }
-// }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(MyPage)
