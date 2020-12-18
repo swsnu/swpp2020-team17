@@ -22,7 +22,6 @@ class ChatroomList extends Component {
     constructor(props) {
         super(props)
         this.props.onGetCurrentUser();
-        this.props.onGetChatroomList();
     }
 
     onClickJoin = async (id) => {
@@ -59,11 +58,12 @@ class ChatroomList extends Component {
                         this.props.onDeleteChatting();
                     }
                     data.push({
+                        key: room.id,
                         game: room.tag == 1? 'LOL' : room.tag == 2? 'HearthStone' : 'MapleStory',
                         gamers: room.memberList.length,
                         title: room.title,
-                        sorry: <Button type="primary" key="1" onClick={() => this.onClickSorry(room.id)}> Sorry </Button>,
-                        sure: <Button type="primary" key="2" onClick={() =>this.onClickSure(room.id)}> Sure </Button>,
+                        sorry: <Button className="sorry-button" type="primary" key={room.id} onClick={() => this.onClickSorry(room.id)}> Sorry </Button>,
+                        sure: <Button className="sure-button" type="primary" key={room.id} onClick={() =>this.onClickSure(room.id)}> Sure </Button>,
                     })
                 }
                 return data;
@@ -85,11 +85,12 @@ class ChatroomList extends Component {
                         this.props.onDeleteChatting();
                     }
                     data.push({
+                        key: room.id,
                         game: room.tag == 1? 'LOL' : room.tag == 2? 'HearthStone' : 'MapleStory',
                         gamers: room.memberList.length,
                         title: room.title,
                         empty: null,
-                        join: <Button type="primary" onClick={() => this.onClickJoin(room.id)}> Join </Button>,
+                        join: <Button className="join-button" type="primary" onClick={() => this.onClickJoin(room.id)}> Join </Button>,
                     })
                 }
                 return data;
@@ -112,8 +113,6 @@ class ChatroomList extends Component {
 const mapStateToProps = (state) => {
     return {
         storedCurrentUser: state.ur.currentUser,
-        storedChatroomList: state.chat.chatroomList,
-        storedTagList: state.tg.tagList,
     }
 }
 
@@ -123,8 +122,6 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getCurrentUser()),
         onPutUser: (user) => 
             dispatch(actionCreators.putUser(user)),
-        onGetChatroomList: () => 
-            dispatch(actionCreators.getChatroomList()),
         onDeleteChatroom: (id) => 
             dispatch(actionCreators.deleteChatroom(id)),
         onCreateChatting: (chatroomId, user) =>

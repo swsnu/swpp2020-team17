@@ -1,9 +1,8 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { connectRouter, ConnectedRouter } from 'connected-react-router';
-import { Route, Redirect, Switch } from 'react-router-dom';
-import { Table, Row, Col, Button, Typography } from 'antd';
+import { ConnectedRouter } from 'connected-react-router';
+import { Route } from 'react-router-dom';
 
 import ChatroomList from './ChatroomList';
 import { getMockStore } from '../../test-utils/mocks'
@@ -11,14 +10,6 @@ import { history } from '../../store/store'
 
 import * as userActionCreators from '../../store/actions/user';
 import * as chatActionCreators from '../../store/actions/chatroom';
-
-jest.mock('antd', () => {
-    return jest.fn(props => {
-        return (
-            <div className="spyantd" onClick={jest.fn()} />
-        )
-    });
-});
 
 const propsList = [
     {
@@ -28,25 +19,20 @@ const propsList = [
         maxPersonnel: 10,
         title: 'chatroom1',
         tag: 1,
-        memberList: [1, 2],
+        memberList: [1],
+    },
+    {
+        discordLink: "not yet",
+        id: 2,
+        isGlobal: true,
+        maxPersonnel: 10,
+        title: 'chatroom2',
+        tag: 2,
+        memberList: [2],
     },
 ]
 
 const stubInitialState = {
-    chatroomList: [
-        {
-            id: 1,
-            title: 'chatroom1',
-            tag: 1,
-            memberList: [1, 2],
-        },
-        {
-            id: 1,
-            title: 'chatroom2',
-            tag: 2,
-            memberList: [3],
-        },
-    ],
     currentUser: {
         id: 1,
         username: 'User1',
@@ -61,10 +47,25 @@ const stubInitialState = {
     },
 }
 
+Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+
 const mockStore = getMockStore(stubInitialState);
 
 describe('<ChatroomList />', () => {
     let chatroomList, spyGetCurrentUser, spyPutUser, spyGetChatroomList, spyDeleteChatroom, spyCreateChatting, spyDeleteChatting;
+    
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -73,18 +74,19 @@ describe('<ChatroomList />', () => {
         chatroomList = (
             <Provider store={mockStore}>
                 <ConnectedRouter history={history}>
+                <Route path='/' exact component={() => 
                         <ChatroomList
                             isShallWe={true}
                             list={propsList}
-                        />
+                        />} />
+                        
                 </ConnectedRouter>
             </Provider>
         );
+
         spyGetCurrentUser = jest.spyOn(userActionCreators, 'getCurrentUser')
             .mockImplementation(() => { return dispatch => { }; }); 
         spyPutUser = jest.spyOn(userActionCreators, 'putUser')
-            .mockImplementation(() => { return dispatch => { }; });
-        spyGetChatroomList = jest.spyOn(chatActionCreators, 'getChatroomList')
             .mockImplementation(() => { return dispatch => { }; });
         spyDeleteChatroom = jest.spyOn(chatActionCreators, 'deleteChatroom')
             .mockImplementation(() => { return dispatch => { }; });
@@ -97,43 +99,59 @@ describe('<ChatroomList />', () => {
     it('should render without errors', () => {
         const component = mount(chatroomList);
         let wrapper = component.find(".ChatroomList");
-        console.log(component)
         expect(wrapper.length).toBe(1);
     });
+
+    it('should render without errors when isShallWe=false', () => {
+        chatroomList = (
+            <Provider store={mockStore}>
+                <ConnectedRouter history={history}>
+                <Route path='/' exact component={() => 
+                        <ChatroomList
+                            isShallWe={false}
+                            list={propsList}
+                        />} />
+                        
+                </ConnectedRouter>
+            </Provider>
+        );
+        const component = mount(chatroomList);
+        const wrapper = component.find('.ChatroomList');
+        expect(wrapper.length).toBe(1);
+    });
+
+    it('should click sorry', () => {
+        const component = mount(chatroomList);
+        const wrapper = component.find(".sorry-button");
+        wrapper.at(0).simulate('click');
+        expect(wrapper.at(0).length).toBe(1);
+        expect(spyDeleteChatroom).toBeCalledTimes(1);
+    });
+    
+    it('should click join when isShallWe=false', () => {
+        chatroomList = (
+            <Provider store={mockStore}>
+                <ConnectedRouter history={history}>
+                <Route path='/' exact component={() => 
+                        <ChatroomList
+                            isShallWe={false}
+                            list={propsList}
+                        />} />
+                        
+                </ConnectedRouter>
+            </Provider>
+        );
+        const component = mount(chatroomList);
+        const wrapper = component.find(".join-button");
+        expect(wrapper.at(0).length).toBe(1);
+    });
+
+    it('should click sure', () => {
+        const component = mount(chatroomList);
+        const wrapper = component.find(".sure-button");
+        wrapper.at(0).simulate('click');
+        expect(wrapper.at(0).length).toBe(1);
+        expect(spyPutUser).toBeCalledTimes(1);
+
+    });
 });
-
-// import React from 'react';
-// import { shallow } from 'enzyme';
-// import ChatroomList from './ChatroomList';
-
-// describe('<ChatroomList />', () => {
-//     const fakeList = [
-//         {
-//             id: 1, 
-//             title: 'chatroom1', 
-//             tag: 1, 
-//             memberList: [1, 2],
-//         }
-//     ]
-//     const fakeTagList = [
-//         {
-//             id: 1,
-//             name: 'LOL'
-//         }
-//     ]
-//     let onClick;
-//     beforeEach(() => {
-//         onClick = jest.fn();
-//     })
-//     it('should render without errors', () => {
-//         const component = shallow(<ChatroomList list={fakeList} tagList={fakeTagList} isShallWe={false} onClickJoin={onClick}/>);
-//         const wrapper = component.find('.ChatroomList');
-//         expect(wrapper.length).toBe(1);
-//     });
-
-//     it('should render without errors when isShallWe=true', () => {
-//         const component = shallow(<ChatroomList list={fakeList} tagList={fakeTagList} isShallWe={true} onClickSorry={onClick} onClickSure={onClick}/>);
-//         const wrapper = component.find('.ChatroomList');
-//         expect(wrapper.length).toBe(1);
-//     });
-// });
