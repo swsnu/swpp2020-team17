@@ -126,6 +126,19 @@ const PostInGridWrapper = styled.div`
     box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1);
 `;
 
+Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
 class MyPage extends Component {
     constructor(props) {
         super(props);
@@ -156,18 +169,17 @@ class MyPage extends Component {
         let newChatroom = {
             isGlobal: false, 
             title: this.props.storedCurrentUser.username + '_s Shall We to ' + receivingUser.username, 
-            tag: tagId,     //tag가 없는디 어떡하지  
+            tag: tagId,     
             maxPersonnel: 2, 
             discordLink: null,
         }
-        console.log(receivingUser);
+        //(receivingUser);
         let sendingUser = this.props.storedCurrentUser;
         await this.props.onSendShallWe(newChatroom, sendingUser, receivingUser);
-        if(sendingUser.chatroom != -1) {
+        if(sendingUser.chatroom !== -1) {
             this.props.history.push('/chatroom/' + sendingUser.chatroom);
         }
-        // current user의 chatroom 바꾸고 redirect?
-        // receivingUser가 offline이거나 다른 chatroom에 들어가 있으면 button disable
+
     }
 
     onToggleTag = (tag_id) => {
@@ -185,7 +197,6 @@ class MyPage extends Component {
     }
 
     render() {
-        let test = this.props.storedSelectedChatroom;
         let user = this.props.storedCurrentUser;
         let userProfile = (user !== null)?
             (<Profile
@@ -198,7 +209,7 @@ class MyPage extends Component {
         ;
         let userList = this.props.storedUserList;
         let friendList = [];
-        console.log(this.props.storedUserList);
+        //console.log(this.props.storedUserList);
         friendList = user.friendList.map(friend_id => {
             return userList.find(user => user.id === friend_id);
         });
@@ -217,7 +228,7 @@ class MyPage extends Component {
         let menuItems = friendList.map(friend => {
             let menu = friend.tagList.map(tagId => {
                 return (
-                    <Menu.Item onClick={() => this.onClickShallWe(friend, tagId)}>
+                    <Menu.Item key={tagId} onClick={() => this.onClickShallWe(friend, tagId)}>
                         <a>
                             {tagId===1 ? "LOL": tagId===2 ? "HearthStone": "MapleStory"}
                         </a>
@@ -231,6 +242,7 @@ class MyPage extends Component {
         });
 
         return(
+            <div className="MyPage">
             <MyPageContainer>
                 <MyPageLeftContainer>
                     <ProfileCardWrapper>
@@ -245,7 +257,11 @@ class MyPage extends Component {
                             renderItem={item => (
                                 <List.Item key={item.id}>
                                         <FriendItemWrapper>
-                                            <AuthorItem onClick={() => this.handleAuthorClicked(item.id)} style={{ cursor: "pointer" }} >
+                                            <AuthorItem 
+                                                className="avatar-redirect"
+                                                onClick={() => this.handleAuthorClicked(item.id)} 
+                                                style={{ cursor: "pointer" }} 
+                                            >
                                                 <Author
                                                     //FIXME: user로 넘기도록 수정해야함
                                                     name={item.username}
@@ -274,8 +290,8 @@ class MyPage extends Component {
                                                     <Button
                                                         type="primary"
                                                         shape="round"
-                                                        disabled={this.props.storedCurrentUser.chatroom != -1
-                                                        || item.chatroom != -1 || item.login == false}
+                                                        disabled={this.props.storedCurrentUser.chatroom !== -1
+                                                        || item.chatroom !== -1 || !item.login}
                                                         size="small"
                                                         style={{ fontSize: 8, fontWeight: "bolder" }}
                                                     >
@@ -295,6 +311,7 @@ class MyPage extends Component {
                         </TagWrapper>
                         <ButtonCreate>
                             <Button
+                                className="create-post-button"
                                 type="primary"
                                 onClick={() => this.onClickCreatePost()}
                             >
@@ -310,6 +327,7 @@ class MyPage extends Component {
                     
                 </MyPageRightContainer>
             </MyPageContainer>
+            </div>
         );
     }
 
@@ -320,7 +338,6 @@ const mapStateToProps = (state) => {
         storedCurrentUser: state.ur.currentUser,
         storedPostList: state.ps.postList,
         storedUserList: state.ur.userList,
-        storedSelectedChatroom: state.chat.selectedChatroom,
     }
 }
 
@@ -332,8 +349,6 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.getPostList()),
         onGetUserList: () =>
             dispatch(actionCreators.getUserList()),
-        onPutUser: (user) =>
-            dispatch(actionCreators.putUser(user)),
         onSendShallWe: (newChatroom, sendingUser, receivingUser) => 
             dispatch(actionCreators.sendShallWe(newChatroom, sendingUser, receivingUser)),
     }
