@@ -6,3 +6,4 @@ backend.zip
 backend/.config_secret/
 backend/backend/.env
 node_modules
+frontend/node_modules
