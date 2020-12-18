@@ -33,6 +33,7 @@ class CreateNewPost extends React.Component {
     };
 
     handleChange = info => {
+        console.log(info);
         if (info.file.status === 'uploading') {
             this.setState({ loading: true });
             return;
@@ -80,6 +81,7 @@ class CreateNewPost extends React.Component {
         };
 
         return (
+            <div className="CreatePost">
             <Form
                 {...layout}
                 name="nest-messages"
@@ -119,12 +121,12 @@ class CreateNewPost extends React.Component {
                     </Button>
                 </Form.Item>
             </Form>
+            </div>
         );
     }
 }
 
 const mapStateToProps = (state) => ({
-    postList: state.ps.postList,
     currentUser: state.ur.currentUser,
     selectedPost: state.ps.selectedPost,
     tagList: state.tg.tagList,
@@ -134,7 +136,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         createPost: (post) =>
             dispatch(actionCreators.createPost(post)),
-
         getCurrentUser: () => {
             dispatch(actionCreators.getCurrentUser())
         },
