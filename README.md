@@ -5,19 +5,12 @@
 
 
 # Frontend
-1. If you want to run frontend for the first time after cloning,
-<pre><code>cd frontend   
-yarn
-yarn start
-</code></pre>
-
-2. After first running,
-<pre><code>cd frontend   
-yarn start
+<pre><code>
+sh runFront.sh
 </code></pre>
 
 # Backend
-<pre><code>cd backend
+<pre><code>
 sh runBack.sh
 </code></pre>
 
