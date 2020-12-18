@@ -29,4 +29,4 @@ matrix:
         - pip install -r requirements.txt
       script:
         - python manage.py migrate --run-syncdb
-        - pylint **/*.py --disable='shallWeGame.tests' --load-plugins pylint_django
+        - pylint shallWeGame/*.py --disable='shallWeGame/tests.py' --load-plugins pylint_django
