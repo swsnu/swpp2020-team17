@@ -13,7 +13,7 @@ import * as userActionCreators from '../../store/actions/user';
 jest.mock('../../../node_modules/antd/lib/button', () => {
     return jest.fn(props => {
         return (
-            <div className="spyButton" onClick={jest.fn()}/>
+            <div className="spyButton" onClick={() => props.onClick()}/>
         )
     });
 });
@@ -60,9 +60,9 @@ describe('<RoomInfo />', () => {
     it('should handle login', () => {
         const component = mount(login);
         let wrapper = component.find('.LoginPage');
-        //wrapper.at(0).simulate('click');
         expect(wrapper.length).toBe(1);
         wrapper = component.find('.spyButton');
+        wrapper.simulate('click');
         expect(wrapper.length).toBe(1);
     });
 

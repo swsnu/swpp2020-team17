@@ -105,7 +105,7 @@ describe('<Chatroom />', () => {
             <Provider store={mockStore}>
               <ConnectedRouter history={history}>
               <Switch>
-                <Route path='/' exact component={(props) => <Chatroom {...props} match={{params: {id: 1}, isExact: true, path: "", url: ""}} />} /> />
+                <Route path='/' exact component={(props) => <Chatroom {...props} match={{params: {id: 1}, isExact: true, path: "", url: ""}} />} />
               </Switch>
               </ConnectedRouter>
             </Provider>
